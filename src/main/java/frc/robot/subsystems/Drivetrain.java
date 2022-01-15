@@ -17,10 +17,55 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.Set;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.EntryListenerFlags;
 
 import static frc.robot.Constants.*;
 
 public class Drivetrain extends SubsystemBase {
+  private NetworkTableInstance current = NetworkTableInstance.getDefault();
+  private NetworkTable pathTable;
+  private NetworkTable path1Table;
+  private NetworkTable path2Table;
+  private Set<String> path1Names;
+  private Set<String> path2Names;
+  private NetworkTable[] path1;
+  private NetworkTable[] path2;
+
+  private void updateDash(){
+        current = NetworkTableInstance.create();
+        pathTable = current.getTable("paths");
+        pathTable.addEntryListener(
+          "newPath",
+          (table, key, entry, value, flags) -> {
+            newDash();
+          }, 
+          EntryListenerFlags.kNew | EntryListenerFlags.kUpdate
+          );
+      }
+    
+      private void newDash(){
+        path1Table = pathTable.getSubTable("path1");
+        path2Table = pathTable.getSubTable("path2");
+        path1Names = path1Table.getSubTables();
+        path2Names = path2Table.getSubTables();
+        path1 = openPath(path1Names);
+        path2 = openPath(path2Names);
+      }
+    
+      private NetworkTable[] openPath(Set<String> path){
+        NetworkTable[] pointsArray = new NetworkTable[path.size()];
+      
+        Object[] pointNames = path.toArray();
+    
+        for(int i = 0; i < path.size(); i++){
+          pointsArray[i] = path1Table.getSubTable(pointNames[i].toString());
+        }
+    
+        return pointsArray;
+      }
   /**
    * The maximum voltage that will be delivered to the drive motors.
    * <p>
@@ -184,6 +229,7 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+    updateDash();
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
     SwerveDriveKinematics.normalizeWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 

@@ -21,51 +21,66 @@ import java.util.Set;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.EntryListenerFlags;
+import frc.robot.utility.PathPoint;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static frc.robot.Constants.*;
 
 public class Drivetrain extends SubsystemBase {
-  private NetworkTableInstance current = NetworkTableInstance.getDefault();
-  private NetworkTable pathTable;
-  private NetworkTable path1Table;
-  private NetworkTable path2Table;
-  private Set<String> path1Names;
-  private Set<String> path2Names;
-  private NetworkTable[] path1;
-  private NetworkTable[] path2;
+  private PathPoint[] path1;
+  private PathPoint[] path2;
 
-  private void updateDash(){
-        current = NetworkTableInstance.create();
-        pathTable = current.getTable("paths");
-        pathTable.addEntryListener(
-          "newPath",
-          (table, key, entry, value, flags) -> {
-            newDash();
-          }, 
-          EntryListenerFlags.kNew | EntryListenerFlags.kUpdate
-          );
-      }
-    
-      private void newDash(){
-        path1Table = pathTable.getSubTable("path1");
-        path2Table = pathTable.getSubTable("path2");
-        path1Names = path1Table.getSubTables();
-        path2Names = path2Table.getSubTables();
-        path1 = openPath(path1Names);
-        path2 = openPath(path2Names);
-      }
-    
-      private NetworkTable[] openPath(Set<String> path){
-        NetworkTable[] pointsArray = new NetworkTable[path.size()];
-      
-        Object[] pointNames = path.toArray();
-    
-        for(int i = 0; i < path.size(); i++){
-          pointsArray[i] = path1Table.getSubTable(pointNames[i].toString());
-        }
-    
-        return pointsArray;
-      }
+  //Sets both paths to zero, begins cycling both paths
+  private void cycleTable(){
+    nullPaths();
+    for(int i = 0; i < 2; i++){
+      nullPaths();
+      cyclePath(i + 1);
+    }
+  }
+
+  //Runs pullPoint for every point on the selected path
+  private void cyclePath(int path){
+    for(int i = 0; i < getPathLength(path); i++){
+      pullPoint(path, i + 1);
+    }
+  }
+
+  //Sets the values of the selected point to whatever Leo sends. Must pass path as a parameter cause Network Tables suck
+  private void pullPoint(int path, int point){
+    for(int i = 0; i < getPathLength(path); i++){
+      path1[i].setX(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/X").getDouble(1.0));
+      path1[i].setY(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/Y").getDouble(1.0));
+      path1[i].setVx(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/Vx").getDouble(1.0));
+      path1[i].setVy(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/Vy").getDouble(1.0));
+      path1[i].setHeading(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/Heading").getDouble(1.0));
+      path1[i].setOmega(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/Omega").getDouble(1.0));
+      path1[i].setVision(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/Vision").getDouble(1.0));
+    }
+  }
+
+  //Sets all values of all points in both paths to zero
+  private void nullPaths(){
+    path1 = new PathPoint[(int)getPathLength(1)];
+    path2 = new PathPoint[(int)getPathLength(2)];
+    for(int i = 0; i < path1.length; i++){
+      path1[i] = new PathPoint(0,0,0,0,0,0,0);
+    }
+
+    for(int r = 0; r < path2.length; r++){
+      path1[r] = new PathPoint(0,0,0,0,0,0,0);
+    }
+  }
+
+  //This code assumes there are 2 paths being sent
+  // private double getPathCount(){
+  //   return SmartDashboard.getEntry("/pathTable/numPaths").getDouble(0.0);
+  // }
+
+  //Returns the amount of points in a path
+  private double getPathLength(int path){
+    return SmartDashboard.getEntry("/pathTable/path" + path + "/numPoints").getDouble(0.0);
+  }
   /**
    * The maximum voltage that will be delivered to the drive motors.
    * <p>
@@ -123,6 +138,7 @@ public class Drivetrain extends SubsystemBase {
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
   public Drivetrain() {
+    cycleTable();
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     // There are 4 methods you can call to create your swerve modules.

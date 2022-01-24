@@ -12,6 +12,7 @@ public class IdleClimb extends CommandBase {
   /** Creates a new IdleClimb. */
   public IdleClimb(Climb climb) {
     this.climb = climb;
+    addRequirements(climb);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

@@ -13,6 +13,7 @@ public class IdleIntake extends CommandBase {
   /** Creates a new IdleIntake. */
   public IdleIntake(Intake intake) {
     this.intake = intake;
+    addRequirements(intake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

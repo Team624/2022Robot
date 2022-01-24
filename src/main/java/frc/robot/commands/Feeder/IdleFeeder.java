@@ -12,6 +12,7 @@ public class IdleFeeder extends CommandBase {
   /** Creates a new Hopper. */
   public IdleFeeder(Feeder feeder) {
     this.feeder = feeder;
+    addRequirements(feeder);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

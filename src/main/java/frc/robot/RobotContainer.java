@@ -6,11 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.Climb.IdleClimb;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Feeder.IdleFeeder;
@@ -71,9 +68,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Back button zeros the gyroscope
-    new Button(m_controller::getBackButton)
-            // No requirements because we don't need to interrupt anything
-            .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+    //FIXME
+    // new Button(m_controller::getBackButton)
+    //         // No requirements because we don't need to interrupt anything
+    //         .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
   }
 
   /**

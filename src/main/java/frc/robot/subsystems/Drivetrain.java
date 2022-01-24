@@ -4,8 +4,8 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
-import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
+import com.kauailabs.navx.frc.AHRS;
+import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,77 +17,17 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.Set;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.EntryListenerFlags;
-import frc.robot.utility.PathPoint;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import static frc.robot.Constants.*;
 
 public class Drivetrain extends SubsystemBase {
-  private PathPoint[] path1;
-  private PathPoint[] path2;
 
-  //Sets both paths to zero, begins cycling both paths
-  private void cycleTable(){
-    nullPaths();
-    for(int i = 0; i < 2; i++){
-      nullPaths();
-      cyclePath(i + 1);
-    }
-  }
-
-  //Runs pullPoint for every point on the selected path
-  private void cyclePath(int path){
-    for(int i = 0; i < getPathLength(path); i++){
-      pullPoint(path, i + 1);
-    }
-  }
-
-  //Sets the values of the selected point to whatever Leo sends. Must pass path as a parameter cause Network Tables suck
-  private void pullPoint(int path, int point){
-    for(int i = 0; i < getPathLength(path); i++){
-      path1[i].setX(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/X").getDouble(1.0));
-      path1[i].setY(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/Y").getDouble(1.0));
-      path1[i].setVx(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/Vx").getDouble(1.0));
-      path1[i].setVy(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/Vy").getDouble(1.0));
-      path1[i].setHeading(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/Heading").getDouble(1.0));
-      path1[i].setOmega(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/Omega").getDouble(1.0));
-      path1[i].setVision(SmartDashboard.getEntry("/pathTable/path" + path + "/point" + point + "/Vision").getDouble(1.0));
-    }
-  }
-
-  //Sets all values of all points in both paths to zero
-  private void nullPaths(){
-    path1 = new PathPoint[(int)getPathLength(1)];
-    path2 = new PathPoint[(int)getPathLength(2)];
-    for(int i = 0; i < path1.length; i++){
-      path1[i] = new PathPoint(0,0,0,0,0,0,0);
-    }
-
-    for(int r = 0; r < path2.length; r++){
-      path1[r] = new PathPoint(0,0,0,0,0,0,0);
-    }
-  }
-
-  //This code assumes there are 2 paths being sent
-  // private double getPathCount(){
-  //   return SmartDashboard.getEntry("/pathTable/numPaths").getDouble(0.0);
-  // }
-
-  //Returns the amount of points in a path
-  private double getPathLength(int path){
-    return SmartDashboard.getEntry("/pathTable/path" + path + "/numPoints").getDouble(0.0);
-  }
   /**
    * The maximum voltage that will be delivered to the drive motors.
    * <p>
    * This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
    */
   public static final double MAX_VOLTAGE = 12.0;
-  // FIXME Measure the drivetrain's maximum velocity or calculate the theoretical.
+  // Measure the drivetrain's maximum velocity or calculate the theoretical.
   //  The formula for calculating the theoretical maximum velocity is:
   //   <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> * pi
   //  By default this value is setup for a Mk3 standard module using Falcon500s to drive.
@@ -98,9 +38,9 @@ public class Drivetrain extends SubsystemBase {
    * <p>
    * This is a measure of how fast the robot should be able to drive in a straight line.
    */
-  public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
-          SdsModuleConfigurations.MK3_STANDARD.getDriveReduction() *
-          SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
+  public static final double MAX_VELOCITY_METERS_PER_SECOND = 6379.0 / 60.0 *
+          SdsModuleConfigurations.MK4_L2.getDriveReduction() *
+          SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI;
   /**
    * The maximum angular velocity of the robot in radians per second.
    * <p>
@@ -124,11 +64,9 @@ public class Drivetrain extends SubsystemBase {
   // By default we use a Pigeon for our gyroscope. But if you use another gyroscope, like a NavX, you can change this.
   // The important thing about how you configure your gyroscope is that rotating the robot counter-clockwise should
   // cause the angle reading to increase until it wraps back over to zero.
-  // FIXME Remove if you are using a Pigeon
-  private final PigeonIMU m_pigeon = new PigeonIMU(DRIVETRAIN_PIGEON_ID);
-  // FIXME Uncomment if you are using a NavX
-//  private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
-
+  // private final PigeonIMU m_pigeon = new PigeonIMU(DRIVETRAIN_PIGEON_ID);
+  
+  private final AHRS m_navx = new AHRS(edu.wpi.first.wpilibj.I2C.Port.kOnboard);
   // These are our modules. We initialize them in the constructor.
   private final SwerveModule m_frontLeftModule;
   private final SwerveModule m_frontRightModule;
@@ -138,7 +76,7 @@ public class Drivetrain extends SubsystemBase {
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
   public Drivetrain() {
-    cycleTable();
+    
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     // There are 4 methods you can call to create your swerve modules.
@@ -160,83 +98,69 @@ public class Drivetrain extends SubsystemBase {
 
     // By default we will use Falcon 500s in standard configuration. But if you use a different configuration or motors
     // you MUST change it. If you do not, your code will crash on startup.
-    // FIXME Setup motor configuration
-    m_frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
-            // This parameter is optional, but will allow you to see the current state of the module on the dashboard.
+    m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Front Left Module", BuiltInLayouts.kList)
-                    .withSize(2, 4)
-                    .withPosition(0, 0),
-            // This can either be STANDARD or FAST depending on your gear configuration
-            Mk3SwerveModuleHelper.GearRatio.STANDARD,
-            // This is the ID of the drive motor
-            FRONT_LEFT_MODULE_DRIVE_MOTOR,
-            // This is the ID of the steer motor
-            FRONT_LEFT_MODULE_STEER_MOTOR,
-            // This is the ID of the steer encoder
-            FRONT_LEFT_MODULE_STEER_ENCODER,
-            // This is how much the steer encoder is offset from true zero (In our case, zero is facing straight forward)
-            FRONT_LEFT_MODULE_STEER_OFFSET
-    );
+                .withSize(2, 4)
+                .withPosition(2, 0),
+                Mk4SwerveModuleHelper.GearRatio.L2,
+                FRONT_LEFT_MODULE_DRIVE_MOTOR, 
+                FRONT_LEFT_MODULE_STEER_MOTOR, 
+                FRONT_LEFT_MODULE_STEER_ENCODER,
+                FRONT_LEFT_MODULE_STEER_OFFSET);
 
     // We will do the same for the other modules
-    m_frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
+    m_frontRightModule = Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
                     .withPosition(2, 0),
-            Mk3SwerveModuleHelper.GearRatio.STANDARD,
+            Mk4SwerveModuleHelper.GearRatio.L2,
             FRONT_RIGHT_MODULE_DRIVE_MOTOR,
             FRONT_RIGHT_MODULE_STEER_MOTOR,
             FRONT_RIGHT_MODULE_STEER_ENCODER,
             FRONT_RIGHT_MODULE_STEER_OFFSET
     );
 
-    m_backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
+    m_backLeftModule = Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Back Left Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
                     .withPosition(4, 0),
-            Mk3SwerveModuleHelper.GearRatio.STANDARD,
+            Mk4SwerveModuleHelper.GearRatio.L2,
             BACK_LEFT_MODULE_DRIVE_MOTOR,
             BACK_LEFT_MODULE_STEER_MOTOR,
             BACK_LEFT_MODULE_STEER_ENCODER,
             BACK_LEFT_MODULE_STEER_OFFSET
     );
 
-    m_backRightModule = Mk3SwerveModuleHelper.createFalcon500(
+    m_backRightModule = Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
                     .withPosition(6, 0),
-            Mk3SwerveModuleHelper.GearRatio.STANDARD,
+            Mk4SwerveModuleHelper.GearRatio.L2,
             BACK_RIGHT_MODULE_DRIVE_MOTOR,
             BACK_RIGHT_MODULE_STEER_MOTOR,
             BACK_RIGHT_MODULE_STEER_ENCODER,
             BACK_RIGHT_MODULE_STEER_OFFSET
     );
-  }
+   }
 
   /**
    * Sets the gyroscope angle to zero. This can be used to set the direction the robot is currently facing to the
    * 'forwards' direction.
    */
-  public void zeroGyroscope() {
-    // FIXME Remove if you are using a Pigeon
-    m_pigeon.setFusedHeading(0.0);
-
-    // FIXME Uncomment if you are using a NavX
-//    m_navx.zeroYaw();
-  }
+   
+   public void zeroGyroscope() {
+           m_navx.zeroYaw();
+   }
 
   public Rotation2d getGyroscopeRotation() {
-    // FIXME Remove if you are using a Pigeon
-    return Rotation2d.fromDegrees(m_pigeon.getFusedHeading());
 
-    // FIXME Uncomment if you are using a NavX
-//    if (m_navx.isMagnetometerCalibrated()) {
-//      // We will only get valid fused headings if the magnetometer is calibrated
-//      return Rotation2d.fromDegrees(m_navx.getFusedHeading());
-//    }
-//
-//    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-//    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+   if (m_navx.isMagnetometerCalibrated()) {
+     // We will only get valid fused headings if the magnetometer is calibrated
+     return Rotation2d.fromDegrees(m_navx.getFusedHeading());
+   }
+
+   // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
+   return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -245,9 +169,8 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    updateDash();
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
-    SwerveDriveKinematics.normalizeWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 
     m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
     m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());

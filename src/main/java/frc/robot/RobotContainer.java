@@ -35,7 +35,7 @@ public class RobotContainer {
   private final Feeder m_hopper = new Feeder();
   private final Shooter m_shooter = new Shooter();
 
-  private final XboxController d_controller = new XboxController(0);
+  public final XboxController d_controller = new XboxController(0);
   private final XboxController m_controller = new XboxController(1);
 
   /**

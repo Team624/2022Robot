@@ -28,7 +28,6 @@ public class DefaultDriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        System.out.println("Controller input: " + m_rotationSupplier.getAsDouble());
         System.out.println("Gyro: " + m_drivetrainSubsystem.getGyroscopeRotation());
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         m_drivetrainSubsystem.drive(

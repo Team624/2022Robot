@@ -149,7 +149,7 @@ public class Drivetrain extends SubsystemBase {
    */
    
    public void zeroGyroscope() {
-           m_navx.zeroYaw();
+           m_navx.reset();
            System.out.println("im doing the thing");
    }
 
@@ -162,7 +162,7 @@ public class Drivetrain extends SubsystemBase {
 //    }
 
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-   return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+   return Rotation2d.fromDegrees(360 - m_navx.getYaw());
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -174,7 +174,7 @@ public class Drivetrain extends SubsystemBase {
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
 
-    System.out.println("speed being set: " + states[0].speedMetersPerSecond);
+    //System.out.println("speed being set: " + states[0].speedMetersPerSecond);
 
     m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
     m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());

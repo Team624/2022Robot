@@ -16,7 +16,7 @@ public class PositionTurn extends CommandBase {
   private final DoubleSupplier m_translationXSupplier;
   private final DoubleSupplier m_translationYSupplier;
 
-  private final PIDController pid = new PIDController(0.001, 0, 0);
+  private final PIDController pid = new PIDController(0.01, 0, 0);
 
   /** Creates a new PositionTurn. */
   public PositionTurn(Drivetrain drivetrainSubsystem,

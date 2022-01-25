@@ -1,5 +1,6 @@
 package frc.robot.commands.Drivetrain;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
@@ -27,12 +28,14 @@ public class DefaultDriveCommand extends CommandBase {
 
     @Override
     public void execute() {
+        System.out.println("Controller input: " + m_rotationSupplier.getAsDouble());
+        System.out.println("Gyro: " + m_drivetrainSubsystem.getGyroscopeRotation());
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                        m_translationXSupplier.getAsDouble(),
-                        m_translationYSupplier.getAsDouble(),
-                        m_rotationSupplier.getAsDouble(),
+                        m_translationXSupplier.getAsDouble() * .5,
+                        m_translationYSupplier.getAsDouble() * .5,
+                        m_rotationSupplier.getAsDouble() * .5,
                         m_drivetrainSubsystem.getGyroscopeRotation()
                 )
         );

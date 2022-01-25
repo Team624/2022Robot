@@ -150,14 +150,16 @@ public class Drivetrain extends SubsystemBase {
    
    public void zeroGyroscope() {
            m_navx.zeroYaw();
+           System.out.println("im doing the thing");
    }
 
   public Rotation2d getGyroscopeRotation() {
 
-   if (m_navx.isMagnetometerCalibrated()) {
-     // We will only get valid fused headings if the magnetometer is calibrated
-     return Rotation2d.fromDegrees(m_navx.getFusedHeading());
-   }
+        //FIXME
+//    if (m_navx.isMagnetometerCalibrated()) {
+//      // We will only get valid fused headings if the magnetometer is calibrated
+//      return Rotation2d.fromDegrees(m_navx.getFusedHeading());
+//    }
 
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
@@ -171,6 +173,8 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
+
+    System.out.println("speed being set: " + states[0].speedMetersPerSecond);
 
     m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
     m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());

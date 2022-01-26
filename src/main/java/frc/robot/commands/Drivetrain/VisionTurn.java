@@ -50,7 +50,9 @@ public class VisionTurn extends CommandBase {
   }
 
   private double getRotationPID(double wantedDeltaAngle){
-    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getRadians(), m_drivetrainSubsystem.getGyroscopeRotation().getRadians() + wantedDeltaAngle);
+    //double setpoint = m_drivetrainSubsystem.getGyroscopeRotation().getRadians() + wantedDeltaAngle;
+    double setpoint = 0;
+    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getRadians(), setpoint);
   }
 
   // Called once the command ends or is interrupted.

@@ -76,7 +76,7 @@ public class Drivetrain extends SubsystemBase {
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
   public Drivetrain() {
-    
+
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     // There are 4 methods you can call to create your swerve modules.
@@ -149,8 +149,8 @@ public class Drivetrain extends SubsystemBase {
    */
    
    public void zeroGyroscope() {
-           m_navx.reset();
-           System.out.println("im doing the thing");
+        m_navx.reset();
+        System.out.println("im doing the thing");
    }
 
   public Rotation2d getGyroscopeRotation() {
@@ -162,7 +162,18 @@ public class Drivetrain extends SubsystemBase {
 //    }
 
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-   return Rotation2d.fromDegrees(360 - m_navx.getYaw());
+   return new Rotation2d(normalizeAngle(m_navx.getYaw() * (Math.PI/180.0)));
+  }
+
+  public double normalizeAngle(double angle){
+	  // Normalizes angle between [-pi , pi]
+	  angle %= (Math.PI*2);
+	  angle = (angle + 2 * Math.PI) % (Math.PI*2);
+
+	  if (angle > Math.PI){
+		angle -= Math.PI * 2;
+	  }
+	  return angle;
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {

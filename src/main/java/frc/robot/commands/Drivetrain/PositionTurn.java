@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import java.util.function.DoubleSupplier;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class PositionTurn extends CommandBase {
   private final Drivetrain m_drivetrainSubsystem;
@@ -37,18 +38,19 @@ public class PositionTurn extends CommandBase {
   @Override
   public void execute() {
     System.out.println("shit works lol");
+    double wantedDeltaAngle = SmartDashboard.getEntry("/vision/rotationAngle").getDouble(0.0);
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
         m_translationXSupplier.getAsDouble(),
         m_translationYSupplier.getAsDouble(),
-        getRotationPID(),
+        getRotationPID(wantedDeltaAngle),
         m_drivetrainSubsystem.getGyroscopeRotation()
       )
     );
   }
 
-  private double getRotationPID(){
-    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), 0.0);
+  private double getRotationPID(double wantedDeltaAngle){
+    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getRadians(), m_drivetrainSubsystem.getGyroscopeRotation().getRadians() + wantedDeltaAngle);
   }
 
   // Called once the command ends or is interrupted.

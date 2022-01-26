@@ -11,7 +11,7 @@ import frc.robot.subsystems.Drivetrain;
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class PositionTurn extends CommandBase {
+public class VisionTurn extends CommandBase {
   private final Drivetrain m_drivetrainSubsystem;
 
   private final DoubleSupplier m_translationXSupplier;
@@ -20,7 +20,7 @@ public class PositionTurn extends CommandBase {
   private final PIDController pid = new PIDController(0.01, 0, 0);
 
   /** Creates a new PositionTurn. */
-  public PositionTurn(Drivetrain drivetrainSubsystem,
+  public VisionTurn(Drivetrain drivetrainSubsystem,
                       DoubleSupplier translationXSupplier,
                       DoubleSupplier translationYSupplier) {
     this.m_drivetrainSubsystem = drivetrainSubsystem;

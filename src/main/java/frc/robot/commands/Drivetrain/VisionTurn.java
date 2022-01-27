@@ -41,8 +41,8 @@ public class VisionTurn extends CommandBase {
     double wantedDeltaAngle = SmartDashboard.getEntry("/vision/rotationAngle").getDouble(0.0);
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
-        m_translationXSupplier.getAsDouble(),
-        m_translationYSupplier.getAsDouble(),
+        m_translationXSupplier.getAsDouble() * 0.3,
+        m_translationYSupplier.getAsDouble() * 0.3,
         getRotationPID(wantedDeltaAngle),
         m_drivetrainSubsystem.getGyroscopeRotation()
       )

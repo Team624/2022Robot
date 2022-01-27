@@ -150,7 +150,7 @@ public class Drivetrain extends SubsystemBase {
    
    public void zeroGyroscope() {
         m_navx.reset();
-        System.out.println("im doing the thing");
+        //System.out.println("im doing the thing");
    }
 
   public Rotation2d getGyroscopeRotation() {
@@ -162,7 +162,7 @@ public class Drivetrain extends SubsystemBase {
 //    }
 
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-   return new Rotation2d(normalizeAngle(m_navx.getYaw() * (Math.PI/180.0)));
+   return Rotation2d.fromDegrees(-m_navx.getYaw());
   }
 
   public double normalizeAngle(double angle){

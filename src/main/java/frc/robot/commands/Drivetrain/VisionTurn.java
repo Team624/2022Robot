@@ -37,12 +37,12 @@ public class VisionTurn extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("shit works lol");
     double wantedDeltaAngle = SmartDashboard.getEntry("/vision/rotationAngle").getDouble(0.0);
+    System.out.println("Gyro: " + m_drivetrainSubsystem.getGyroscopeRotation());
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
-        m_translationXSupplier.getAsDouble(),
-        m_translationYSupplier.getAsDouble(),
+        m_translationXSupplier.getAsDouble() * 0.3,
+        m_translationYSupplier.getAsDouble() * 0.3,
         getRotationPID(wantedDeltaAngle),
         m_drivetrainSubsystem.getGyroscopeRotation()
       )
@@ -50,14 +50,16 @@ public class VisionTurn extends CommandBase {
   }
 
   private double getRotationPID(double wantedDeltaAngle){
-    //double setpoint = m_drivetrainSubsystem.getGyroscopeRotation().getRadians() + wantedDeltaAngle;
+    //double setpoint = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle;
     double setpoint = 0;
-    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getRadians(), setpoint);
+    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), setpoint);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
+  }
 
   // Returns true when the command should end.
   @Override

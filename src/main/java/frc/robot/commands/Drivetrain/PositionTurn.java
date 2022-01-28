@@ -4,11 +4,12 @@
 
 package frc.robot.commands.Drivetrain;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
-import java.util.function.DoubleSupplier;
 
 public class PositionTurn extends CommandBase {
   private final Drivetrain m_drivetrainSubsystem;
@@ -16,27 +17,26 @@ public class PositionTurn extends CommandBase {
   private final DoubleSupplier m_translationXSupplier;
   private final DoubleSupplier m_translationYSupplier;
 
-  private final PIDController pid = new PIDController(0.01, 0, 0);
+  private final PIDController pid = new PIDController(0.07, 0, 0);
 
   /** Creates a new PositionTurn. */
-  public PositionTurn(Drivetrain drivetrainSubsystem,
-                      DoubleSupplier translationXSupplier,
-                      DoubleSupplier translationYSupplier) {
+  public PositionTurn(Drivetrain drivetrainSubsystem, DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier) {
     this.m_drivetrainSubsystem = drivetrainSubsystem;
     this.m_translationXSupplier = translationXSupplier;
     this.m_translationYSupplier = translationYSupplier;
-
     addRequirements(drivetrainSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    //FIXME This is a thing
+    pid.enableContinuousInput(180, 540);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("shit works lol");
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
         m_translationXSupplier.getAsDouble(),
@@ -48,7 +48,7 @@ public class PositionTurn extends CommandBase {
   }
 
   private double getRotationPID(){
-    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), 0.0);
+    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), 360.0);
   }
 
   // Called once the command ends or is interrupted.

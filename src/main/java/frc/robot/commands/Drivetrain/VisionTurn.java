@@ -17,7 +17,7 @@ public class VisionTurn extends CommandBase {
   private final DoubleSupplier m_translationXSupplier;
   private final DoubleSupplier m_translationYSupplier;
 
-  private final PIDController pid = new PIDController(0.01, 0, 0);
+  private final PIDController pid = new PIDController(0.07, 0, 0);
 
   /** Creates a new PositionTurn. */
   public VisionTurn(Drivetrain drivetrainSubsystem,
@@ -41,8 +41,8 @@ public class VisionTurn extends CommandBase {
     System.out.println("Gyro: " + m_drivetrainSubsystem.getGyroscopeRotation());
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
-        m_translationXSupplier.getAsDouble() * 0.3,
-        m_translationYSupplier.getAsDouble() * 0.3,
+        m_translationXSupplier.getAsDouble(),
+        m_translationYSupplier.getAsDouble(),
         getRotationPID(wantedDeltaAngle),
         m_drivetrainSubsystem.getGyroscopeRotation()
       )

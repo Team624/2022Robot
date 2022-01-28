@@ -173,6 +173,16 @@ public class Drivetrain extends SubsystemBase {
    return Rotation2d.fromDegrees(ypr[0]);
   }
 
+  public double normalizeAngle(double angle){
+        //   Normalizes angle between (-pi and pi)
+          angle %= (Math.PI*2);
+          angle = (angle + 2 * Math.PI) % (Math.PI * 2);
+          if (angle > Math.PI){
+                  angle -= Math.PI * 2;
+          }
+          return angle;
+  }
+
   public void drive(ChassisSpeeds chassisSpeeds) {
     m_chassisSpeeds = chassisSpeeds;
     

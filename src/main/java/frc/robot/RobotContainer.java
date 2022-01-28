@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.Climb.IdleClimb;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
-import frc.robot.commands.Drivetrain.PositionTurn;
+import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Feeder.IdleFeeder;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShooter;
@@ -76,7 +76,7 @@ public class RobotContainer {
              .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
     
 
-    new Button(d_controller::getYButton).whenHeld(new PositionTurn(
+    new Button(d_controller::getYButton).whenHeld(new VisionTurn(
        m_drivetrainSubsystem,
        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER

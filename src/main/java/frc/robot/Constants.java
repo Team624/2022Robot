@@ -13,6 +13,9 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final double DRIVETRAIN_INPUT_DEADBAND = .05;
+    public static final double DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER = .5;
+    public static final double DRIVETRAIN_INPUT_ROTATION_MULTIPLIER = .5;
     /**
      * The left-to-right distance between the drivetrain wheels
      *

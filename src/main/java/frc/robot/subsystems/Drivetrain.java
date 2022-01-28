@@ -17,6 +17,9 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import com.ctre.phoenix.sensors.PigeonIMU;
+
 import static frc.robot.Constants.*;
 
 public class Drivetrain extends SubsystemBase {
@@ -65,8 +68,7 @@ public class Drivetrain extends SubsystemBase {
   // The important thing about how you configure your gyroscope is that rotating the robot counter-clockwise should
   // cause the angle reading to increase until it wraps back over to zero.
   // private final PigeonIMU m_pigeon = new PigeonIMU(DRIVETRAIN_PIGEON_ID);
-  
-  private final AHRS m_navx = new AHRS(edu.wpi.first.wpilibj.I2C.Port.kOnboard);
+  private final PigeonIMU m_pImu = new PigeonIMU(25);
   // These are our modules. We initialize them in the constructor.
   private final SwerveModule m_frontLeftModule;
   private final SwerveModule m_frontRightModule;
@@ -74,9 +76,10 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveModule m_backRightModule;
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
+  private SwerveModuleState[] lstates = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
   public Drivetrain() {
-
+    
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
     // There are 4 methods you can call to create your swerve modules.
@@ -149,41 +152,46 @@ public class Drivetrain extends SubsystemBase {
    */
    
    public void zeroGyroscope() {
-        m_navx.reset();
-        //System.out.println("im doing the thing");
+           m_pImu.setYaw(0.0);
+           System.out.println("im doing the thing");
    }
 
   public Rotation2d getGyroscopeRotation() {
+        double[] ypr = new double[3];
+        m_pImu.getYawPitchRoll(ypr);
+        System.out.println(m_pImu.getState());
+        //FIXME - Test just printing yaw stock. Try to get the angle wrapping properly
+
+        //^this should do (-180 to 180)
+
+        // 360 - m_navx.getYaw - (540-180)
 
         //FIXME
-//    if (m_navx.isMagnetometerCalibrated()) {
-//      // We will only get valid fused headings if the magnetometer is calibrated
-//      return Rotation2d.fromDegrees(m_navx.getFusedHeading());
-//    }
+        //If this doesn't work try -m_navx.getYaw();
 
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-   return Rotation2d.fromDegrees(-m_navx.getYaw());
-  }
-
-  public double normalizeAngle(double angle){
-	  // Normalizes angle between [-pi , pi]
-	  angle %= (Math.PI*2);
-	  angle = (angle + 2 * Math.PI) % (Math.PI*2);
-
-	  if (angle > Math.PI){
-		angle -= Math.PI * 2;
-	  }
-	  return angle;
+   return Rotation2d.fromDegrees(ypr[0]);
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
     m_chassisSpeeds = chassisSpeeds;
+    
   }
 
   @Override
   public void periodic() {
-    SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
+        boolean freezeChassis = freezeState(m_chassisSpeeds);
+        SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+        if(freezeChassis){
+                states[0].angle = lstates[0].angle;
+                states[1].angle = lstates[1].angle;
+                states[2].angle = lstates[2].angle;
+                states[3].angle = lstates[3].angle;
+        }else{
+                SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
+                lstates = states;
+        }     
+        
 
     //System.out.println("speed being set: " + states[0].speedMetersPerSecond);
 
@@ -192,4 +200,16 @@ public class Drivetrain extends SubsystemBase {
     m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
     m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
   }
+
+  private boolean freezeState(ChassisSpeeds chassisSpeeds){
+          if(Math.abs(chassisSpeeds.omegaRadiansPerSecond) +
+          Math.abs(chassisSpeeds.vxMetersPerSecond) +
+          Math.abs(chassisSpeeds.vyMetersPerSecond) < Constants.DRIVETRAIN_INPUT_DEADBAND){
+                return true;
+          }else{
+                return false;
+          }
+
+  }
+
 }

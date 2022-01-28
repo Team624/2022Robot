@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.Climb.IdleClimb;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
-import frc.robot.commands.Drivetrain.VisionTurn;
+import frc.robot.commands.Drivetrain.PositionTurn;
 import frc.robot.commands.Feeder.IdleFeeder;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShooter;
@@ -36,6 +36,7 @@ public class RobotContainer {
   private final Shooter m_shooter = new Shooter();
 
   public final XboxController d_controller = new XboxController(0);
+  //private final XboxController d_controller = new XboxController(0);
   private final XboxController m_controller = new XboxController(1);
 
   /**
@@ -52,13 +53,13 @@ public class RobotContainer {
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-            m_drivetrainSubsystem,
-            () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+        m_drivetrainSubsystem, 
+        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+        () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER
     ));
 
-    // Configure the button bindings
+    // Configure the button bindings  
     configureButtonBindings();
   }
 
@@ -70,15 +71,15 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Back button zeros the gyroscope
-  
     new Button(d_controller::getAButton)
-            // No requirements because we don't need to interrupt anything
-            .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+    //         // No requirements because we don't need to interrupt anything
+             .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+    
 
-    new Button(d_controller::getYButton).whenHeld(new VisionTurn(
-      m_drivetrainSubsystem,
-      () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND
+    new Button(d_controller::getYButton).whenHeld(new PositionTurn(
+       m_drivetrainSubsystem,
+       () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+       () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER
     ));
   }
 
@@ -106,7 +107,7 @@ public class RobotContainer {
 
   private static double modifyAxis(double value) {
     // Deadband
-    value = deadband(value, 0.02);
+    value = deadband(value, Constants.DRIVETRAIN_INPUT_DEADBAND);
 
     // Square the axis
     value = Math.copySign(value * value, value);

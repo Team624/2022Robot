@@ -53,21 +53,16 @@ public class Drivetrain extends SubsystemBase {
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
   private SwerveModuleState[] lstates = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
-  private ShuffleboardTab tab;
-  private NetworkTableEntry getRotationConts;
-  private NetworkTableEntry rotationP;
-  private NetworkTableEntry rotationI;
-  private NetworkTableEntry rotationD;
+  private ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+  private NetworkTableEntry getRotationConts = tab.add("Set Constants", false).withPosition(8, 0).getEntry();
+  private NetworkTableEntry rotationP = tab.add("Tracking P", 0.0).withPosition(8, 1).getEntry();;
+  private NetworkTableEntry rotationI = tab.add("Tracking I", 0.0).withPosition(8, 2).getEntry();;
+  private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();;
 
   private boolean isCreepin = false;
 
   public Drivetrain() {
-          ahrs = new AHRS(edu.wpi.first.wpilibj.SPI.Port.kMXP);
-          tab = Shuffleboard.getTab("Drivetrain");
-          getRotationConts = tab.add("Set Constants", false).getEntry();
-          rotationP = tab.add("Tracking P", 0.0).getEntry();
-          rotationI = tab.add("Tracking I", 0.0).getEntry();
-          rotationD = tab.add("Tracking D", 0.0).getEntry();
+          ahrs = new AHRS(edu.wpi.first.wpilibj.SPI.Port.kMXP); 
 
           m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                   tab.getLayout("Front Left Module", BuiltInLayouts.kList)
@@ -118,6 +113,7 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+          System.out.println(m_frontLeftModule.getSteerAngle());
           SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
           states = freezeLogic(states);
           states = creepify(states);

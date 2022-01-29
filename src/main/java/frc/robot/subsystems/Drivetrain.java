@@ -4,21 +4,27 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.vmx.AHRSJNI;
+import edu.wpi.first.wpilibj.SPI;
 
 import static frc.robot.Constants.*;
 
@@ -68,7 +74,7 @@ public class Drivetrain extends SubsystemBase {
   // The important thing about how you configure your gyroscope is that rotating the robot counter-clockwise should
   // cause the angle reading to increase until it wraps back over to zero.
   // private final PigeonIMU m_pigeon = new PigeonIMU(DRIVETRAIN_PIGEON_ID);
-  private final PigeonIMU m_pImu = new PigeonIMU(25);
+  private AHRS ahrs;
   // These are our modules. We initialize them in the constructor.
   private final SwerveModule m_frontLeftModule;
   private final SwerveModule m_frontRightModule;
@@ -78,9 +84,20 @@ public class Drivetrain extends SubsystemBase {
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
   private SwerveModuleState[] lstates = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
+  private ShuffleboardTab tab;
+  private NetworkTableEntry getRotationConts;
+  private NetworkTableEntry rotationP;
+  private NetworkTableEntry rotationI;
+  private NetworkTableEntry rotationD;
+
+
   public Drivetrain() {
-    
-    ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+          ahrs = new AHRS(edu.wpi.first.wpilibj.SPI.Port.kMXP);
+          tab = Shuffleboard.getTab("Drivetrain");
+          getRotationConts = tab.add("Set Constants", false).getEntry();
+          rotationP = tab.add("Tracking P", 0.0).getEntry();
+          rotationI = tab.add("Tracking I", 0.0).getEntry();
+          rotationD = tab.add("Tracking D", 0.0).getEntry();
 
     // There are 4 methods you can call to create your swerve modules.
     // The method you use depends on what motors you are using.
@@ -104,7 +121,7 @@ public class Drivetrain extends SubsystemBase {
     m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
             tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                 .withSize(2, 4)
-                .withPosition(2, 0),
+                .withPosition(0, 0),
                 Mk4SwerveModuleHelper.GearRatio.L2,
                 FRONT_LEFT_MODULE_DRIVE_MOTOR, 
                 FRONT_LEFT_MODULE_STEER_MOTOR, 
@@ -144,6 +161,8 @@ public class Drivetrain extends SubsystemBase {
             BACK_RIGHT_MODULE_STEER_ENCODER,
             BACK_RIGHT_MODULE_STEER_OFFSET
     );
+
+
    }
 
   /**
@@ -152,25 +171,14 @@ public class Drivetrain extends SubsystemBase {
    */
    
    public void zeroGyroscope() {
-           m_pImu.setYaw(0.0);
-           System.out.println("im doing the thing");
+           ahrs.reset();
    }
 
   public Rotation2d getGyroscopeRotation() {
-        double[] ypr = new double[3];
-        m_pImu.getYawPitchRoll(ypr);
-        System.out.println(m_pImu.getState());
-        //FIXME - Test just printing yaw stock. Try to get the angle wrapping properly
-
-        //^this should do (-180 to 180)
-
-        // 360 - m_navx.getYaw - (540-180)
-
-        //FIXME
-        //If this doesn't work try -m_navx.getYaw();
+          System.out.println("Test: " + ahrs.getAngle());
 
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-   return Rotation2d.fromDegrees(ypr[0]);
+   return Rotation2d.fromDegrees(-ahrs.getAngle());
   }
 
   public double normalizeAngle(double angle){
@@ -185,41 +193,40 @@ public class Drivetrain extends SubsystemBase {
 
   public void drive(ChassisSpeeds chassisSpeeds) {
     m_chassisSpeeds = chassisSpeeds;
-    
   }
 
   @Override
   public void periodic() {
-        boolean freezeChassis = freezeState(m_chassisSpeeds);
-        SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
-        if(freezeChassis){
-                states[0].angle = lstates[0].angle;
-                states[1].angle = lstates[1].angle;
-                states[2].angle = lstates[2].angle;
-                states[3].angle = lstates[3].angle;
-        }else{
-                SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
-                lstates = states;
-        }     
-        
-
-    //System.out.println("speed being set: " + states[0].speedMetersPerSecond);
-
-    m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
-    m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
-    m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
-    m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
+          SwerveModuleState[] states = freezeLogic();
+          SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);       
+          m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
+          m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
+          m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
+          m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
   }
 
-  private boolean freezeState(ChassisSpeeds chassisSpeeds){
-          if(Math.abs(chassisSpeeds.omegaRadiansPerSecond) +
-          Math.abs(chassisSpeeds.vxMetersPerSecond) +
-          Math.abs(chassisSpeeds.vyMetersPerSecond) < Constants.DRIVETRAIN_INPUT_DEADBAND){
-                return true;
-          }else{
-                return false;
-          }
+  private SwerveModuleState[] freezeLogic(){
+          SwerveModuleState[] current = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+          if(Math.abs(m_chassisSpeeds.omegaRadiansPerSecond) +
+             Math.abs(m_chassisSpeeds.vxMetersPerSecond) +
+             Math.abs(m_chassisSpeeds.vyMetersPerSecond) < Constants.DRIVETRAIN_INPUT_DEADBAND){
+                        current[0].angle = lstates[0].angle;
+                        current[1].angle = lstates[1].angle;
+                        current[2].angle = lstates[2].angle;
+                        current[3].angle = lstates[3].angle;
+         }else{
+                 lstates = current;
+         }
+         return current; 
+  }
 
+  public PIDController getRotationPID(){
+          if(getRotationConts.getBoolean(false)){
+                return new PIDController(rotationP.getDouble(0.0), rotationI.getDouble(0.0), rotationD.getDouble(0.0));
+          }else{
+                  return new PIDController(.7, 0, 0);
+          }
+          
   }
 
 }

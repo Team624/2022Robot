@@ -74,6 +74,12 @@ public class RobotContainer {
     new Button(d_controller::getAButton)
     //         // No requirements because we don't need to interrupt anything
              .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+
+    new Button(d_controller::getRightBumper)
+              .whenPressed(m_drivetrainSubsystem::yesCreepMode);
+
+    new Button(d_controller::getLeftBumper)
+              .whenReleased(m_drivetrainSubsystem::noCreepMode);
     
 
     new Button(d_controller::getYButton).whenHeld(new VisionTurn(

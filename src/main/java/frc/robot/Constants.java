@@ -14,8 +14,9 @@ package frc.robot;
  */
 public final class Constants {
     public static final double DRIVETRAIN_INPUT_DEADBAND = .05;
-    public static final double DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER = .5;
-    public static final double DRIVETRAIN_INPUT_ROTATION_MULTIPLIER = .5;
+    public static final double DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER = .6;
+    public static final double DRIVETRAIN_INPUT_ROTATION_MULTIPLIER = .6;
+    public static final double DRIVETRAIN_INPUT_CREEP_MULTIPLIER = .5;
     /**
      * The left-to-right distance between the drivetrain wheels
      *

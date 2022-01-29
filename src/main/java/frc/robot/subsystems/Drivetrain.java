@@ -15,17 +15,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import com.ctre.phoenix.sensors.PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
-import com.kauailabs.vmx.AHRSJNI;
-import edu.wpi.first.wpilibj.SPI;
-
 import static frc.robot.Constants.*;
 
 public class Drivetrain extends SubsystemBase {
@@ -90,6 +85,7 @@ public class Drivetrain extends SubsystemBase {
   private NetworkTableEntry rotationI;
   private NetworkTableEntry rotationD;
 
+  private boolean isCreepin = false;
 
   public Drivetrain() {
           ahrs = new AHRS(edu.wpi.first.wpilibj.SPI.Port.kMXP);
@@ -175,7 +171,6 @@ public class Drivetrain extends SubsystemBase {
    }
 
   public Rotation2d getGyroscopeRotation() {
-          System.out.println("Test: " + ahrs.getAngle());
 
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
    return Rotation2d.fromDegrees(-ahrs.getAngle());
@@ -197,7 +192,9 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-          SwerveModuleState[] states = freezeLogic();
+        SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+          states = freezeLogic(states);
+          states = creepify(states);
           SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);       
           m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
           m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
@@ -205,8 +202,7 @@ public class Drivetrain extends SubsystemBase {
           m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
   }
 
-  private SwerveModuleState[] freezeLogic(){
-          SwerveModuleState[] current = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+  private SwerveModuleState[] freezeLogic(SwerveModuleState[] current){
           if(Math.abs(m_chassisSpeeds.omegaRadiansPerSecond) +
              Math.abs(m_chassisSpeeds.vxMetersPerSecond) +
              Math.abs(m_chassisSpeeds.vyMetersPerSecond) < Constants.DRIVETRAIN_INPUT_DEADBAND){
@@ -227,6 +223,24 @@ public class Drivetrain extends SubsystemBase {
                   return new PIDController(.7, 0, 0);
           }
           
+  }
+
+  public void yesCreepMode(){
+        isCreepin = true;
+  }
+
+  public void noCreepMode(){
+          isCreepin = false;
+  }
+
+  private SwerveModuleState[] creepify(SwerveModuleState[] state){
+          SwerveModuleState[] current = state;
+        if(isCreepin){
+                for(int i = 0; i < 4; i++){
+                        current[i].speedMetersPerSecond *= Constants.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
+                }
+        }
+        return current;
   }
 
 }

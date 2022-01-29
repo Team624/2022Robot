@@ -17,7 +17,7 @@ public class PositionTurn extends CommandBase {
   private final DoubleSupplier m_translationXSupplier;
   private final DoubleSupplier m_translationYSupplier;
 
-  private final PIDController pid = new PIDController(0.07, 0, 0);
+  private PIDController pid;
 
   /** Creates a new PositionTurn. */
   public PositionTurn(Drivetrain drivetrainSubsystem, DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier) {
@@ -30,8 +30,8 @@ public class PositionTurn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //FIXME This is a thing
-    pid.enableContinuousInput(180, 540);
+    pid = m_drivetrainSubsystem.getRotationPID();
+    pid.enableContinuousInput(-360, 360);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,7 +48,7 @@ public class PositionTurn extends CommandBase {
   }
 
   private double getRotationPID(){
-    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), 360.0);
+    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() % 360.0, 360.0);
   }
 
   // Called once the command ends or is interrupted.

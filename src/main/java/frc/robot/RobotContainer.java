@@ -54,9 +54,9 @@ public class RobotContainer {
     // Right stick X axis -> rotation
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem, 
-        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-        () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER
+        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+        () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER
     ));
 
     // Configure the button bindings  
@@ -78,14 +78,13 @@ public class RobotContainer {
     new Button(d_controller::getRightBumper)
               .whenPressed(m_drivetrainSubsystem::yesCreepMode);
 
-    new Button(d_controller::getLeftBumper)
+    new Button(d_controller::getRightBumper)
               .whenReleased(m_drivetrainSubsystem::noCreepMode);
     
-
     new Button(d_controller::getYButton).whenHeld(new VisionTurn(
        m_drivetrainSubsystem,
-       () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-       () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER
+       () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+       () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER
     ));
   }
 
@@ -113,7 +112,7 @@ public class RobotContainer {
 
   private static double modifyAxis(double value) {
     // Deadband
-    value = deadband(value, Constants.DRIVETRAIN_INPUT_DEADBAND);
+    value = deadband(value, Constants.Drivetrain.DRIVETRAIN_INPUT_DEADBAND);
 
     // Square the axis
     value = Math.copySign(value * value, value);

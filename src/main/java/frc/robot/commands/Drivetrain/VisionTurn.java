@@ -17,7 +17,7 @@ public class VisionTurn extends CommandBase {
   private final DoubleSupplier m_translationXSupplier;
   private final DoubleSupplier m_translationYSupplier;
 
-  private final PIDController pid = new PIDController(0.07, 0, 0);
+  private final PIDController pid = new PIDController(0.1, 0.01, 0.0035);
 
   /** Creates a new PositionTurn. */
   public VisionTurn(Drivetrain drivetrainSubsystem,
@@ -32,7 +32,9 @@ public class VisionTurn extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+   
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

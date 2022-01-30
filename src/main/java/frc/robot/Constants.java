@@ -14,6 +14,13 @@ package frc.robot;
  */
 public final class Constants {
 
+    public static final class Shooter{
+        public static final double[][] distanceOutputMatrix = {
+            {50, 100},
+            {60, 110}
+        };
+    }
+
     public static final class Drivetrain{
         public static final double DRIVETRAIN_INPUT_DEADBAND = .05;
         public static final double DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER = .6;

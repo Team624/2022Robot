@@ -17,7 +17,7 @@ public class VisionTurn extends CommandBase {
   private final DoubleSupplier m_translationXSupplier;
   private final DoubleSupplier m_translationYSupplier;
 
-  private final PIDController pid = new PIDController(0.01, 0, 0);
+  private PIDController pid;
 
   /** Creates a new PositionTurn. */
   public VisionTurn(Drivetrain drivetrainSubsystem,
@@ -32,12 +32,13 @@ public class VisionTurn extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    pid = m_drivetrainSubsystem.getRotationPID();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("shit works lol");
     double wantedDeltaAngle = SmartDashboard.getEntry("/vision/rotationAngle").getDouble(0.0);
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -50,12 +51,16 @@ public class VisionTurn extends CommandBase {
   }
 
   private double getRotationPID(double wantedDeltaAngle){
-    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getRadians(), m_drivetrainSubsystem.getGyroscopeRotation().getRadians() + wantedDeltaAngle);
+    double setpoint = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() - wantedDeltaAngle;
+    System.out.println(setpoint);
+    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), setpoint);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
+  }
 
   // Returns true when the command should end.
   @Override

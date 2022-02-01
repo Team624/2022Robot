@@ -32,7 +32,7 @@ public class Auton {
         int pathCount = getPathCount();
         Path[] auto = new Path[pathCount];
         for(int i = 0; i < pathCount; i++){
-            auton[i] = cyclePath(i);
+            auto[i] = cyclePath(i);
         }
         return auto;
     }

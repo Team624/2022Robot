@@ -57,7 +57,7 @@ public class RobotContainer {
         m_drivetrainSubsystem, 
         () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
         () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-        () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER
+        () -> -modifyAxis(d_controller.getRawAxis(3)) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER
     ));
 
     // Configure the button bindings  
@@ -73,10 +73,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
     new Button(d_controller::getAButton)
              .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+
+    new Button(d_controller::getXButton)
+             .whenPressed(m_drivetrainSubsystem::setPose);
     
     // Solely for debugging. Remove in master
     new Button(d_controller::getBButton)
-              .whenPressed(m_drivetrainSubsystem::setGyro);
+              .whenPressed(m_drivetrainSubsystem::setPose);
 
     new Button(d_controller::getRightBumper)
               .whenPressed(m_drivetrainSubsystem::yesCreepMode);

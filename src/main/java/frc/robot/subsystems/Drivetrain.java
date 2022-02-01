@@ -8,6 +8,7 @@ import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -59,9 +60,9 @@ public class Drivetrain extends SubsystemBase {
 
   private ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
   private NetworkTableEntry getRotationConts = tab.add("Set Constants", false).withPosition(8, 0).getEntry();
-  private NetworkTableEntry rotationP = tab.add("Tracking P", 0.0).withPosition(8, 1).getEntry();;
-  private NetworkTableEntry rotationI = tab.add("Tracking I", 0.0).withPosition(8, 2).getEntry();;
-  private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();;
+  private NetworkTableEntry rotationP = tab.add("Tracking P", 0.0).withPosition(8, 1).getEntry();
+  private NetworkTableEntry rotationI = tab.add("Tracking I", 0.0).withPosition(8, 2).getEntry();
+  private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();
 
   private boolean isCreepin = false;
 
@@ -123,8 +124,7 @@ public class Drivetrain extends SubsystemBase {
           m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
           m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
           m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
-          m_odometry.update(getGyroscopeRotation(), states);
-          
+          m_odometry.update(getGyroscopeRotation(), states);          
   }
 
   private SwerveModuleState[] freezeLogic(SwerveModuleState[] current){
@@ -187,8 +187,19 @@ public class Drivetrain extends SubsystemBase {
           return angle;
   }
 
-  public void setGyro(){
-          ahrs.setAngleAdjustment(SmartDashboard.getEntry("auton/startAngle").getDouble(0.0));
+  public void setPose(){
+          zeroGyroscope();
+          double[] startPosition = SmartDashboard.getEntry("/auto/robot_set_pose").getDoubleArray(new double[3]);
+          Rotation2d newRot = new Rotation2d(startPosition[2]);
+          Pose2d newPose = new Pose2d(startPosition[0], startPosition[1], newRot);
+          m_odometry.resetPosition(newPose, newRot);
+          ahrs.setAngleAdjustment(newRot.getDegrees());
+  }
+
+  public void updatePose(){
+        SmartDashboard.putNumber("/pose/th", getGyroscopeRotation().getRadians());
+        SmartDashboard.putNumber("/pose/x", m_odometry.getPoseMeters().getX());
+        SmartDashboard.putNumber("/pose/y", m_odometry.getPoseMeters().getY());
   }
 
 }

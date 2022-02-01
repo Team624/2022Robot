@@ -14,9 +14,9 @@ public class Auton {
 
     private Path[] auton;
 
-    private ShuffleboardTab smartTab = Shuffleboard.getTab("SmartDashboard");
+    private ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
   
-    private NetworkTableEntry autoChoiceGet = smartTab.add("Auton Choice", 10).withPosition(0, 0).withWidget(BuiltInWidgets.kNumberBar).getEntry();
+    private NetworkTableEntry autoChoiceGet = autoTab.add("Auton Choice", 10).withPosition(0, 0).withWidget(BuiltInWidgets.kNumberBar).getEntry();
 
     public Auton(){
         sendAutoChoice();
@@ -26,14 +26,13 @@ public class Auton {
     private void sendAutoChoice(){
       Number autoChoice = autoChoiceGet.getNumber(10.0);
       SmartDashboard.putNumber("/auto/select", (double)autoChoice);
-      SmartDashboard.putBoolean("/auton/state", true);
     }
 
     private Path[] getAuto(){
         int pathCount = getPathCount();
         Path[] auto = new Path[pathCount];
         for(int i = 0; i < pathCount; i++){
-            auton[i] = cyclePath(i);
+            auto[i] = cyclePath(i);
         }
         return auto;
     }
@@ -59,8 +58,7 @@ public class Auton {
             SmartDashboard.getEntry(pathString + "Y").getDouble(0.0),
             SmartDashboard.getEntry(pathString + "Vx").getDouble(0.0), 
             SmartDashboard.getEntry(pathString + "Vy").getDouble(0.0), 
-            SmartDashboard.getEntry(pathString + "Heading").getDouble(0.0), 
-            SmartDashboard.getEntry(pathString + "Omega").getDouble(0.0), 
+            SmartDashboard.getEntry(pathString + "Heading").getDouble(0.0),  
             SmartDashboard.getEntry(pathString + "Vision").getDouble(0.0)
         );
         return point;

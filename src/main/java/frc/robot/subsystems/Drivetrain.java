@@ -8,15 +8,18 @@ import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.kauailabs.navx.frc.AHRS;
@@ -43,7 +46,9 @@ public class Drivetrain extends SubsystemBase {
           new Translation2d(-Constants.Drivetrain.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -Constants.Drivetrain.DRIVETRAIN_WHEELBASE_METERS / 2.0)
   );
 
-  private AHRS ahrs;
+  private AHRS ahrs = new AHRS(edu.wpi.first.wpilibj.SPI.Port.kMXP);
+
+  private SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(m_kinematics, ahrs.getRotation2d());
 
   private final SwerveModule m_frontLeftModule;
   private final SwerveModule m_frontRightModule;
@@ -55,15 +60,13 @@ public class Drivetrain extends SubsystemBase {
 
   private ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
   private NetworkTableEntry getRotationConts = tab.add("Set Constants", false).withPosition(8, 0).getEntry();
-  private NetworkTableEntry rotationP = tab.add("Tracking P", 0.0).withPosition(8, 1).getEntry();;
-  private NetworkTableEntry rotationI = tab.add("Tracking I", 0.0).withPosition(8, 2).getEntry();;
-  private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();;
+  private NetworkTableEntry rotationP = tab.add("Tracking P", 0.0).withPosition(8, 1).getEntry();
+  private NetworkTableEntry rotationI = tab.add("Tracking I", 0.0).withPosition(8, 2).getEntry();
+  private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();
 
   private boolean isCreepin = false;
 
   public Drivetrain() {
-          ahrs = new AHRS(edu.wpi.first.wpilibj.SPI.Port.kMXP); 
-
           m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                   tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                   .withSize(2, 4)
@@ -113,7 +116,6 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-          System.out.println(m_frontLeftModule.getSteerAngle());
           SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
           states = freezeLogic(states);
           states = creepify(states);
@@ -122,6 +124,7 @@ public class Drivetrain extends SubsystemBase {
           m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
           m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
           m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
+          m_odometry.update(getGyroscopeRotation(), states);          
   }
 
   private SwerveModuleState[] freezeLogic(SwerveModuleState[] current){
@@ -149,6 +152,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void zeroGyroscope() {
+          ahrs.setAngleAdjustment(0.0);
           ahrs.reset();
   }
 
@@ -181,6 +185,21 @@ public class Drivetrain extends SubsystemBase {
                   angle -= Math.PI * 2;
           }
           return angle;
+  }
+
+  public void setPose(){
+          zeroGyroscope();
+          double[] startPosition = SmartDashboard.getEntry("/auto/robot_set_pose").getDoubleArray(new double[3]);
+          Rotation2d newRot = new Rotation2d(startPosition[2]);
+          Pose2d newPose = new Pose2d(startPosition[0], startPosition[1], newRot);
+          m_odometry.resetPosition(newPose, newRot);
+          ahrs.setAngleAdjustment(newRot.getDegrees());
+  }
+
+  public void updatePose(){
+        SmartDashboard.putNumber("/pose/th", getGyroscopeRotation().getRadians());
+        SmartDashboard.putNumber("/pose/x", m_odometry.getPoseMeters().getX());
+        SmartDashboard.putNumber("/pose/y", m_odometry.getPoseMeters().getY());
   }
 
 }

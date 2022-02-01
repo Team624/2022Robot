@@ -7,9 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.Climb.IdleClimb;
+import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Feeder.IdleFeeder;
@@ -20,6 +20,7 @@ import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.utility.Auton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -56,7 +57,7 @@ public class RobotContainer {
         m_drivetrainSubsystem, 
         () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
         () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-        () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER
+        () -> -modifyAxis(d_controller.getRawAxis(3)) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER
     ));
 
     // Configure the button bindings  
@@ -70,10 +71,15 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Back button zeros the gyroscope
     new Button(d_controller::getAButton)
-    //         // No requirements because we don't need to interrupt anything
              .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+
+    new Button(d_controller::getXButton)
+             .whenPressed(m_drivetrainSubsystem::setPose);
+    
+    // Solely for debugging. Remove in master
+    new Button(d_controller::getBButton)
+              .whenPressed(m_drivetrainSubsystem::setPose);
 
     new Button(d_controller::getRightBumper)
               .whenPressed(m_drivetrainSubsystem::yesCreepMode);
@@ -93,9 +99,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return new InstantCommand();
+  public Command getAutonomousDriveCommand(Auton auton) {
+    return new AutonomousDrive(m_drivetrainSubsystem, auton);
   }
 
   private static double deadband(double value, double deadband) {

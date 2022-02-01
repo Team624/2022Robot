@@ -8,13 +8,22 @@ package frc.robot.utility;
 public class Path {
 
     private PathPoint[] path;
+    private int pathId;
 
-    public Path(PathPoint[] points){
+    public Path(PathPoint[] points, int pathId){
         path = points;
+        this.pathId = pathId;
     }
 
     public PathPoint getPoint(int point){
         return path[point];
     }
 
+    public int getPathId() {
+        return pathId;
+    }
+
+    public int getLength() {
+        return path.length;
+    }
 }

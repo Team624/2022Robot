@@ -63,6 +63,8 @@ public final class Constants {
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 10;
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 21;
         public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(15);
+
+        public static final double TRANSLATION_TUNING_CONSTANT = 1;
     }
     
 }

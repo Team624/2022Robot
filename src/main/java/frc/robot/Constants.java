@@ -65,6 +65,7 @@ public final class Constants {
         public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(15);
 
         public static final double TRANSLATION_TUNING_CONSTANT = 1;
+        public static final double PATH_POINT_RANGE = 0.1;
     }
     
 }

@@ -16,7 +16,6 @@ public class AutonPointCommand extends CommandBase {
     private final int point;
     private final PIDController pid = new PIDController(0.01, 0, 0);
 
-    // TODO: Get actual data for these
     private double currentX = 0;
     private double currentY = 0;
 
@@ -37,6 +36,9 @@ public class AutonPointCommand extends CommandBase {
 
     @Override
     public void execute () {
+        currentX = m_drivetrainSubsystem.getSwervePose()[0];
+        currentY = m_drivetrainSubsystem.getSwervePose()[1];
+
         PathPoint pathPoint = path.getPoint(point);
         double[] nearestPoint = getClosestPointOnLine(pathPoint.getX(), pathPoint.getY(), path.getPoint(point - 1).getX(), path.getPoint(point - 1).getY(), currentX, currentY);
 
@@ -44,17 +46,42 @@ public class AutonPointCommand extends CommandBase {
         double velocityX = pathPoint.getVx() + (nearestPoint[0] - currentX) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
         double velocityY = pathPoint.getVy() + (nearestPoint[1] - currentY) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
 
-        double wantedAngle = m_drivetrainSubsystem.normalizeAngle(0.0);
-        // Check left and right angles to see which way of rotation will make it quicker (subtract from 2pi)
-        double error = m_drivetrainSubsystem.getGyroscopeRotation().getRadians() - wantedAngle;
-        double wantedDeltaAngle = 0.0;
+        autonDrive(velocityX, velocityY, pathPoint.getHeading());
+    }
 
-        m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
-            velocityX, 
-            velocityY, 
-            getRotationPID(wantedDeltaAngle), 
+    private void autonDrive(double xVelocity, double yVelocity, double theta){
+        double wantedAngle = m_drivetrainSubsystem.normalizeAngle(theta);
+        // Check left and right angles to see which way of rotation will make it quicker (subtract from pi)
+        double errorA = wantedAngle - m_drivetrainSubsystem.normalizeAngle(m_drivetrainSubsystem.getGyroscopeRotation().getRadians());
+        double errorB = errorA - (Math.PI * 2);
+        double errorC = errorA + (Math.PI * 2);
+    
+        double wantedDeltaAngle = 0.0;
+        if (Math.abs(errorA) < Math.abs(errorB)){
+          if (Math.abs(errorA) < Math.abs(errorC)){
+            wantedDeltaAngle = errorA;
+          }
+          else{
+            wantedDeltaAngle = errorC;
+          }
+        }
+        else{
+          if (Math.abs(errorB) < Math.abs(errorC)){
+            wantedDeltaAngle = errorB;
+          }
+          else{
+            wantedDeltaAngle = errorC;
+          }
+        }
+    
+        m_drivetrainSubsystem.drive(
+          ChassisSpeeds.fromFieldRelativeSpeeds(
+            xVelocity,
+            yVelocity,
+            getRotationPID(wantedDeltaAngle * (180/Math.PI)), // Convert from radians to degrees
             m_drivetrainSubsystem.getGyroscopeRotation()
-        ));
+          )
+        );
     }
 
     private double getRotationPID(double wantedDeltaAngle){

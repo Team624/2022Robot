@@ -202,4 +202,9 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putNumber("/pose/y", m_odometry.getPoseMeters().getY());
   }
 
+  public double[] getSwervePose(){
+        double pose[] = {m_odometry.getPoseMeters().getX(), m_odometry.getPoseMeters().getY()};
+        return pose;
+  }
+
 }

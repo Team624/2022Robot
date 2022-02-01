@@ -40,7 +40,7 @@ public class Auton {
 
     private Path cyclePath(int pathNum){
         PathPoint[] points = cyclePoints(pathNum);
-        return new Path(points);
+        return new Path(points, pathNum);
     }
 
     private PathPoint[] cyclePoints(int pathNum){

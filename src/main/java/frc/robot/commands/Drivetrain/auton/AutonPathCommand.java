@@ -19,7 +19,6 @@ public class AutonPathCommand extends CommandBase {
         this.path = path;
 
         commandGroup = new SequentialCommandGroup();
-
         for (int i = 0; i < path.getLength(); i++) {
             commandGroup.addCommands(new AutonPointCommand(drive, path, i));
         }
@@ -34,7 +33,9 @@ public class AutonPathCommand extends CommandBase {
     }
     
     @Override
-    public void execute() {}
+    public void execute() {
+        
+    }
 
     @Override
     public void end(boolean interrupted) {
@@ -43,6 +44,7 @@ public class AutonPathCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        
         return commandGroup.isFinished();
     }
 }

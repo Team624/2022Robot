@@ -116,6 +116,7 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+        System.out.println(m_odometry.getPoseMeters().getX());
           SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
           states = freezeLogic(states);
           states = creepify(states);
@@ -189,8 +190,8 @@ public class Drivetrain extends SubsystemBase {
 
   public void setPose(){
           zeroGyroscope();
-          double[] startPosition = SmartDashboard.getEntry("/auto/robot_set_pose").getDoubleArray(new double[3]);
-          Rotation2d newRot = new Rotation2d(startPosition[2]);
+          double[] startPosition = SmartDashboard.getEntry("/pathTable/startPose").getDoubleArray(new double[3]);
+          Rotation2d newRot = new Rotation2d(-startPosition[2]);
           Pose2d newPose = new Pose2d(startPosition[0], startPosition[1], newRot);
           m_odometry.resetPosition(newPose, newRot);
           ahrs.setAngleAdjustment(newRot.getDegrees());
@@ -203,7 +204,8 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public double[] getSwervePose(){
-        double pose[] = {m_odometry.getPoseMeters().getX(), m_odometry.getPoseMeters().getY()};
+          
+        double[] pose = {m_odometry.getPoseMeters().getX(), m_odometry.getPoseMeters().getY()};
         return pose;
   }
 

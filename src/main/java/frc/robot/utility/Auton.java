@@ -12,23 +12,26 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 /** Add your docs here. */
 public class Auton {
 
-    private Path[] auton;
+    public Path[] auton;
 
     private ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
   
-    private NetworkTableEntry autoChoiceGet = autoTab.add("Auton Choice", 10).withPosition(0, 0).withWidget(BuiltInWidgets.kNumberBar).getEntry();
+    private NetworkTableEntry autoChoiceGet = autoTab.add("Auton Choice", 10).withPosition(0, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
     public Auton(){
-        sendAutoChoice();
+        auton = getAuto();
+    }
+
+    public void updatePaths(){
         auton = getAuto();
     }
   
-    private void sendAutoChoice(){
+    public void sendAutoChoice(){
       Number autoChoice = autoChoiceGet.getNumber(10.0);
       SmartDashboard.putNumber("/auto/select", (double)autoChoice);
     }
 
-    private Path[] getAuto(){
+    public Path[] getAuto(){
         int pathCount = getPathCount();
         Path[] auto = new Path[pathCount];
         for(int i = 0; i < pathCount; i++){

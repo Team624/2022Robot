@@ -63,6 +63,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     auton.setState(true);
+    //m_robotContainer.getTestCommand().schedule();
     m_robotContainer.getAutonomousDriveCommand(auton).schedule();
   }
 

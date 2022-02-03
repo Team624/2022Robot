@@ -16,11 +16,12 @@ public class AutonomousDrive extends CommandBase {
   private Auton auton;
 
   private Command pathCommand;
-  private Drivetrain m_drivetrainSubsystem;
+  private final Drivetrain m_drivetrainSubsystem;
   /** Creates a new AutonomousDrive. */
   public AutonomousDrive(Drivetrain drivetrainSubsystem, Auton auton) {
     this.m_drivetrainSubsystem = drivetrainSubsystem;
     this.auton = auton;
+    addRequirements(m_drivetrainSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -34,9 +35,7 @@ public class AutonomousDrive extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    m_drivetrainSubsystem.updatePose();
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

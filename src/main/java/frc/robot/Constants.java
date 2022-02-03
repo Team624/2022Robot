@@ -27,8 +27,8 @@ public final class Constants {
         public static final double DRIVETRAIN_INPUT_ROTATION_MULTIPLIER = .6;
         public static final double DRIVETRAIN_INPUT_CREEP_MULTIPLIER = .5;
 
-        public static final double visionP = .1;
-        public static final double visionI = .01;
+        public static final double visionP = .09;
+        public static final double visionI = .0;
         public static final double visionD = .0035;
         /**
          * The left-to-right distance between the drivetrain wheels
@@ -65,7 +65,7 @@ public final class Constants {
         public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(15);
 
         public static final double TRANSLATION_TUNING_CONSTANT = 1;
-        public static final double PATH_POINT_RANGE = 0.1;
+        public static final double PATH_POINT_RANGE = 0.2;
     }
     
 }

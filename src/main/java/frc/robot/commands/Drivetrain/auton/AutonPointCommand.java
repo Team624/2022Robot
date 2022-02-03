@@ -26,12 +26,13 @@ public class AutonPointCommand extends CommandBase {
         this.path = path;
         this.point = point;
         this.pathPoint = path.getPoint(point);
-        
         this.addRequirements(drive);
+        
     }
 
     @Override
     public void initialize() {
+      System.out.println("Here" + point);
         SmartDashboard.getEntry("/pathTable/status/point").setNumber(point);    
     }
 
@@ -41,10 +42,9 @@ public class AutonPointCommand extends CommandBase {
         currentY = m_drivetrainSubsystem.getSwervePose()[1];
 
         PathPoint pathPoint = path.getPoint(point);
-        System.out.println(currentX + " " + currentY);
-        double[] nearestPoint = getClosestPointOnLine(pathPoint.getX(), pathPoint.getY(), path.getPoint(point).getX(), path.getPoint(point).getY(), currentX, currentY);
+        double[] nearestPoint = getClosestPointOnLine(pathPoint.getX(), pathPoint.getY(), path.getPoint(point+1).getX(), path.getPoint(point).getY(), currentX, currentY);
 
-        // Acts like PID
+        // // Acts like PID
         double velocityX = pathPoint.getVx() + (nearestPoint[0] - currentX) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
         double velocityY = pathPoint.getVy() + (nearestPoint[1] - currentY) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
         autonDrive(velocityX, velocityY, pathPoint.getHeading());
@@ -74,7 +74,6 @@ public class AutonPointCommand extends CommandBase {
             wantedDeltaAngle = errorC;
           }
         }
-    
         m_drivetrainSubsystem.drive(
           ChassisSpeeds.fromFieldRelativeSpeeds(
             xVelocity,

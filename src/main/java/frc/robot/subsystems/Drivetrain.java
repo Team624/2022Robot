@@ -116,7 +116,6 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-        System.out.println(m_odometry.getPoseMeters().getX());
           SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
           states = freezeLogic(states);
           states = creepify(states);
@@ -125,7 +124,8 @@ public class Drivetrain extends SubsystemBase {
           m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
           m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
           m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
-          m_odometry.update(getGyroscopeRotation(), states);          
+          m_odometry.update(getGyroscopeRotation(), states);
+          updateLeoPose();          
   }
 
   private SwerveModuleState[] freezeLogic(SwerveModuleState[] current){
@@ -150,11 +150,6 @@ public class Drivetrain extends SubsystemBase {
                       }
               }
               return current;
-  }
-
-  public void zeroGyroscope() {
-          ahrs.setAngleAdjustment(0.0);
-          ahrs.reset();
   }
 
   public Rotation2d getGyroscopeRotation() {
@@ -188,16 +183,23 @@ public class Drivetrain extends SubsystemBase {
           return angle;
   }
 
+  
+  public void zeroGyroscope() {
+        ahrs.setAngleAdjustment(0.0);
+        ahrs.reset();
+}
+
   public void setPose(){
           zeroGyroscope();
-          double[] startPosition = SmartDashboard.getEntry("/pathTable/startPose").getDoubleArray(new double[3]);
+          double[] zeros = {0.0, 0.0, 0.0};
+          double[] startPosition = SmartDashboard.getEntry("/pathTable/startPose").getDoubleArray(zeros);
           Rotation2d newRot = new Rotation2d(-startPosition[2]);
           Pose2d newPose = new Pose2d(startPosition[0], startPosition[1], newRot);
           m_odometry.resetPosition(newPose, newRot);
           ahrs.setAngleAdjustment(newRot.getDegrees());
   }
 
-  public void updatePose(){
+  public void updateLeoPose(){
         SmartDashboard.putNumber("/pose/th", getGyroscopeRotation().getRadians());
         SmartDashboard.putNumber("/pose/x", m_odometry.getPoseMeters().getX());
         SmartDashboard.putNumber("/pose/y", m_odometry.getPoseMeters().getY());

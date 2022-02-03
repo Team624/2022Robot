@@ -47,8 +47,11 @@ public class AutonPointCommand extends CommandBase {
 
           // Acts like PID
           // TODO: May need to subtract (nearestPoint[0] - currentX) instead of adding
+          // TODO: Tune translation tuning constant
           double velocityX = pathPoint.getVx() + (nearestPoint[0] - currentX) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
           double velocityY = pathPoint.getVy() + (nearestPoint[1] - currentY) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
+
+          // TODO: Test if turning to a heading works- adjust pid 
           autonDrive(velocityX, velocityY, pathPoint.getHeading());
         }
     }

@@ -17,6 +17,8 @@ public class AutonomousDrive extends CommandBase {
 
   private Command pathCommand;
   private final Drivetrain m_drivetrainSubsystem;
+
+  private int currentPathInd = -1;
   /** Creates a new AutonomousDrive. */
   public AutonomousDrive(Drivetrain drivetrainSubsystem, Auton auton) {
     this.m_drivetrainSubsystem = drivetrainSubsystem;
@@ -30,13 +32,19 @@ public class AutonomousDrive extends CommandBase {
   @Override
   public void initialize() {
     m_drivetrainSubsystem.setPose();
-    pathCommand = new AutonPathCommand(m_drivetrainSubsystem, auton.auton[0]);
-    pathCommand.schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    int pathInd = auton.getStartPathIndex();
+    if (pathInd != -1 && currentPathInd != pathInd && pathInd < auton.getPathCount()){
+      System.out.println("STARTED NEW PATH: " + pathInd);
+      currentPathInd = auton.getStartPathIndex();
+      pathCommand = new AutonPathCommand(m_drivetrainSubsystem, auton.auton[currentPathInd]);
+      pathCommand.schedule();
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override

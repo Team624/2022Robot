@@ -67,7 +67,7 @@ public class Auton {
         return point;
     }
 
-    private int getPathCount(){
+    public int getPathCount(){
         return SmartDashboard.getEntry("/pathTable/numPaths").getNumber(0).intValue();
     }
 
@@ -77,6 +77,10 @@ public class Auton {
 
     public void setState(boolean state){
         SmartDashboard.putBoolean("/auton/state", state);
+    }
+
+    public int getStartPathIndex(){
+        return SmartDashboard.getEntry("/pathTable/startPathIndex").getNumber(-1).intValue();
     }
     
 }

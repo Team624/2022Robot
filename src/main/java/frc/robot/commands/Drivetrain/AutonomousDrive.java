@@ -23,6 +23,7 @@ public class AutonomousDrive extends CommandBase {
     this.auton = auton;
     addRequirements(m_drivetrainSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
+    this.addRequirements(drivetrainSubsystem);
   }
 
   // Called when the command is initially scheduled.

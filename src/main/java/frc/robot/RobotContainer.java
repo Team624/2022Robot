@@ -12,7 +12,6 @@ import frc.robot.commands.Climb.IdleClimb;
 import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
-import frc.robot.commands.Drivetrain.test;
 import frc.robot.commands.Feeder.IdleFeeder;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShooter;
@@ -106,10 +105,6 @@ public class RobotContainer {
    */
   public Command getAutonomousDriveCommand(Auton auton) {
     return new AutonomousDrive(m_drivetrainSubsystem, auton);
-  }
-
-  public Command getTestCommand() {
-    return new test(m_drivetrainSubsystem);
   }
 
   private static double deadband(double value, double deadband) {

@@ -32,7 +32,7 @@ public class AutonPointCommand extends CommandBase {
 
     @Override
     public void initialize() {
-      System.out.println("Here" + point);
+        System.out.println("At Point: " + point);
         SmartDashboard.getEntry("/pathTable/status/point").setNumber(point);    
     }
 
@@ -42,12 +42,15 @@ public class AutonPointCommand extends CommandBase {
         currentY = m_drivetrainSubsystem.getSwervePose()[1];
 
         PathPoint pathPoint = path.getPoint(point);
-        double[] nearestPoint = getClosestPointOnLine(pathPoint.getX(), pathPoint.getY(), path.getPoint(point+1).getX(), path.getPoint(point).getY(), currentX, currentY);
+        if (point < path.getLength()-1){
+          double[] nearestPoint = getClosestPointOnLine(pathPoint.getX(), pathPoint.getY(), path.getPoint(point+1).getX(), path.getPoint(point).getY(), currentX, currentY);
 
-        // // Acts like PID
-        double velocityX = pathPoint.getVx() + (nearestPoint[0] - currentX) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
-        double velocityY = pathPoint.getVy() + (nearestPoint[1] - currentY) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
-        autonDrive(velocityX, velocityY, pathPoint.getHeading());
+          // Acts like PID
+          // TODO: May need to subtract (nearestPoint[0] - currentX) instead of adding
+          double velocityX = pathPoint.getVx() + (nearestPoint[0] - currentX) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
+          double velocityY = pathPoint.getVy() + (nearestPoint[1] - currentY) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
+          autonDrive(velocityX, velocityY, pathPoint.getHeading());
+        }
     }
 
     private void autonDrive(double xVelocity, double yVelocity, double theta){
@@ -117,6 +120,9 @@ public class AutonPointCommand extends CommandBase {
     
     @Override
     public boolean isFinished() {
-        return calculateDistance(currentX, currentY, pathPoint.getX(), pathPoint.getY()) < Constants.Drivetrain.PATH_POINT_RANGE;
+        if (point == path.getLength() -1){
+          return true;
+        }
+        return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < Constants.Drivetrain.PATH_POINT_RANGE;
     }
 }

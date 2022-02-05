@@ -11,11 +11,12 @@ import frc.robot.utility.Auton;
 import frc.robot.utility.Path;
 import frc.robot.utility.PathPoint;
 import frc.robot.commands.Drivetrain.auton.*;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class AutonomousDrive extends CommandBase {
   private Auton auton;
 
-  private Command pathCommand;
+  private SequentialCommandGroup commandGroup;
   private final Drivetrain m_drivetrainSubsystem;
 
   private int currentPathInd = -1;
@@ -32,19 +33,16 @@ public class AutonomousDrive extends CommandBase {
   @Override
   public void initialize() {
     m_drivetrainSubsystem.setPose();
+    commandGroup = new SequentialCommandGroup();
+    for (int i = 0; i < auton.getPathCount(); i++){
+      commandGroup.addCommands(new AutonPathCommand(m_drivetrainSubsystem, auton.auton[i], auton));
+    }
+    commandGroup.schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("running command");
-    int pathInd = auton.getStartPathIndex();
-    if (pathInd != -1 && currentPathInd != pathInd && pathInd < auton.getPathCount()){
-      System.out.println("STARTED NEW PATH: " + pathInd);
-      currentPathInd = auton.getStartPathIndex();
-      pathCommand = new AutonPathCommand(m_drivetrainSubsystem, auton.auton[currentPathInd], auton);
-      pathCommand.schedule();
-    }
   }
 
   // Called once the command ends or is interrupted.

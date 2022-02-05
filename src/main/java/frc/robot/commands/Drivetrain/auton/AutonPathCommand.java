@@ -31,12 +31,16 @@ public class AutonPathCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        commandGroup.schedule();
-        SmartDashboard.getEntry("/pathTable/status/path").setNumber(path.getPathId());
     }
     
     @Override
-    public void execute() {}
+    public void execute() {
+        if (auton.getStartPathIndex() == path.getPathId()){
+            System.out.println("STARTED NEW PATH: " + path.getPathId());
+            commandGroup.schedule();
+            SmartDashboard.getEntry("/pathTable/status/path").setNumber(path.getPathId());
+        }
+    }
 
     @Override
     public void end(boolean interrupted) {

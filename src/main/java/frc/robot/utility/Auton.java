@@ -4,6 +4,7 @@
 
 package frc.robot.utility;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -17,6 +18,9 @@ public class Auton {
     private ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
   
     private NetworkTableEntry autoChoiceGet = autoTab.add("Auton Choice", 10).withPosition(0, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
+    private NetworkTableEntry pathPointRange = autoTab.add("Path Point Range", Constants.Drivetrain.PATH_POINT_RANGE).withWidget(BuiltInWidgets.kTextView).getEntry();
+
+    private double pathRange;
 
     public Auton(){
         auton = getAuto();
@@ -28,6 +32,7 @@ public class Auton {
   
     public void sendAutoChoice(){
       Number autoChoice = autoChoiceGet.getNumber(10.0);
+      pathRange = (double)pathPointRange.getNumber(Constants.Drivetrain.PATH_POINT_RANGE);
       SmartDashboard.putNumber("/auto/select", (double)autoChoice);
     }
 
@@ -76,11 +81,15 @@ public class Auton {
     }
 
     public void setState(boolean state){
-        SmartDashboard.putBoolean("/auton/state", state);
+        SmartDashboard.putBoolean("/auto/state", state);
     }
 
     public int getStartPathIndex(){
         return SmartDashboard.getEntry("/pathTable/startPathIndex").getNumber(-1).intValue();
+    }
+
+    public double getPathPointRange(){
+        return pathRange;
     }
     
 }

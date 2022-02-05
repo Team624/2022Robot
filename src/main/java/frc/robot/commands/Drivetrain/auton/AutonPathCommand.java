@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.utility.Auton;
 import frc.robot.utility.Path;
 
 public class AutonPathCommand extends CommandBase {
@@ -13,13 +14,16 @@ public class AutonPathCommand extends CommandBase {
     private SequentialCommandGroup commandGroup;
     private Path path;
 
-    public AutonPathCommand (Drivetrain drive, Path path) {
+    private Auton auton;
+
+    public AutonPathCommand (Drivetrain drive, Path path, Auton auton) {
         this.m_drivetrainSubsystem = drive;
         this.path = path;
+        this.auton = auton;
 
         commandGroup = new SequentialCommandGroup();
         for (int i = 0; i < path.getLength(); i++) {
-            commandGroup.addCommands(new AutonPointCommand(drive, path, i));
+            commandGroup.addCommands(new AutonPointCommand(drive, path, i, auton));
         }
 
         this.addRequirements(drive);

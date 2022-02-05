@@ -5,6 +5,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.utility.Auton;
 import frc.robot.utility.Path;
 import frc.robot.utility.PathPoint;
 import frc.robot.Constants;
@@ -16,16 +17,19 @@ public class AutonPointCommand extends CommandBase {
     private final int point;
     private final PIDController pid = new PIDController(0.01, 0, 0);
 
+    private Auton auton;
+
     private double currentX = 0;
     private double currentY = 0;
 
 
-    public AutonPointCommand (Drivetrain drive, Path path, int point) {
+    public AutonPointCommand (Drivetrain drive, Path path, int point, Auton auton) {
 
         this.m_drivetrainSubsystem = drive;
         this.path = path;
         this.point = point;
         this.pathPoint = path.getPoint(point);
+        this.auton = auton;
         this.addRequirements(drive);
         
     }
@@ -126,6 +130,6 @@ public class AutonPointCommand extends CommandBase {
         if (point == path.getLength() -1){
           return true;
         }
-        return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < Constants.Drivetrain.PATH_POINT_RANGE;
+        return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < auton.getPathPointRange();
     }
 }

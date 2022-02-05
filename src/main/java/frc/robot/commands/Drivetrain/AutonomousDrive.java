@@ -37,11 +37,12 @@ public class AutonomousDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("running command");
     int pathInd = auton.getStartPathIndex();
     if (pathInd != -1 && currentPathInd != pathInd && pathInd < auton.getPathCount()){
       System.out.println("STARTED NEW PATH: " + pathInd);
       currentPathInd = auton.getStartPathIndex();
-      pathCommand = new AutonPathCommand(m_drivetrainSubsystem, auton.auton[currentPathInd]);
+      pathCommand = new AutonPathCommand(m_drivetrainSubsystem, auton.auton[currentPathInd], auton);
       pathCommand.schedule();
     }
   }

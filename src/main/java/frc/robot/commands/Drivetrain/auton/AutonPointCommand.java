@@ -13,9 +13,8 @@ import frc.robot.Constants;
 public class AutonPointCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;
     private final Path path;
-    private final PathPoint pathPoint;
     private final int point;
-    private final PIDController pid = new PIDController(0.01, 0, 0);
+    private final PIDController pid = new PIDController(0.04, 0, 0);
 
     private Auton auton;
 
@@ -28,7 +27,6 @@ public class AutonPointCommand extends CommandBase {
         this.m_drivetrainSubsystem = drive;
         this.path = path;
         this.point = point;
-        this.pathPoint = path.getPoint(point);
         this.auton = auton;
         this.addRequirements(drive);
         
@@ -36,7 +34,7 @@ public class AutonPointCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        System.out.println("At Point: " + point);
+      System.out.println("On point: " + point);
         SmartDashboard.getEntry("/pathTable/status/point").setNumber(point);    
     }
 
@@ -47,43 +45,39 @@ public class AutonPointCommand extends CommandBase {
 
         PathPoint pathPoint = path.getPoint(point);
         if (point < path.getLength()-1){
-          double[] nearestPoint = getClosestPointOnLine(pathPoint.getX(), pathPoint.getY(), path.getPoint(point+1).getX(), path.getPoint(point).getY(), currentX, currentY);
+          double[] nearestPoint = getClosestPointOnLine(pathPoint.getX(), pathPoint.getY(), path.getPoint(point+1).getX(), path.getPoint(point + 1).getY(), currentX, currentY);
 
-          // Acts like PID
-          // TODO: May need to subtract (nearestPoint[0] - currentX) instead of adding
-          // TODO: Tune translation tuning constant
           double velocityX = pathPoint.getVx() + (nearestPoint[0] - currentX) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
           double velocityY = pathPoint.getVy() + (nearestPoint[1] - currentY) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
-
-          // TODO: Test if turning to a heading works- adjust pid 
+ 
           autonDrive(velocityX, velocityY, pathPoint.getHeading());
         }
     }
 
     private void autonDrive(double xVelocity, double yVelocity, double theta){
         double wantedAngle = m_drivetrainSubsystem.normalizeAngle(theta);
+        System.out.println("WantedAngle: " + wantedAngle);
+        System.out.println("CurrentAngle: " + m_drivetrainSubsystem.normalizeAngle(m_drivetrainSubsystem.getGyroscopeRotation().getRadians()));
         // Check left and right angles to see which way of rotation will make it quicker (subtract from pi)
         double errorA = wantedAngle - m_drivetrainSubsystem.normalizeAngle(m_drivetrainSubsystem.getGyroscopeRotation().getRadians());
         double errorB = errorA - (Math.PI * 2);
         double errorC = errorA + (Math.PI * 2);
     
         double wantedDeltaAngle = 0.0;
-        if (Math.abs(errorA) < Math.abs(errorB)){
+        /*if (Math.abs(errorA) < Math.abs(errorB)){
           if (Math.abs(errorA) < Math.abs(errorC)){
             wantedDeltaAngle = errorA;
-          }
-          else{
+          } else {
             wantedDeltaAngle = errorC;
           }
-        }
-        else{
-          if (Math.abs(errorB) < Math.abs(errorC)){
-            wantedDeltaAngle = errorB;
-          }
-          else{
-            wantedDeltaAngle = errorC;
-          }
-        }
+        } else if (Math.abs(errorB) < Math.abs(errorC)) {
+          wantedDeltaAngle = errorB;
+        } else {
+          wantedDeltaAngle = errorC;
+        }*/
+        wantedDeltaAngle = Math.abs(errorB) < Math.abs(errorC) ? errorB : errorC;
+        wantedDeltaAngle = Math.abs(wantedDeltaAngle) < Math.abs(errorA) ? wantedDeltaAngle : errorA; 
+
         m_drivetrainSubsystem.drive(
           ChassisSpeeds.fromFieldRelativeSpeeds(
             xVelocity,
@@ -106,30 +100,53 @@ public class AutonPointCommand extends CommandBase {
     }
 
     private double[] getClosestPointOnLine (double point1X, double point1Y, double point2X, double point2Y, double point3X, double point3Y) {
-        double perpSlope =  -(point2X - point1X) / (point2Y - point1Y);
-    
-        // Catch the case of the perpSlope being undefined
-        if (Double.isInfinite(perpSlope)) {
-          double[] result = {point3X, point1Y};
-          return result;
-        }
-        
-        double point4X = point3X + 1;
-        double point4Y = point3Y + perpSlope;
-        
-        double d = (point1X - point2X) * (point3X - point4Y) - (point1Y - point2Y) * (point3X - point4X);
-        double intersectionX = ((point1X * point2Y - point1Y * point2X) * (point3X - point4X) - (point1X - point2X) * (point3X * point4Y - point3Y * point4X)) / d;
-        double intersectionY = ((point1X * point2Y - point1Y * point2X) * (point3Y - point4Y) - (point1Y - point2Y) * (point3X * point4Y - point3Y * point4X)) / d;
-    
-        double[] result = {intersectionX, intersectionY};
+      double perpSlope =  -(point2X - point1X) / (point2Y - point1Y);
+  
+      // Catch the case of the perpSlope being undefined
+      if (Double.isInfinite(perpSlope)) {
+        double[] result = {point3X, point1Y};
         return result;
-    }
+      }
+            
+      double point4X = point3X + 1;
+      double point4Y = point3Y + perpSlope;
+            
+      double[] L1 = line(point1X, point1Y, point2X, point2Y);
+      double[] L2 = line(point3X, point3Y, point4X, point4Y);
+  
+      double[] result = intersection(L1, L2);
+      return result;
+  }
+  
+  private double[] intersection(double[] L1, double[] L2) {
+      double D = L1[0] * L2[1] - L1[1] * L2[0];
+      double Dx = L1[2] * L2[1] - L1[1] * L2[2];
+      double Dy = L1[0] * L2[2] - L1[2] * L2[0];
+      
+      // Might return infinity if there is no intersection!
+      double x = Dx / D;
+      double y = Dy / D;
+      double[] result = {x, y};
+      return result;
+  }
+  
+  private double[] line(double point1X, double point1Y, double point2X, double point2Y) {
+      double A = point1Y - point2Y;
+      double B = point2X - point1X;
+      double C = (point1X * point2Y) - (point2X * point1Y);
+      double[] result = {A, B, -C};
+      return (result);
+  }
     
     @Override
     public boolean isFinished() {
         if (point == path.getLength() -1){
+          // if (path.getPathId() == auton.getPathCount()-1){
+          //   m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, m_drivetrainSubsystem.getGyroscopeRotation()));
+          // }
           return true;
         }
+        //System.out.println(calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()));
         return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < auton.getPathPointRange();
     }
 }

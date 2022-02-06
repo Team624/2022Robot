@@ -18,7 +18,7 @@ public class Auton {
     private ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
   
     private NetworkTableEntry autoChoiceGet = autoTab.add("Auton Choice", 10).withPosition(0, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
-    private NetworkTableEntry pathPointRange = autoTab.add("Path Point Range", Constants.Drivetrain.PATH_POINT_RANGE).withWidget(BuiltInWidgets.kTextView).getEntry();
+    private NetworkTableEntry pathPointRange = autoTab.add("Path Point Range", Constants.Drivetrain.PATH_POINT_RANGE).withPosition(1, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
     private double pathRange;
 

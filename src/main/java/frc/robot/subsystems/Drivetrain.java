@@ -166,9 +166,9 @@ public class Drivetrain extends SubsystemBase {
 
   public PIDController getRotationPID(){
         if(getRotationConts.getBoolean(false)){
-                return new PIDController(rotationP.getDouble(0.0), rotationI.getDouble(0.0), rotationD.getDouble(0.0));
+                return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
         }else{
-                return new PIDController(.7, 0, 0);
+                return new PIDController(Constants.Drivetrain.visionP, Constants.Drivetrain.visionI, Constants.Drivetrain.visionD);
         }
         
   }

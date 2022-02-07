@@ -9,6 +9,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utility.Auton;
 import frc.robot.commands.Drivetrain.auton.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class AutonomousDrive extends CommandBase {
   private Auton auton;
@@ -44,7 +45,8 @@ public class AutonomousDrive extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    commandGroup.cancel();;
+    commandGroup.cancel();
+    m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
   }
 
   // Returns true when the command should end.

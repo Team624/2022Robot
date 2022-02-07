@@ -45,8 +45,10 @@ public class AutonomousDrive extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    commandGroup.cancel();
-    m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
+    System.out.println("Main Auton Command is ended---------------");
+    // TODO: Could cause problems if auton command is immediatly canceled when commandGroups starts TEST it
+    // commandGroup.cancel();
+    // m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
   }
 
   // Returns true when the command should end.

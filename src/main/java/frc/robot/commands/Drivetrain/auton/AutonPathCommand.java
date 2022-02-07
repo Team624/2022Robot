@@ -50,6 +50,7 @@ public class AutonPathCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        commandGroup.cancel();
     }
 
     @Override

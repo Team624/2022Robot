@@ -32,16 +32,16 @@ public class AutonPathCommand extends CommandBase {
         for (int i = 0; i < path.getLength(); i++) {
             commandGroup.addCommands(new AutonPointCommand(m_drivetrainSubsystem, path, i, auton));
         }
+        System.out.println("Initialized path with " + path.getLength() + " points in it");
     }
     
     @Override
     public void execute() {
-        System.out.println(auton.getStartPathIndex() + " " + path.getPathId());
         if (auton.getStartPathIndex() == path.getPathId() && currentID != path.getPathId()){
-            currentID = path.getPathId();
             System.out.println("STARTED NEW PATH: " + path.getPathId());
             commandGroup.schedule();
             SmartDashboard.getEntry("/pathTable/status/path").setNumber(path.getPathId());
+            currentID = path.getPathId();
         }
         if (currentID != path.getPathId()){
             m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, m_drivetrainSubsystem.getGyroscopeRotation()));
@@ -54,7 +54,11 @@ public class AutonPathCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        // TODO: Has to be something going wrong here
+        // !commandGroup.isScheduled() - maybe it takes some time to schedule the command
+        //commandGroup.isFinished()
         if (!commandGroup.isScheduled() && currentID == path.getPathId()){
+            System.out.println("Finished Path:  isScheduled=" + commandGroup.isScheduled() + "   ids match=" + (currentID == path.getPathId()));
             if (path.getPathId() == auton.getPathCount()-1)
                 m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, m_drivetrainSubsystem.getGyroscopeRotation()));
             return true;

@@ -56,25 +56,13 @@ public class AutonPointCommand extends CommandBase {
 
     private void autonDrive(double xVelocity, double yVelocity, double theta){
         double wantedAngle = m_drivetrainSubsystem.normalizeAngle(theta);
-        System.out.println("WantedAngle: " + wantedAngle);
-        System.out.println("CurrentAngle: " + m_drivetrainSubsystem.normalizeAngle(m_drivetrainSubsystem.getGyroscopeRotation().getRadians()));
         // Check left and right angles to see which way of rotation will make it quicker (subtract from pi)
         double errorA = wantedAngle - m_drivetrainSubsystem.normalizeAngle(m_drivetrainSubsystem.getGyroscopeRotation().getRadians());
         double errorB = errorA - (Math.PI * 2);
         double errorC = errorA + (Math.PI * 2);
     
         double wantedDeltaAngle = 0.0;
-        /*if (Math.abs(errorA) < Math.abs(errorB)){
-          if (Math.abs(errorA) < Math.abs(errorC)){
-            wantedDeltaAngle = errorA;
-          } else {
-            wantedDeltaAngle = errorC;
-          }
-        } else if (Math.abs(errorB) < Math.abs(errorC)) {
-          wantedDeltaAngle = errorB;
-        } else {
-          wantedDeltaAngle = errorC;
-        }*/
+
         wantedDeltaAngle = Math.abs(errorB) < Math.abs(errorC) ? errorB : errorC;
         wantedDeltaAngle = Math.abs(wantedDeltaAngle) < Math.abs(errorA) ? wantedDeltaAngle : errorA; 
 
@@ -141,12 +129,9 @@ public class AutonPointCommand extends CommandBase {
     @Override
     public boolean isFinished() {
         if (point == path.getLength() -1){
-          // if (path.getPathId() == auton.getPathCount()-1){
-          //   m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, m_drivetrainSubsystem.getGyroscopeRotation()));
-          // }
+          System.out.println("LAST POINT IN PATH OF LENGTH: " + path.getLength());
           return true;
         }
-        //System.out.println(calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()));
         return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < auton.getPathPointRange();
     }
 }

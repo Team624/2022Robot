@@ -52,6 +52,10 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     auton.setState(false);
+    // TODO: Im not sure if not properly canceling the command could cause the issues but I guess we'll see lol
+    if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
+      m_robotContainer.getAutonomousDriveCommand(auton).cancel();
+    }
   }
 
   @Override

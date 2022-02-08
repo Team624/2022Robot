@@ -133,6 +133,6 @@ public class AutonPointCommand extends CommandBase {
           m_drivetrainSubsystem.lastPointCommand = true;
           return true;
         }
-        return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < auton.getPathPointRange();
+        return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < path.getPoint(point).getTolerance();
     }
 }

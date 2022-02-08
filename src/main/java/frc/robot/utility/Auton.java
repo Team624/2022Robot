@@ -67,7 +67,7 @@ public class Auton {
             SmartDashboard.getEntry(pathString + "Vx").getDouble(0.0), 
             SmartDashboard.getEntry(pathString + "Vy").getDouble(0.0), 
             SmartDashboard.getEntry(pathString + "Heading").getDouble(0.0),  
-            SmartDashboard.getEntry(pathString + "Vision").getDouble(0.0)
+            SmartDashboard.getEntry(pathString + "Tolerance").getDouble(0.0)
         );
         return point;
     }

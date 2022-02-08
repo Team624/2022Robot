@@ -2,6 +2,7 @@ package frc.robot.utility;
 
 public class PathPoint {
     private double x, y, vx, vy, heading, tolerance;
+    
     public PathPoint(double x, double y, double vx, double vy, double heading, double tolerance) {
         this.x = x;
         this.y = y;

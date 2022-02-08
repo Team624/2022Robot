@@ -39,7 +39,7 @@ public class VisionTurn extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double wantedDeltaAngle = SmartDashboard.getEntry("/vision/rotationAngle").getDouble(0.0);
+    double wantedDeltaAngle = m_drivetrainSubsystem.getVisionRotationAngle();
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
         m_translationXSupplier.getAsDouble(),
@@ -51,7 +51,7 @@ public class VisionTurn extends CommandBase {
   }
 
   private double getRotationPID(double wantedDeltaAngle){
-    double setpoint = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() - wantedDeltaAngle;
+    double setpoint = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle;
     System.out.println(setpoint);
     return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), setpoint);
   }

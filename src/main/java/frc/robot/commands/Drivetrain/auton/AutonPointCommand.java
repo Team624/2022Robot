@@ -14,7 +14,7 @@ public class AutonPointCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;
     private final Path path;
     private final int point;
-    private final PIDController pid = new PIDController(0.04, 0, 0);
+    private PIDController pid;
 
     private Auton auton;
 
@@ -35,7 +35,8 @@ public class AutonPointCommand extends CommandBase {
     @Override
     public void initialize() {
       System.out.println("On point: " + point);
-        SmartDashboard.getEntry("/pathTable/status/point").setNumber(point);    
+      SmartDashboard.getEntry("/pathTable/status/point").setNumber(point);   
+      pid = m_drivetrainSubsystem.getRotationPID(); 
     }
 
     @Override
@@ -66,18 +67,25 @@ public class AutonPointCommand extends CommandBase {
         wantedDeltaAngle = Math.abs(errorB) < Math.abs(errorC) ? errorB : errorC;
         wantedDeltaAngle = Math.abs(wantedDeltaAngle) < Math.abs(errorA) ? wantedDeltaAngle : errorA; 
 
+        double thVelocity = 0;
+        // If the vision tracking is running
+        if (m_drivetrainSubsystem.useVisionRotation()){
+          thVelocity = getRotationPID(m_drivetrainSubsystem.getVisionRotationAngle());
+        } else{
+          thVelocity = getRotationPID(wantedDeltaAngle * (180/Math.PI));
+        }
         m_drivetrainSubsystem.drive(
           ChassisSpeeds.fromFieldRelativeSpeeds(
             xVelocity,
             yVelocity,
-            getRotationPID(wantedDeltaAngle * (180/Math.PI)), // Convert from radians to degrees
+            thVelocity, // In degrees
             m_drivetrainSubsystem.getGyroscopeRotation()
           )
         );
     }
 
     private double getRotationPID(double wantedDeltaAngle){
-        return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getRadians(), m_drivetrainSubsystem.getGyroscopeRotation().getRadians() + wantedDeltaAngle);
+        return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
     }
 
     private double calculateDistance(double point1X, double point1Y, double point2X, double point2Y) {

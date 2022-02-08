@@ -66,6 +66,8 @@ public class Drivetrain extends SubsystemBase {
 
   private boolean isCreepin = false;
 
+  public boolean lastPointCommand = false;
+
   public Drivetrain() {
           m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                   tab.getLayout("Front Left Module", BuiltInLayouts.kList)

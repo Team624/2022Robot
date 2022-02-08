@@ -130,6 +130,7 @@ public class AutonPointCommand extends CommandBase {
     public boolean isFinished() {
         if (point == path.getLength() -1){
           System.out.println("LAST POINT IN PATH OF LENGTH: " + path.getLength());
+          m_drivetrainSubsystem.lastPointCommand = true;
           return true;
         }
         return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < auton.getPathPointRange();

@@ -51,7 +51,7 @@ public class AutonPathCommand extends CommandBase {
         }
         if (currentID != path.getPathId()){
             // When the path is not currently running
-            if (m_drivetrainSubsystem.useVisionRotation()){
+            if (auton.getShooterState() == "prime" || auton.getShooterState() == "shoot"){
                 double wantedDeltaAngle = m_drivetrainSubsystem.getVisionRotationAngle();
                 m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, getRotationPID(wantedDeltaAngle), m_drivetrainSubsystem.getGyroscopeRotation()));
             } else{

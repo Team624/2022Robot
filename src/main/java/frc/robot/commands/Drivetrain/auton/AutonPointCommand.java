@@ -35,8 +35,9 @@ public class AutonPointCommand extends CommandBase {
     @Override
     public void initialize() {
       System.out.println("On point: " + point);
-      SmartDashboard.getEntry("/pathTable/status/point").setNumber(point);   
-      pid = m_drivetrainSubsystem.getRotationPID(); 
+      SmartDashboard.getEntry("/pathTable/status/point").setNumber(point); 
+      SmartDashboard.getEntry("/pathTable/status/finishedPath").setBoolean(false);  
+      pid = m_drivetrainSubsystem.getRotationPathPID(); 
     }
 
     @Override
@@ -69,7 +70,7 @@ public class AutonPointCommand extends CommandBase {
 
         double thVelocity = 0;
         // If the vision tracking is running
-        if (m_drivetrainSubsystem.useVisionRotation()){
+        if (auton.getShooterState() == "prime" || auton.getShooterState() == "shoot"){
           thVelocity = getRotationPID(m_drivetrainSubsystem.getVisionRotationAngle());
         } else{
           thVelocity = getRotationPID(wantedDeltaAngle * (180/Math.PI));
@@ -139,6 +140,7 @@ public class AutonPointCommand extends CommandBase {
         if (point == path.getLength() -1){
           System.out.println("LAST POINT IN PATH OF LENGTH: " + path.getLength());
           m_drivetrainSubsystem.lastPointCommand = true;
+          SmartDashboard.getEntry("/pathTable/status/finishedPath").setBoolean(true);
           return true;
         }
         return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < path.getPoint(point).getTolerance();

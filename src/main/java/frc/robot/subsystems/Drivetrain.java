@@ -175,6 +175,10 @@ public class Drivetrain extends SubsystemBase {
         
   }
 
+  public PIDController getRotationPathPID(){
+        return new PIDController(0.06, 0, 0);
+  }
+
   public double normalizeAngle(double angle){
         //   Normalizes angle between (-pi and pi)
           angle %= (Math.PI*2);
@@ -209,10 +213,6 @@ public class Drivetrain extends SubsystemBase {
 
   public double getVisionRotationAngle(){
         return -SmartDashboard.getEntry("/vision/rotationAngle").getDouble(0.0);
-  }
-
-  public boolean useVisionRotation(){
-        return SmartDashboard.getEntry("/auto/useVisionRotation").getBoolean(false);
   }
 
   public double[] getSwervePose(){

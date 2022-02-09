@@ -91,5 +91,22 @@ public class Auton {
     public double getPathPointRange(){
         return pathRange;
     }
+
+    // States
+    public String getShooterState(){
+        return SmartDashboard.getEntry("/auto/shooter/state").getString("idle");
+    }
+
+    public String getFlywheelState(){
+        return SmartDashboard.getEntry("/auto/flywheel/state").getString("idle");
+    }
+
+    public String getHoodState(){
+        return SmartDashboard.getEntry("/auto/hood/state").getString("idle");
+    }
+
+    public String getIntakeState(){
+        return SmartDashboard.getEntry("/auto/intake/state").getString("retract");
+    }
     
 }

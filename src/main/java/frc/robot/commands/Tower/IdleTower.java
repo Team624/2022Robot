@@ -2,30 +2,30 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Intake;
+package frc.robot.commands.Tower;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Tower;
 
-public class IdleIntake extends CommandBase {
-  private final Intake intake;
-  /** Creates a new IdleIntake. */
-  public IdleIntake(Intake intake) {
-    this.intake = intake;
-    addRequirements(intake);
+public class IdleTower extends CommandBase {
+  private final Tower tower;
+  private double IRState;
+  /** Creates a new IdleTower. */
+  public IdleTower(Tower tower) {
+    this.tower = tower;
+    addRequirements(this.tower);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    intake.powerIntake();
-    intake.retractSolenoids();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    IRState = tower.checkIR();
+  }
 
   // Called once the command ends or is interrupted.
   @Override

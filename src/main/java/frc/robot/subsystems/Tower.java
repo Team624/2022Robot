@@ -13,31 +13,34 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Feeder extends SubsystemBase {
-  private CANSparkMax feederMotor = new CANSparkMax(Constants.Feeder.feederMotorID, MotorType.kBrushless);
+public class Tower extends SubsystemBase {
+  private CANSparkMax towerMotor = new CANSparkMax(Constants.Tower.towerMotorID, MotorType.kBrushless);
 
-  private ShuffleboardTab tab = Shuffleboard.getTab("Feeder");
+  private ShuffleboardTab tab = Shuffleboard.getTab("Tower");
   private NetworkTableEntry setSpeed = tab.add("Set Speed", false).withPosition(0, 0).getEntry();
-  private NetworkTableEntry feederSpeed = tab.add("Feeder Speed", 0.0).withPosition(0, 1).getEntry();
+  private NetworkTableEntry towerSpeed = tab.add("Tower Speed", 0.0).withPosition(0, 1).getEntry();
 
-  private double feederPower = Constants.Feeder.feederPower;
+  private double towerPower = Constants.Tower.towerPower;
 
-  /** Creates a new Hopper. */
-  public Feeder() {}
+  /** Creates a new Tower. */
+  public Tower() {}
 
   @Override
   public void periodic() {
     checkNT();
-    // This method will be called once per scheduler run
   }
 
   private void checkNT(){
     if(setSpeed.getBoolean(false)){
-      feederPower = feederSpeed.getDouble(Constants.Feeder.feederPower);
+      towerPower = towerSpeed.getDouble(Constants.Tower.towerPower);
     }
   }
 
-  public void powerFeeder() {
-    feederMotor.set(feederPower);
+  public double checkIR(){
+    return 0.0;
+  }
+
+  public void powerTower(){
+    towerMotor.set(towerPower);
   }
 }

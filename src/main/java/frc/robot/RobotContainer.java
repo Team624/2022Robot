@@ -4,84 +4,62 @@
 
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
-import frc.robot.commands.Climb.IdleClimb;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
+import frc.robot.commands.Feeder.ActiveFeed;
 import frc.robot.commands.Feeder.IdleFeeder;
+import frc.robot.commands.Feeder.ManualFeed;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShooter;
+import frc.robot.commands.Tower.ManualTower;
+import frc.robot.commands.Intake.DeployIntake;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Tower;
 import frc.robot.utility.Auton;
+import frc.robot.utility.TestTrigger;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and button mappings) should be declared here.
- */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
   private final Climb m_climb = new Climb();
   private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
   private final Intake m_intake = new Intake();
-  private final Feeder m_hopper = new Feeder();
+  private final Feeder m_feeder = new Feeder();
+  private final Tower m_tower = new Tower();
   private final Shooter m_shooter = new Shooter();
 
   public final XboxController d_controller = new XboxController(0);
-  //private final XboxController d_controller = new XboxController(0);
   private final XboxController m_controller = new XboxController(1);
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
   public RobotContainer() {
-    m_climb.setDefaultCommand(new IdleClimb(m_climb));
     m_intake.setDefaultCommand(new IdleIntake(m_intake));
-    m_hopper.setDefaultCommand(new IdleFeeder(m_hopper));
+    m_feeder.setDefaultCommand(new IdleFeeder(m_feeder));
     m_shooter.setDefaultCommand(new IdleShooter(m_shooter));
-    // Set up the default command for the drivetrain.
-    // The controls are for field-oriented driving:
-    // Left stick Y axis -> forward and backwards movement
-    // Left stick X axis -> left and right movement
-    // Right stick X axis -> rotation
-    // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-    //     m_drivetrainSubsystem, 
-    //     () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-    //     () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-    //     () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER
-    // ));
-
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem, 
         () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
         () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
         () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER
     ));
-
-    // Configure the button bindings  
     configureButtonBindings();
   }
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
   private void configureButtonBindings() {
     new Button(d_controller::getAButton)
              .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
     
-    // Solely for debugging. Remove in master
+    //FIXME Solely for debugging. Remove in master
     new Button(d_controller::getBButton)
               .whenPressed(m_drivetrainSubsystem::setPose);
 
@@ -96,7 +74,17 @@ public class RobotContainer {
        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER
     ));
+
+    //--------------------------------------------------
+
+    new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));
+
+    new Button(m_controller::getAButton).whenHeld(new ManualFeed(m_feeder));
+
+    new Button(m_controller::getAButton).whenHeld(new ManualTower(m_tower));
+
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

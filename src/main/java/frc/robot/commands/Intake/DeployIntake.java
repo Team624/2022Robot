@@ -7,20 +7,21 @@ package frc.robot.commands.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Intake;
 
-public class IdleIntake extends CommandBase {
+public class DeployIntake extends CommandBase {
   private final Intake intake;
-  /** Creates a new IdleIntake. */
-  public IdleIntake(Intake intake) {
+
+  /** Creates a new DeployIntake. */
+  public DeployIntake(Intake intake) {
     this.intake = intake;
-    addRequirements(intake);
+    addRequirements(this.intake);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    intake.actuateSolenoids();
     intake.powerIntake();
-    intake.retractSolenoids();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -29,7 +30,10 @@ public class IdleIntake extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    intake.retractSolenoids();
+    intake.powerIntake();
+  }
 
   // Returns true when the command should end.
   @Override

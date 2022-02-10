@@ -2,23 +2,25 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Climb;
+package frc.robot.commands.Tower;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Tower;
 
-public class IdleClimb extends CommandBase {
-  private final Climb climb;
-  /** Creates a new IdleClimb. */
-  public IdleClimb(Climb climb) {
-    this.climb = climb;
-    addRequirements(climb);
+public class ManualTower extends CommandBase {
+  private Tower tower;
+  /** Creates a new Tower. */
+  public ManualTower(Tower tower) {
+    this.tower = tower;
+    addRequirements(this.tower);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    tower.powerTower();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -26,7 +28,9 @@ public class IdleClimb extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    tower.powerTower();
+  }
 
   // Returns true when the command should end.
   @Override

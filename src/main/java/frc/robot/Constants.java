@@ -14,11 +14,44 @@ package frc.robot;
  */
 public final class Constants {
 
+    public static final class Climb{
+        //FIXME 
+        public static final int winchMotorID = 0;
+
+        public static final int bottomLeftPistonID = 0;
+        public static final int bottomRightPistonID = 1;
+        public static final int topLeftPistonID = 2;
+        public static final int topRightPistonID = 3;
+    }
+
     public static final class Shooter{
         public static final double[][] distanceOutputMatrix = {
             {50, 100},
             {60, 110}
         };
+    }
+
+    public static final class Intake{
+        //FIXME
+        public static final int intakeMotorID = 0;
+        public static final int leftIntakeSolenoidID = 0;
+        public static final int rightIntakeSolenoidID = 0;
+
+        public static final double intakePower = .2;
+    }
+
+    public static final class Feeder{
+        //FIXME
+        public static final int feederMotorID = 0;
+
+        public static final double feederPower = .2;
+    }
+
+    public static final class Tower{
+        //FIXME
+        public static final int towerMotorID = 0;
+
+        public static final double towerPower = .2;
     }
 
     public static final class Drivetrain{
@@ -46,25 +79,34 @@ public final class Constants {
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 20;
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 23;
-        //197 pointing left
-        //242 pointing lefter
-        //152 almost there
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(67); // FIXME Measure and set front left steer offset
+        //FOR PROTO
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(67);
+        //FOR FINAL
+        //public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(67);
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 19;
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 18;
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 22;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(116); // FIXME Measure and set front right steer offset
+        //FOR PROTO
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(116);
+        //FOR FINAL
+        //public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(116);
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 9; 
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 8;
         public static final int BACK_LEFT_MODULE_STEER_ENCODER = 24;
+        //FOR PROTO
         public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(356);
+        //FOR FINAL
+        //public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(356);
 
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 11;
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 10;
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 21;
+        //FOR PROTO
         public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(12.9);
+        //FOR FINAL
+        //public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(12.9);
 
         public static final double TRANSLATION_TUNING_CONSTANT = 1;
         public static final double PATH_POINT_RANGE = 0.3;

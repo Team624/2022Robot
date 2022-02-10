@@ -14,7 +14,8 @@ public class AutonPointCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;
     private final Path path;
     private final int point;
-    private final PIDController pid = new PIDController(0.04, 0, 0);
+    private PIDController pidVision;
+    private PIDController pidPathRotation;
 
     private Auton auton;
 
@@ -35,7 +36,10 @@ public class AutonPointCommand extends CommandBase {
     @Override
     public void initialize() {
       System.out.println("On point: " + point);
-        SmartDashboard.getEntry("/pathTable/status/point").setNumber(point);    
+      SmartDashboard.getEntry("/pathTable/status/point").setNumber(point); 
+      SmartDashboard.getEntry("/pathTable/status/finishedPath").setBoolean(false);  
+      pidPathRotation = m_drivetrainSubsystem.getRotationPathPID();
+      pidVision = m_drivetrainSubsystem.getRotationPID(); 
     }
 
     @Override
@@ -66,19 +70,30 @@ public class AutonPointCommand extends CommandBase {
         wantedDeltaAngle = Math.abs(errorB) < Math.abs(errorC) ? errorB : errorC;
         wantedDeltaAngle = Math.abs(wantedDeltaAngle) < Math.abs(errorA) ? wantedDeltaAngle : errorA; 
 
+        double thVelocity = 0;
+        // If the vision tracking is running
+        if (auton.getShooterState() == "prime" || auton.getShooterState() == "shoot"){
+          thVelocity = getRotationVisionPID(m_drivetrainSubsystem.getVisionRotationAngle());
+        } else{
+          thVelocity = getRotationPathPID(wantedDeltaAngle * (180/Math.PI));
+        }
         m_drivetrainSubsystem.drive(
           ChassisSpeeds.fromFieldRelativeSpeeds(
             xVelocity,
             yVelocity,
-            getRotationPID(wantedDeltaAngle * (180/Math.PI)), // Convert from radians to degrees
+            thVelocity, // In degrees
             m_drivetrainSubsystem.getGyroscopeRotation()
           )
         );
     }
 
-    private double getRotationPID(double wantedDeltaAngle){
-        return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getRadians(), m_drivetrainSubsystem.getGyroscopeRotation().getRadians() + wantedDeltaAngle);
+    private double getRotationVisionPID(double wantedDeltaAngle){
+        return pidVision.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
     }
+
+    private double getRotationPathPID(double wantedDeltaAngle){
+      return pidPathRotation.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
+  }
 
     private double calculateDistance(double point1X, double point1Y, double point2X, double point2Y) {
         double distanceX = point1X - point2X;
@@ -131,8 +146,9 @@ public class AutonPointCommand extends CommandBase {
         if (point == path.getLength() -1){
           System.out.println("LAST POINT IN PATH OF LENGTH: " + path.getLength());
           m_drivetrainSubsystem.lastPointCommand = true;
+          SmartDashboard.getEntry("/pathTable/status/finishedPath").setBoolean(true);
           return true;
         }
-        return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < auton.getPathPointRange();
+        return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < path.getPoint(point).getTolerance();
     }
 }

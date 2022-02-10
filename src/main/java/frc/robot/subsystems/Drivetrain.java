@@ -215,6 +215,10 @@ public class Drivetrain extends SubsystemBase {
         return -SmartDashboard.getEntry("/vision/rotationAngle").getDouble(0.0);
   }
 
+  public double getQuickRotationAngle(){
+        return SmartDashboard.getEntry("/vision/quickTurn").getDouble(0.0);
+  }
+
   public double[] getSwervePose(){
           
         double[] pose = {m_odometry.getPoseMeters().getX(), m_odometry.getPoseMeters().getY()};

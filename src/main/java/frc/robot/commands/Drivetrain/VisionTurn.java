@@ -21,6 +21,7 @@ public class VisionTurn extends CommandBase {
   private PIDController pidQuickTurn;
 
   private double quickTurnTolerance = 10;
+  private double visionResetTolerance = 7;
 
   /** Creates a new PositionTurn. */
   public VisionTurn(Drivetrain drivetrainSubsystem,
@@ -49,6 +50,10 @@ public class VisionTurn extends CommandBase {
     if(Math.abs(error) < quickTurnTolerance){
       // If doing normal vision targeting
       thVelocity = getRotationPID(m_drivetrainSubsystem.getVisionRotationAngle());
+      if (Math.abs(m_drivetrainSubsystem.getVisionRotationAngle()) < visionResetTolerance){
+        System.out.println("reseting robot pose");
+        
+      }
     } else{
       // Quick turn
       thVelocity = getQuickTurnPID(m_drivetrainSubsystem.getQuickRotationAngle() * (180/Math.PI));

@@ -41,8 +41,8 @@ public class FollowBall extends CommandBase {
 
   private void updateSwerve() {
     double ballDistance = Math.sqrt(Constants.Drivetrain.BALL_AREA_ONE_METER / NTBallArea.getDouble(0));
-    double relativeX = ballDistance * Math.cos(Math.toRadians(drivetrain.getRotationDegrees()-NTBallAngle.getDouble(0)));
-    double relativeY = ballDistance * Math.sin(Math.toRadians(drivetrain.getRotationDegrees()-NTBallAngle.getDouble(0)));
+    double relativeX = ballDistance * Math.cos(Math.toRadians(drivetrain.getGyroscopeRotation().getDegrees() - NTBallAngle.getDouble(0)));
+    double relativeY = ballDistance * Math.sin(Math.toRadians(drivetrain.getGyroscopeRotation().getDegrees() - NTBallAngle.getDouble(0)));
     double vx = relativeX / Constants.Drivetrain.BALL_FOLLOW_SECONDS;
     double vy = relativeY / Constants.Drivetrain.BALL_FOLLOW_SECONDS;
     double omegaRadiansPerSecond = -NTBallAngle.getDouble(0) / Constants.Drivetrain.BALL_FOLLOW_SECONDS;

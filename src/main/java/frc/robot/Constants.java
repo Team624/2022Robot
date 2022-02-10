@@ -66,6 +66,9 @@ public final class Constants {
 
         public static final double TRANSLATION_TUNING_CONSTANT = 1;
         public static final double PATH_POINT_RANGE = 0.1;
+
+        public static final double BALL_AREA_ONE_METER = 10;
+        public static final double BALL_FOLLOW_SECONDS = 10;
     }
     
 }

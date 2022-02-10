@@ -2,6 +2,7 @@ package frc.robot.commands.Drivetrain;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 
 public class FollowBall extends CommandBase {
@@ -39,13 +40,12 @@ public class FollowBall extends CommandBase {
   }
 
   private void updateSwerve() {
-    double ballDistance = Math.sqrt(ballAreaTunedArea / ballArea);
-    double time = 10;
+    double ballDistance = Math.sqrt(Constants.Drivetrain.BALL_AREA_ONE_METER / ballArea);
     double relativeX = ballDistance * Math.cos(ballAngle);
     double relativeY = ballDistance * Math.sin(ballAngle);
-    double vx = relativeX / time;
-    double vy = relativeY / time;
-    double omegaRadiansPerSecond = -ballAngle / time;
+    double vx = relativeX / Constants.Drivetrain.BALL_FOLLOW_SECONDS;
+    double vy = relativeY / Constants.Drivetrain.BALL_FOLLOW_SECONDS;
+    double omegaRadiansPerSecond = -ballAngle / Constants.Drivetrain.BALL_FOLLOW_SECONDS;
 
     drivetrain.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
       vx, 

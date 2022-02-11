@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.Constants;
 
 public class DefaultDriveCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;
@@ -27,11 +28,19 @@ public class DefaultDriveCommand extends CommandBase {
         //System.out.println(RobotContainer.deadband(-cont.getRawAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND *.5, .05));
         //System.out.println(RobotContainer.deadband(cont.getRightX() * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND *.5, .05));
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
+        double vx = m_translationXSupplier.getAsDouble();
+        double vy = m_translationYSupplier.getAsDouble();
+        double omega = m_rotationSupplier.getAsDouble();
+        if (m_drivetrainSubsystem.isCreepin){
+            vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
+            vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
+            omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
+        }
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                    m_translationXSupplier.getAsDouble(),
-                    m_translationYSupplier.getAsDouble(),
-                    m_rotationSupplier.getAsDouble(),
+                    vx,
+                    vy,
+                    omega,
                     m_drivetrainSubsystem.getGyroscopeRotation()
                 )
         );

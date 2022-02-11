@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 
 public class VisionTurn extends CommandBase {
   private final Drivetrain m_drivetrainSubsystem;
@@ -22,6 +23,8 @@ public class VisionTurn extends CommandBase {
 
   private double quickTurnTolerance = 10;
   private double visionResetTolerance = 7;
+
+  private double quickTurnValue = 0;
 
   /** Creates a new PositionTurn. */
   public VisionTurn(Drivetrain drivetrainSubsystem,
@@ -39,30 +42,44 @@ public class VisionTurn extends CommandBase {
   public void initialize() {
     pid = m_drivetrainSubsystem.getRotationPID();
     pidQuickTurn = m_drivetrainSubsystem.getRotationPathPID();
+    quickTurnValue = m_drivetrainSubsystem.getQuickRotationAngle() + m_drivetrainSubsystem.getGyroscopeRotation().getDegrees();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double thVelocity;
+    double thVelocity = 0;
 
-    double error = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() - m_drivetrainSubsystem.getQuickRotationAngle() * (180/Math.PI);
+    double error = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() - quickTurnValue;
+    System.out.println(error);
     if(Math.abs(error) < quickTurnTolerance){
       // If doing normal vision targeting
-      thVelocity = getRotationPID(m_drivetrainSubsystem.getVisionRotationAngle());
-      if (Math.abs(m_drivetrainSubsystem.getVisionRotationAngle()) < visionResetTolerance){
+      double visionRot = m_drivetrainSubsystem.getVisionRotationAngle();
+      if (Math.abs(visionRot) < visionResetTolerance){
         System.out.println("reseting robot pose");
-        
       }
+
+      quickTurnValue = m_drivetrainSubsystem.getQuickRotationAngle() + m_drivetrainSubsystem.getGyroscopeRotation().getDegrees();
+      if (visionRot == 1000){
+        visionRot = 0;
+      }
+      thVelocity = getRotationPID(visionRot);
+      
     } else{
       // Quick turn
-      thVelocity = getQuickTurnPID(m_drivetrainSubsystem.getQuickRotationAngle() * (180/Math.PI));
+      thVelocity = getQuickTurnPID(quickTurnValue);
     }
 
+    double vx = m_translationXSupplier.getAsDouble();
+    double vy = m_translationYSupplier.getAsDouble();
+    if (m_drivetrainSubsystem.isCreepin){
+      vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
+      vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
+    }
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
-        m_translationXSupplier.getAsDouble(),
-        m_translationYSupplier.getAsDouble(),
+        vx,
+        vy,
         thVelocity,
         m_drivetrainSubsystem.getGyroscopeRotation()
       )
@@ -74,7 +91,7 @@ public class VisionTurn extends CommandBase {
   }
 
   private double getQuickTurnPID(double wantedAngle){
-    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), wantedAngle);
+    return pidQuickTurn.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), wantedAngle);
   }
 
   // Called once the command ends or is interrupted.

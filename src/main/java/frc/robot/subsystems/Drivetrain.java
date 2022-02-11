@@ -8,6 +8,7 @@ import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -64,7 +65,7 @@ public class Drivetrain extends SubsystemBase {
   private NetworkTableEntry rotationI = tab.add("Tracking I", 0.0).withPosition(8, 2).getEntry();
   private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();
 
-  private boolean isCreepin = false;
+  public boolean isCreepin = false;
 
   public boolean lastPointCommand = false;
 
@@ -120,14 +121,18 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
           SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
           states = freezeLogic(states);
-          states = creepify(states);
+          //states = creepify(states);
           SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);       
           m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
           m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
           m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
           m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
-          m_odometry.update(getGyroscopeRotation(), states);
+          m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
           updateLeoPose();          
+  }
+
+  private SwerveModuleState getState(SwerveModule module) {
+          return new SwerveModuleState(module.getDriveVelocity(), new Rotation2d(module.getSteerAngle()));
   }
 
   private SwerveModuleState[] freezeLogic(SwerveModuleState[] current){
@@ -144,15 +149,15 @@ public class Drivetrain extends SubsystemBase {
           return current; 
   }
 
-  private SwerveModuleState[] creepify(SwerveModuleState[] state){
-        SwerveModuleState[] current = state;
-        if(isCreepin){
-                for(int i = 0; i < 4; i++){
-                        current[i].speedMetersPerSecond *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
-                      }
-              }
-              return current;
-  }
+//   private SwerveModuleState[] creepify(SwerveModuleState[] state){
+//         SwerveModuleState[] current = state;
+//         if(isCreepin){
+//                 for(int i = 0; i < 4; i++){
+//                         current[i].speedMetersPerSecond *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
+//                       }
+//               }
+//               return current;
+//   }
 
   public Rotation2d getGyroscopeRotation() {
           return Rotation2d.fromDegrees(-ahrs.getAngle());

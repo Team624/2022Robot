@@ -4,22 +4,18 @@
 
 package frc.robot;
 
-import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
-import frc.robot.commands.Feeder.ActiveFeed;
 import frc.robot.commands.Feeder.IdleFeeder;
 import frc.robot.commands.Feeder.ManualFeed;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShooter;
+import frc.robot.commands.Shooter.TestShoot;
+import frc.robot.commands.Tower.IdleTower;
 import frc.robot.commands.Tower.ManualTower;
 import frc.robot.commands.Intake.DeployIntake;
 import frc.robot.subsystems.Drivetrain;
@@ -29,7 +25,6 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tower;
 import frc.robot.utility.Auton;
-import frc.robot.utility.TestTrigger;
 
 public class RobotContainer {
   private final Climb m_climb = new Climb();
@@ -45,6 +40,7 @@ public class RobotContainer {
   public RobotContainer() {
     m_intake.setDefaultCommand(new IdleIntake(m_intake));
     m_feeder.setDefaultCommand(new IdleFeeder(m_feeder));
+    m_tower.setDefaultCommand(new IdleTower(m_tower));
     m_shooter.setDefaultCommand(new IdleShooter(m_shooter));
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem, 
@@ -82,6 +78,8 @@ public class RobotContainer {
     new Button(m_controller::getAButton).whenHeld(new ManualFeed(m_feeder));
 
     new Button(m_controller::getAButton).whenHeld(new ManualTower(m_tower));
+
+    new Button(m_controller::getYButton).whenHeld(new TestShoot(m_shooter));
 
   }
 

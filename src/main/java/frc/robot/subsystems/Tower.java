@@ -43,4 +43,8 @@ public class Tower extends SubsystemBase {
   public void powerTower(){
     towerMotor.set(towerPower);
   }
+
+  public void stopTower(){
+    towerMotor.stopMotor();
+  }
 }

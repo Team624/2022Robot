@@ -45,6 +45,10 @@ public class Intake extends SubsystemBase {
     intakeMotor.set(intakePower);
   }
 
+  public void stopIntake(){
+    intakeMotor.stopMotor();
+  }
+
   public void actuateSolenoids(){
     leftIntakeSolenoid.set(true);
     rightIntakeSolenoid.set(true);

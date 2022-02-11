@@ -19,7 +19,9 @@ public class IdleTower extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    tower.stopTower();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

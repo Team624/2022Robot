@@ -25,6 +25,20 @@ public final class Constants {
     }
 
     public static final class Shooter{
+        //FIXME
+        public static final int leftFlywheelMotorID = 3;
+        public static final int rightFlywheelMotorID = 13;
+        public static final int flywheelSolenoidID = 0;
+
+        public static final double kP = 0.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kF = 0.0;
+        public static final double kIzone = 0.0;
+
+        public static final double manualPercent = .1;
+        public static final double idlePercent = .2;
+
         public static final double[][] distanceOutputMatrix = {
             {50, 100},
             {60, 110}
@@ -33,7 +47,7 @@ public final class Constants {
 
     public static final class Intake{
         //FIXME
-        public static final int intakeMotorID = 0;
+        public static final int intakeMotorID = 4;
         public static final int leftIntakeSolenoidID = 0;
         public static final int rightIntakeSolenoidID = 0;
 
@@ -42,14 +56,14 @@ public final class Constants {
 
     public static final class Feeder{
         //FIXME
-        public static final int feederMotorID = 0;
+        public static final int feederMotorID = 14;
 
         public static final double feederPower = .2;
     }
 
     public static final class Tower{
         //FIXME
-        public static final int towerMotorID = 0;
+        public static final int towerMotorID = 2;
 
         public static final double towerPower = .2;
     }

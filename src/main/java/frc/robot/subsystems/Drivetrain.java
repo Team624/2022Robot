@@ -127,7 +127,7 @@ public class Drivetrain extends SubsystemBase {
           m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
           m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
           m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
-          m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
+          m_odometry.update(getGyroscopeRotation(), states);
           updateLeoPose();          
   }
 
@@ -148,16 +148,6 @@ public class Drivetrain extends SubsystemBase {
          }
           return current; 
   }
-
-//   private SwerveModuleState[] creepify(SwerveModuleState[] state){
-//         SwerveModuleState[] current = state;
-//         if(isCreepin){
-//                 for(int i = 0; i < 4; i++){
-//                         current[i].speedMetersPerSecond *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
-//                       }
-//               }
-//               return current;
-//   }
 
   public Rotation2d getGyroscopeRotation() {
           return Rotation2d.fromDegrees(-ahrs.getAngle());
@@ -218,10 +208,6 @@ public class Drivetrain extends SubsystemBase {
 
   public double getVisionRotationAngle(){
         return -SmartDashboard.getEntry("/vision/rotationAngle").getDouble(0.0);
-  }
-
-  public double getQuickRotationAngle(){
-        return SmartDashboard.getEntry("/vision/quickTurn").getDouble(0.0);
   }
 
   public double[] getSwervePose(){

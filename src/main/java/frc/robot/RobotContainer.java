@@ -76,7 +76,7 @@ public class RobotContainer {
 
     new Button(m_controller::getAButton).whenHeld(new ManualFeed(m_feeder));
 
-    new Button(m_controller::getAButton).whenHeld(new ManualTower(m_tower));
+    //new Button(m_controller::getAButton).whenHeld(new ManualTower(m_tower));
 
     new Button(m_controller::getYButton).whenHeld(new ManualShoot(m_shooter));
 

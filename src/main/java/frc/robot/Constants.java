@@ -68,11 +68,11 @@ public final class Constants {
 
         public static final double feederPower = .7;
 
-        public static final double P = 6e-5; 
+        public static final double P = 0.00003; 
         public static final double I = 0;
         public static final double D = 0; 
         public static final double Iz = 0; 
-        public static final double FF = 0.0; 
+        public static final double FF = 0.000089; 
         public static final double MaxOutput = 1; 
         public static final double MinOutput = -1;
         public static final double maxRPM = 5700;

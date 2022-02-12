@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    compressor.enableDigital();
+    //compressor.enableDigital();
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
       m_robotContainer.getAutonomousDriveCommand(auton).cancel();
     }

@@ -26,9 +26,9 @@ public class Shooter extends SubsystemBase {
 
   private TalonFX leftFlywheel = new TalonFX(Constants.Shooter.leftFlywheelMotorID);
   private TalonFX rightFlywheel = new TalonFX(Constants.Shooter.rightFlywheelMotorID);
-  private Solenoid hood = new Solenoid(PneumaticsModuleType.REVPH, Constants.Shooter.flywheelSolenoidID);
+  //private Solenoid hood = new Solenoid(PneumaticsModuleType.REVPH, Constants.Shooter.flywheelSolenoidID);
 
-  private boolean elToldo;//not a Hood
+  private boolean hoodActuated;
   private boolean isPriming;
 
   private double goalRPM;
@@ -38,7 +38,7 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry dashSetRPM = shootTab.add("Goal RPM:", 0).withPosition(0, 1).getEntry();
   private NetworkTableEntry dashCurrentRPM = shootTab.add("Current RPM:", 0).withPosition(1, 1).getEntry();
   private NetworkTableEntry dashPrime = shootTab.add("Priming?", false).withPosition(2, 1).getEntry();
-  private NetworkTableEntry manualRPM = shootTab.add("Manually Set RPM: ", 0).withPosition(0, 3).withWidget(BuiltInWidgets.kTextView).getEntry();
+  private NetworkTableEntry manualRPM = shootTab.add("Manual RPM: ", 0).withPosition(0, 3).withWidget(BuiltInWidgets.kTextView).getEntry();
   private NetworkTableEntry manualPercent = shootTab.add("Manual Percent: ", 0).withPosition(0, 3).withWidget(BuiltInWidgets.kTextView).getEntry();
 
   private NetworkTableEntry PID_P = shootTab.add("PID P",Constants.Shooter.kP).withPosition(0,2).withWidget(BuiltInWidgets.kTextView).getEntry();
@@ -109,17 +109,17 @@ public class Shooter extends SubsystemBase {
     rightFlywheel.set(TalonFXControlMode.PercentOutput, manualPercent.getDouble(Constants.Shooter.manualPercent));
   }
 
-  public void setElToldo(boolean isElToldoUp) {
-    elToldo = isElToldoUp;
-    hood.set(elToldo);
+  public void setHood(boolean isHoodUp) {
+    hoodActuated = isHoodUp;
+    //hood.set(hoodActuated);
   }
 
   public void setPriming(boolean priming) {
     dashPrime.setBoolean(priming);
   }
 
-  public boolean getElToldo() {
-    return elToldo;
+  public boolean getHood() {
+    return hoodActuated;
   }
 
   public double getRotationAngle() {

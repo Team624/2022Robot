@@ -7,19 +7,19 @@ package frc.robot.commands.Shooter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
 
-public class TestShoot extends CommandBase {
+public class IdleShoot extends CommandBase {
   private final Shooter shooter;
-  /** Creates a new TestShoot. */
-  public TestShoot(Shooter shooter) {
+  /** Creates a new IdleShooter. */
+  public IdleShoot(Shooter shooter) {
     this.shooter = shooter;
-    addRequirements(this.shooter);
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setNTPercentage();
+    shooter.stopFlywheel();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

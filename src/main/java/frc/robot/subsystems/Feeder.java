@@ -5,8 +5,11 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -14,7 +17,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Feeder extends SubsystemBase {
-  private CANSparkMax feederMotor = new CANSparkMax(Constants.Feeder.feederMotorID, MotorType.kBrushless);
+  private CANSparkMax feederMotor;
+  private RelativeEncoder encoder;
+
+  private SparkMaxPIDController feederPID;
 
   private ShuffleboardTab tab = Shuffleboard.getTab("Feeder");
   private NetworkTableEntry setSpeed = tab.add("Set Speed", false).withPosition(0, 0).getEntry();
@@ -23,7 +29,20 @@ public class Feeder extends SubsystemBase {
   private double feederPower = Constants.Feeder.feederPower;
 
   /** Creates a new Hopper. */
-  public Feeder() {}
+  public Feeder() {
+    feederMotor = new CANSparkMax(Constants.Feeder.feederMotorID, MotorType.kBrushless);
+    encoder = feederMotor.getEncoder();
+    feederPID = feederMotor.getPIDController();
+
+    feederMotor.restoreFactoryDefaults();
+
+    feederPID.setP(Constants.Feeder.P);
+    feederPID.setI(Constants.Feeder.I);
+    feederPID.setD(Constants.Feeder.D);
+    feederPID.setIZone(Constants.Feeder.Iz);
+    feederPID.setFF(Constants.Feeder.FF);
+    feederPID.setOutputRange(Constants.Feeder.MinOutput, Constants.Feeder.MaxOutput);
+  }
 
   @Override
   public void periodic() {
@@ -40,7 +59,7 @@ public class Feeder extends SubsystemBase {
   }
 
   public void powerFeeder() {
-    feederMotor.set(feederPower);
+    feederPID.setReference(feederPower, CANSparkMax.ControlType.kVelocity);
   }
 
   public void stopFeeder() {

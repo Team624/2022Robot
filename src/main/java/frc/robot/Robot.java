@@ -5,7 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utility.Auton;
@@ -21,7 +21,9 @@ public class Robot extends TimedRobot {
 
   private Auton auton = new Auton();
 
-  Compressor phCompressor = new Compressor(PneumaticsModuleType.REVPH);
+  private PneumaticHub hub;
+
+  private Compressor compressor;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -29,7 +31,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    phCompressor.enableDigital();
+    hub = new PneumaticHub(30);
+    compressor = hub.makeCompressor();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -56,6 +59,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    compressor.disable();
     auton.setState(false);
     // TODO: Im not sure if not properly canceling the command could cause the issues but I guess we'll see lol
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
@@ -71,6 +75,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    compressor.enableDigital();
     auton.setState(true);
     m_robotContainer.getAutonomousDriveCommand(auton).schedule();
   }
@@ -81,6 +86,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    compressor.enableDigital();
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
       m_robotContainer.getAutonomousDriveCommand(auton).cancel();
     }

@@ -39,9 +39,17 @@ public final class Constants {
         public static final double manualPercent = 1;
         public static final double idlePercent = .2;
 
-        public static final double[][] distanceOutputMatrix = {
-            {50, 100},
-            {60, 110}
+        public static final double hoodSwitchAngle = 10;
+        public static final double hoodDeadBandSize = 2;
+        public static final double[][] shooterExperimentDataHigh = {
+        //  {angle, rpm, actualDistance}
+            {15, 100, 1},
+            {16, 120, 5}
+        };
+        public static final double[][] shooterExperimentDataLow = {
+        //  {angle, rpm, actualDistance}
+            {5, 100, 1},
+            {6, 110, 5}
         };
     }
 
@@ -59,6 +67,15 @@ public final class Constants {
         public static final int feederMotorID = 14;
 
         public static final double feederPower = .7;
+
+        public static final double P = 6e-5; 
+        public static final double I = 0;
+        public static final double D = 0; 
+        public static final double Iz = 0; 
+        public static final double FF = 0.0; 
+        public static final double MaxOutput = 1; 
+        public static final double MinOutput = -1;
+        public static final double maxRPM = 5700;
     }
 
     public static final class Tower{

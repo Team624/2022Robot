@@ -17,8 +17,8 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   private CANSparkMax intakeMotor = new CANSparkMax(Constants.Intake.intakeMotorID, MotorType.kBrushless);
-  private Solenoid leftIntakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.Intake.leftIntakeSolenoidID);
-  private Solenoid rightIntakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.Intake.rightIntakeSolenoidID);
+  // private Solenoid leftIntakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.Intake.leftIntakeSolenoidID);
+  // private Solenoid rightIntakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.Intake.rightIntakeSolenoidID);
 
   private ShuffleboardTab tab = Shuffleboard.getTab("Intake");
   private NetworkTableEntry setSpeed = tab.add("Set Speed", false).withPosition(0, 0).getEntry();

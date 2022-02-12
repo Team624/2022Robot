@@ -12,6 +12,7 @@ import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Feeder.IdleFeeder;
 import frc.robot.commands.Feeder.ManualFeed;
+import frc.robot.commands.Feeder.StopFeeder;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShooter;
 import frc.robot.commands.Shooter.TestShoot;
@@ -27,7 +28,7 @@ import frc.robot.subsystems.Tower;
 import frc.robot.utility.Auton;
 
 public class RobotContainer {
-  private final Climb m_climb = new Climb();
+  //private final Climb m_climb = new Climb();
   private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
   private final Intake m_intake = new Intake();
   private final Feeder m_feeder = new Feeder();
@@ -39,7 +40,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     m_intake.setDefaultCommand(new IdleIntake(m_intake));
-    m_feeder.setDefaultCommand(new IdleFeeder(m_feeder));
+    m_feeder.setDefaultCommand(new StopFeeder(m_feeder));
     m_tower.setDefaultCommand(new IdleTower(m_tower));
     m_shooter.setDefaultCommand(new IdleShooter(m_shooter));
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(

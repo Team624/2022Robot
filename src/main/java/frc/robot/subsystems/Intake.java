@@ -38,6 +38,8 @@ public class Intake extends SubsystemBase {
   public void checkNT(){
     if(setSpeed.getBoolean(false)){
       intakePower = intakeSpeed.getDouble(Constants.Intake.intakePower);
+    }else{
+      intakePower = Constants.Intake.intakePower;
     }
   }
 
@@ -49,14 +51,14 @@ public class Intake extends SubsystemBase {
     intakeMotor.stopMotor();
   }
 
-  public void actuateSolenoids(){
-    leftIntakeSolenoid.set(true);
-    rightIntakeSolenoid.set(true);
-  }
+  // public void actuateSolenoids(){
+  //   leftIntakeSolenoid.set(true);
+  //   rightIntakeSolenoid.set(true);
+  // }
 
-  public void retractSolenoids(){
-    leftIntakeSolenoid.set(false);
-    rightIntakeSolenoid.set(false);
-  }
+  // public void retractSolenoids(){
+  //   leftIntakeSolenoid.set(false);
+  //   rightIntakeSolenoid.set(false);
+  // }
 
 }

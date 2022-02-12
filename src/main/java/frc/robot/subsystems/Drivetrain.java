@@ -22,6 +22,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
 
 public class Drivetrain extends SubsystemBase {
@@ -68,6 +71,19 @@ public class Drivetrain extends SubsystemBase {
 
   public boolean lastPointCommand = false;
 
+//   private TalonFX[] = {
+//           new TalonFX(0),
+//           new TalonFX(0),
+//           new TalonFX(0),
+//           new TalonFX(0),
+//           new TalonFX(0),
+//           new TalonFX(0),
+//           new TalonFX(0),
+//           new TalonFX(0)
+//   }
+
+  //private Orchestra orchestra = new Orchestra(instruments, filePath)
+
   public Drivetrain() {
           m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                   tab.getLayout("Front Left Module", BuiltInLayouts.kList)
@@ -108,7 +124,6 @@ public class Drivetrain extends SubsystemBase {
                   Constants.Drivetrain.BACK_RIGHT_MODULE_STEER_MOTOR,
                   Constants.Drivetrain.BACK_RIGHT_MODULE_STEER_ENCODER,
                   Constants.Drivetrain.BACK_RIGHT_MODULE_STEER_OFFSET);
-
 
   }
 

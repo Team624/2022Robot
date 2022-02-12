@@ -9,7 +9,7 @@ import frc.robot.subsystems.Tower;
 
 public class IdleTower extends CommandBase {
   private final Tower tower;
-  private double IRState;
+  private boolean IRState;
   /** Creates a new IdleTower. */
   public IdleTower(Tower tower) {
     this.tower = tower;
@@ -27,6 +27,11 @@ public class IdleTower extends CommandBase {
   @Override
   public void execute() {
     IRState = tower.checkIR();
+    if(IRState){
+      tower.loadTower();
+    }else{
+      tower.stopTower();
+    }
   }
 
   // Called once the command ends or is interrupted.

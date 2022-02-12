@@ -20,7 +20,7 @@ public class DeployIntake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.actuateSolenoids();
+    //intake.actuateSolenoids();
     intake.powerIntake();
   }
 
@@ -31,7 +31,7 @@ public class DeployIntake extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.retractSolenoids();
+    //intake.retractSolenoids();
     intake.powerIntake();
   }
 

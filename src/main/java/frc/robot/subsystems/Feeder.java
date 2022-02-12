@@ -34,10 +34,16 @@ public class Feeder extends SubsystemBase {
   private void checkNT(){
     if(setSpeed.getBoolean(false)){
       feederPower = feederSpeed.getDouble(Constants.Feeder.feederPower);
+    }else{
+      feederPower = Constants.Feeder.feederPower;
     }
   }
 
   public void powerFeeder() {
     feederMotor.set(feederPower);
+  }
+
+  public void stopFeeder() {
+    feederMotor.stopMotor();
   }
 }

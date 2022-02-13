@@ -54,7 +54,8 @@ public class VisionTurn extends CommandBase {
 
     double visionRot = m_drivetrainSubsystem.getVisionRotationAngle();
 
-    if(Math.abs(error) < quickTurnTolerance && visionRot != 1000){
+    if((Math.abs(error) < quickTurnTolerance) && (Math.abs(visionRot) < 500)){
+      //System.out.println("Angle: " + visionRot);
       // If doing normal vision targeting
       if (Math.abs(visionRot) < visionResetTolerance){
         System.out.println("reseting robot pose");
@@ -82,6 +83,7 @@ public class VisionTurn extends CommandBase {
       vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
       vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
     }
+    System.out.println("Vision Turn ::::::::");
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
         vx,
@@ -114,6 +116,7 @@ public class VisionTurn extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("Vision Turn END ::::::::");
     m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
   }
 

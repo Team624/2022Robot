@@ -21,7 +21,7 @@ public class Robot extends TimedRobot {
 
   private Auton auton = new Auton();
 
-  private Compressor compressor = new Compressor(8, PneumaticsModuleType.CTREPCM);
+  //private Compressor compressor = new Compressor(8, PneumaticsModuleType.CTREPCM);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     auton.setState(false);
-    compressor.enableDigital();
+    //compressor.enableDigital();
   }
 
   /**
@@ -70,9 +70,10 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    compressor.enableDigital();
+    m_robotContainer.setBlankDrivetrainCommand();
+    //compressor.enableDigital();
     auton.setState(true);
-    m_robotContainer.getAutonomousDriveCommand(auton).schedule();
+    m_robotContainer.getAutonomousDriveCommand(auton).schedule(true);
   }
 
   /** This function is called periodically during autonomous. */
@@ -81,7 +82,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    compressor.enableDigital();
+    //compressor.enableDigital();
+    m_robotContainer.setDrivetrainDefaultCommand();
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
       m_robotContainer.getAutonomousDriveCommand(auton).cancel();
     }

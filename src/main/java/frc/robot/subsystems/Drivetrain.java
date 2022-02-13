@@ -114,6 +114,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
+          System.out.println("I be drivin: " + chassisSpeeds.omegaRadiansPerSecond);
           m_chassisSpeeds = chassisSpeeds;
   }
 
@@ -162,12 +163,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public PIDController getRotationPID(){
-        if(getRotationConts.getBoolean(false)){
-                return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
-        }else{
-                return new PIDController(Constants.Drivetrain.visionP, Constants.Drivetrain.visionI, Constants.Drivetrain.visionD);
-        }
-        
+        return new PIDController(Constants.Drivetrain.visionP, Constants.Drivetrain.visionI, Constants.Drivetrain.visionD); 
   }
 
   public PIDController getRotationPathPID(){

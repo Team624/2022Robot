@@ -29,7 +29,7 @@ public class AutonPointCommand extends CommandBase {
         this.path = path;
         this.point = point;
         this.auton = auton;
-        this.addRequirements(drive);
+        addRequirements(drive);
         
     }
 
@@ -72,11 +72,13 @@ public class AutonPointCommand extends CommandBase {
 
         double thVelocity = 0;
         // If the vision tracking is running
-        if (auton.getShooterState() == "prime" || auton.getShooterState() == "shoot"){
-          thVelocity = getRotationVisionPID(m_drivetrainSubsystem.getVisionRotationAngle());
-        } else{
-          thVelocity = getRotationPathPID(wantedDeltaAngle * (180/Math.PI));
-        }
+        // if ((auton.getShooterState().equals("prime") || auton.getShooterState().equals("shoot")) && (Math.abs(m_drivetrainSubsystem.getVisionRotationAngle()) < 500)){
+        //   System.out.println("Using Vision in Path: " + m_drivetrainSubsystem.getVisionRotationAngle());
+        //   thVelocity = getRotationVisionPID(m_drivetrainSubsystem.getVisionRotationAngle());
+        // } else{
+        thVelocity = getRotationPathPID(wantedDeltaAngle * (180/Math.PI));
+      
+        System.out.println("Shit");
         m_drivetrainSubsystem.drive(
           ChassisSpeeds.fromFieldRelativeSpeeds(
             xVelocity,

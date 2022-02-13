@@ -36,6 +36,7 @@ public class DefaultDriveCommand extends CommandBase {
             vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
             omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
         }
+        System.out.println("Default Drive ::::::::");
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     vx,
@@ -48,6 +49,7 @@ public class DefaultDriveCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        System.out.println("Default Drive END ::::::::");
         m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
     }
 }

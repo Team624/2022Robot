@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.music.Orchestra;
@@ -71,20 +72,24 @@ public class Drivetrain extends SubsystemBase {
 
   public boolean lastPointCommand = false;
 
-//   private TalonFX[] = {
-//           new TalonFX(0),
-//           new TalonFX(0),
-//           new TalonFX(0),
-//           new TalonFX(0),
-//           new TalonFX(0),
-//           new TalonFX(0),
-//           new TalonFX(0),
-//           new TalonFX(0)
-//   }
+  private ArrayList<TalonFX> instruments;
 
-  //private Orchestra orchestra = new Orchestra(instruments, filePath)
+  private Orchestra orchestra;
 
   public Drivetrain() {
+         instruments = new ArrayList<>();
+
+         instruments.add(new TalonFX(8));
+         instruments.add(new TalonFX(9));
+         instruments.add(new TalonFX(10));
+         instruments.add(new TalonFX(11));
+         instruments.add(new TalonFX(1));
+         instruments.add(new TalonFX(18));
+         instruments.add(new TalonFX(19));
+         instruments.add(new TalonFX(20));
+        
+         orchestra = new Orchestra(instruments);
+
           m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                   tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                   .withSize(2, 4)
@@ -226,6 +231,17 @@ public class Drivetrain extends SubsystemBase {
           
         double[] pose = {m_odometry.getPoseMeters().getX(), m_odometry.getPoseMeters().getY()};
         return pose;
+  }
+
+  public void play(double index){
+          if(index == 90){
+                orchestra.loadMusic("Depot.chrp");
+                orchestra.play();
+          }else if(index == 180){
+                orchestra.loadMusic("MooMoo.chrp");
+                orchestra.play();
+          }
+          
   }
 
 }

@@ -85,6 +85,15 @@ public final class Constants {
         public static final double towerPower = .7;
 
         public static final double autoLoadPower = 0;
+
+        public static final double P = 0.00003; 
+        public static final double I = 0;
+        public static final double D = 0; 
+        public static final double Iz = 0; 
+        public static final double FF = 0.000172; 
+        public static final double MaxOutput = 1; 
+        public static final double MinOutput = -1;
+        public static final double maxRPM = 5676;
     }
 
     public static final class Drivetrain{

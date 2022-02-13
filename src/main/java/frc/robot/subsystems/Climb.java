@@ -36,9 +36,13 @@ public class Climb extends SubsystemBase {
     climbStatus = false;
   }
 
-  public void actuateBottomPistons(){}
+  public void actuateLowerPistons(){}
 
   public void actuateUpperPistons(){}
+
+  public void retractLowerPistons(){}
+
+  public void retractUpperPistons(){}
 
   public void extendCenterWinch(){}
 

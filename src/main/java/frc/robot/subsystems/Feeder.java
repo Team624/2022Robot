@@ -8,8 +8,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -101,7 +99,6 @@ public class Feeder extends SubsystemBase {
     if((FF != FFnew && FFnew != 0.0)) { feederPID.setFF(FFnew); FF = FFnew; }
 
     currentSpeed.setDouble(encoder.getVelocity());
-    System.out.println(feederPower + " " + Constants.Feeder.maxRPM);
     setPoint.setDouble(feederPower * Constants.Feeder.maxRPM);
   }
 

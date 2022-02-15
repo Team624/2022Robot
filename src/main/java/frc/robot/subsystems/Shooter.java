@@ -139,7 +139,6 @@ public class Shooter extends SubsystemBase {
 
   private void updatePID() {
     if(ntUpdatePID) {
-      //Gains newGAIN = new Gains(Pnew, Inew, Dnew, Fnew, Constants.Shooter.startGains.iZone);
       leftFlywheel.config_kP(0, PID_P.getDouble(Constants.Shooter.kP));
       leftFlywheel.config_kI(0, PID_I.getDouble(Constants.Shooter.kI));
       leftFlywheel.config_IntegralZone(0, PID_Izone.getDouble(Constants.Shooter.kIzone));
@@ -162,7 +161,13 @@ public class Shooter extends SubsystemBase {
     return manualRPM.getDouble(0);
   }
 
-  public void testHood(){
+  public void testHoodOn(){
+    hoodActuated = true;
+    setHood(true);
+  }
 
+  public void testHoodOff(){
+    hoodActuated = false;
+    setHood(false);
   }
 }

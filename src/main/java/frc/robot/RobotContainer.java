@@ -109,13 +109,17 @@ public class RobotContainer {
 
     mRightDown.whenActive(m_climb::retractArmWinch);
 
-    new POVButton(m_controller, 0).whenPressed(m_climb::actuateLowerPistons);
+    new POVButton(m_controller, 0).whenPressed(m_climb::actuateUpperPistons);
 
-    new POVButton(m_controller, 180).whenPressed(m_climb::retractLowerPistons);
+    new POVButton(m_controller, 180).whenPressed(m_climb::retractUpperPistons);
 
-    new POVButton(m_controller, 90).whenPressed(m_climb::actuateUpperPistons);
+    new POVButton(m_controller, 90).whenPressed(m_climb::actuateLowerPistons);
 
-    new POVButton(m_controller, 270).whenPressed(m_climb::retractUpperPistons);
+    new POVButton(m_controller, 270).whenPressed(m_climb::retractLowerPistons);
+
+    new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
+
+    new Button(m_controller::getBButton).whenReleased(m_shooter::testHoodOff);
   }
 
 

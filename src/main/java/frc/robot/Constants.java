@@ -29,7 +29,7 @@ public final class Constants {
 
         public static final double visionP = .09;
         public static final double visionI = .0;
-        public static final double visionD = .01;
+        public static final double visionD = .0035;
         /**
          * The left-to-right distance between the drivetrain wheels
          *
@@ -41,33 +41,34 @@ public final class Constants {
          *
          * Should be measured from center to center.
          */
+        //bad code. smh
         public static final double DRIVETRAIN_WHEELBASE_METERS = 0.466598;
 
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 20;
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 23;
-        //197 pointing left
-        //242 pointing lefter
-        //152 almost there
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(246.86); // FIXME Measure and set front left steer offset
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(71); // FIXME Measure and set front left steer offset
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 19;
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 18;
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 22;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(276.75); // FIXME Measure and set front right steer offset
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(115); // FIXME Measure and set front right steer offset
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 9; 
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 8;
         public static final int BACK_LEFT_MODULE_STEER_ENCODER = 24;
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(281.32);
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0);
 
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 11;
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 10;
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 21;
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(53.61);
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(15);
 
         public static final double TRANSLATION_TUNING_CONSTANT = 1;
-        public static final double PATH_POINT_RANGE = 0.3;
+        public static final double PATH_POINT_RANGE = 0.1;
+
+        public static final double BALL_AREA_ONE_METER = 10;
+        public static final double BALL_FOLLOW_SECONDS = 10;
     }
     
 }

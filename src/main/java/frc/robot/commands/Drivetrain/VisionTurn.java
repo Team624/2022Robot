@@ -21,7 +21,7 @@ public class VisionTurn extends CommandBase {
   private PIDController pid;
   private PIDController pidQuickTurn;
 
-  private double quickTurnTolerance = 10;
+  private double quickTurnTolerance = 15;
   private double visionResetTolerance = 4;
 
   private double[] targetPose = {8.2423, -4.0513};
@@ -49,13 +49,19 @@ public class VisionTurn extends CommandBase {
   public void execute() {
     double thVelocity = 0;
 
-    double error = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() - getQuickTurnValue() * (180/Math.PI);
-    //System.out.println(error);
+    double errorA = getQuickTurnValue() - m_drivetrainSubsystem.normalizeAngle(m_drivetrainSubsystem.getGyroscopeRotation().getRadians());
+    double errorB = errorA - (Math.PI * 2);
+    double errorC = errorA + (Math.PI * 2);
+  
+    double wantedDeltaAngle = 0.0;
+
+    wantedDeltaAngle = Math.abs(errorB) < Math.abs(errorC) ? errorB : errorC;
+    wantedDeltaAngle = Math.abs(wantedDeltaAngle) < Math.abs(errorA) ? wantedDeltaAngle : errorA;
 
     double visionRot = m_drivetrainSubsystem.getVisionRotationAngle();
 
-    if((Math.abs(error) < quickTurnTolerance) && (Math.abs(visionRot) < 500)){
-      //System.out.println("Angle: " + visionRot);
+    if((Math.abs(wantedDeltaAngle) < quickTurnTolerance) && (Math.abs(visionRot) < 500)){
+      System.out.println("Vision targeting error = " + visionRot);
       // If doing normal vision targeting
       if (Math.abs(visionRot) < visionResetTolerance){
         System.out.println("reseting robot pose");
@@ -64,16 +70,8 @@ public class VisionTurn extends CommandBase {
       thVelocity = getRotationPID(visionRot);
       
     } else{
+      System.out.println("Quick turn error = " + m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() % 360);
       // Quick turn
-      System.out.println(getQuickTurnValue());
-      double errorA = getQuickTurnValue() - m_drivetrainSubsystem.normalizeAngle(m_drivetrainSubsystem.getGyroscopeRotation().getRadians());
-      double errorB = errorA - (Math.PI * 2);
-      double errorC = errorA + (Math.PI * 2);
-    
-      double wantedDeltaAngle = 0.0;
-
-      wantedDeltaAngle = Math.abs(errorB) < Math.abs(errorC) ? errorB : errorC;
-      wantedDeltaAngle = Math.abs(wantedDeltaAngle) < Math.abs(errorA) ? wantedDeltaAngle : errorA;
       thVelocity = getQuickTurnPID(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + (wantedDeltaAngle * (180/Math.PI)));
     }
 
@@ -83,7 +81,6 @@ public class VisionTurn extends CommandBase {
       vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
       vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
     }
-    System.out.println("Vision Turn ::::::::");
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
         vx,
@@ -116,7 +113,6 @@ public class VisionTurn extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Vision Turn END ::::::::");
     m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
   }
 

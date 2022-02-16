@@ -23,6 +23,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
+import javax.swing.text.StyledEditorKit.BoldAction;
+
 import com.kauailabs.navx.frc.AHRS;
 
 public class Drivetrain extends SubsystemBase {
@@ -66,6 +69,8 @@ public class Drivetrain extends SubsystemBase {
   private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();
 
   public boolean isCreepin = false;
+
+  public boolean isAuton = false;
 
   public boolean lastPointCommand = false;
 
@@ -114,7 +119,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
-          System.out.println("I be drivin: " + chassisSpeeds.omegaRadiansPerSecond);
+          //System.out.println("I be drivin: " + chassisSpeeds.omegaRadiansPerSecond);
           m_chassisSpeeds = chassisSpeeds;
   }
 
@@ -128,7 +133,12 @@ public class Drivetrain extends SubsystemBase {
           m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
           m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
           m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
-          m_odometry.update(getGyroscopeRotation(), states);
+          
+          if (isAuton){
+                m_odometry.update(getGyroscopeRotation(), states);
+          } else{
+                m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
+          }
           updateLeoPose();          
   }
 
@@ -162,6 +172,9 @@ public class Drivetrain extends SubsystemBase {
           isCreepin = false;
   }
 
+  public void setAuton(boolean state){
+          isAuton = state;
+  }
   public PIDController getRotationPID(){
         return new PIDController(Constants.Drivetrain.visionP, Constants.Drivetrain.visionI, Constants.Drivetrain.visionD); 
   }

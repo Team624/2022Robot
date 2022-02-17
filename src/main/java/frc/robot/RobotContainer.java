@@ -78,7 +78,7 @@ public class RobotContainer {
     
     // Solely for debugging. Remove in master
     new Button(d_controller::getBButton)
-              .whenPressed(m_drivetrainSubsystem::setPose);
+              .whenPressed(m_drivetrainSubsystem::quickZeroPose);
 
     new Button(d_controller::getRightBumper)
               .whenPressed(m_drivetrainSubsystem::yesCreepMode);

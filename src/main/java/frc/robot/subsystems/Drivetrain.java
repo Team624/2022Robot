@@ -209,6 +209,15 @@ public class Drivetrain extends SubsystemBase {
           ahrs.setAngleAdjustment(newRot.getDegrees());
   }
 
+  public void quickZeroPose(){
+        zeroGyroscope();
+        double[] startPosition = {0.406,-6.0198,0};
+        Rotation2d newRot = new Rotation2d(-startPosition[2]);
+        Pose2d newPose = new Pose2d(startPosition[0], startPosition[1], newRot);
+        m_odometry.resetPosition(newPose, newRot);
+        ahrs.setAngleAdjustment(newRot.getDegrees());
+}
+
   public void updateLeoPose(){
         SmartDashboard.putNumber("/pose/th", getGyroscopeRotation().getRadians());
         SmartDashboard.putNumber("/pose/x", m_odometry.getPoseMeters().getX());

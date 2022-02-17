@@ -60,10 +60,10 @@ public class AutonPathCommand extends CommandBase {
                 System.out.println("Doing vision pid: " + pidVal);
                 m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, pidVal, m_drivetrainSubsystem.getGyroscopeRotation()));
             } else{
-                //m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, m_drivetrainSubsystem.getGyroscopeRotation()));
+                m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, m_drivetrainSubsystem.getGyroscopeRotation()));
             }
         }
-        System.out.println(m_drivetrainSubsystem.getGyroscopeRotation().getRadians());
+        //System.out.println(m_drivetrainSubsystem.getGyroscopeRotation().getRadians());
     }
 
     private double getRotationPID(double wantedDeltaAngle){

@@ -59,6 +59,7 @@ public class AutonPointCommand extends CommandBase {
     }
 
     private void autonDrive(double xVelocity, double yVelocity, double theta){
+        System.out.println("Still driving in auton");
         double wantedAngle = m_drivetrainSubsystem.normalizeAngle(theta);
         // Check left and right angles to see which way of rotation will make it quicker (subtract from pi)
         double errorA = wantedAngle - m_drivetrainSubsystem.normalizeAngle(m_drivetrainSubsystem.getGyroscopeRotation().getRadians());
@@ -78,7 +79,6 @@ public class AutonPointCommand extends CommandBase {
         // } else{
         thVelocity = getRotationPathPID(wantedDeltaAngle * (180/Math.PI));
       
-        System.out.println("Shit");
         m_drivetrainSubsystem.drive(
           ChassisSpeeds.fromFieldRelativeSpeeds(
             xVelocity,

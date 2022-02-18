@@ -115,7 +115,7 @@ public final class Constants {
 
         public static final double visionP = .09;
         public static final double visionI = .0;
-        public static final double visionD = .01;
+        public static final double visionD = .0035;
         /**
          * The left-to-right distance between the drivetrain wheels
          *
@@ -127,6 +127,7 @@ public final class Constants {
          *
          * Should be measured from center to center.
          */
+        //bad code. smh
         public static final double DRIVETRAIN_WHEELBASE_METERS = 0.466598;
 
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
@@ -162,7 +163,10 @@ public final class Constants {
         //public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(12.9);
 
         public static final double TRANSLATION_TUNING_CONSTANT = 1;
-        public static final double PATH_POINT_RANGE = 0.3;
+        public static final double PATH_POINT_RANGE = 0.1;
+
+        public static final double BALL_AREA_ONE_METER = 10;
+        public static final double BALL_FOLLOW_SECONDS = 10;
     }
     
 }

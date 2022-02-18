@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -14,6 +15,7 @@ import frc.robot.commands.Climb.ExtendCenterWinch;
 import frc.robot.commands.Climb.IdleClimb;
 import frc.robot.commands.Climb.RetractCenterWinch;
 import frc.robot.commands.Drivetrain.AutonomousDrive;
+import frc.robot.commands.Drivetrain.BlankDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Feeder.ManualFeed;
@@ -90,7 +92,7 @@ public class RobotContainer {
     
     //FIXME Solely for debugging. Remove in master
     new Button(d_controller::getBButton)
-              .whenPressed(m_drivetrainSubsystem::setPose);
+              .whenPressed(m_drivetrainSubsystem::quickZeroPose);
 
     new Button(d_controller::getRightBumper)
               .whenPressed(m_drivetrainSubsystem::yesCreepMode);
@@ -175,5 +177,18 @@ public class RobotContainer {
     value = Math.copySign(value * value, value);
 
     return value;
+  }
+
+  public void setDrivetrainDefaultCommand(){
+    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+        m_drivetrainSubsystem, 
+        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+        () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER
+    ));
+  }
+
+  public void setBlankDrivetrainCommand(){
+    m_drivetrainSubsystem.setDefaultCommand(new BlankDrive(m_drivetrainSubsystem));
   }
 }

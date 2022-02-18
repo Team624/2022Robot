@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utility.Auton;
 import frc.robot.utility.Path;
+import edu.wpi.first.math.controller.PIDController;
 
 public class AutonPathCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;
@@ -18,16 +19,21 @@ public class AutonPathCommand extends CommandBase {
 
     private int currentID = -1;
 
+    private PIDController pid;
+
+    private boolean lastPath = false;
+
     public AutonPathCommand (Drivetrain drive, Path path, Auton auton) {
         this.m_drivetrainSubsystem = drive;
         this.path = path;
         this.auton = auton;
 
-        this.addRequirements(drive);
+        addRequirements(drive);
     }
 
     @Override
     public void initialize() {
+        pid = m_drivetrainSubsystem.getRotationPID();
         commandGroup = new SequentialCommandGroup();
         for (int i = 0; i < path.getLength(); i++) {
             commandGroup.addCommands(new AutonPointCommand(m_drivetrainSubsystem, path, i, auton));
@@ -39,14 +45,31 @@ public class AutonPathCommand extends CommandBase {
     @Override
     public void execute() {
         if (auton.getStartPathIndex() >= path.getPathId() && currentID != path.getPathId()){
+            // Starts the path once
             System.out.println("STARTED NEW PATH: " + path.getPathId());
-            commandGroup.schedule();
+            commandGroup.schedule(false);
             SmartDashboard.getEntry("/pathTable/status/path").setNumber(path.getPathId());
             currentID = path.getPathId();
         }
-        if (currentID != path.getPathId()){
-            m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, m_drivetrainSubsystem.getGyroscopeRotation()));
+        if (currentID != path.getPathId() || lastPath){
+            // When the path is not currently running
+            if ((auton.getShooterState().equals("prime")|| auton.getShooterState().equals("shoot")) && (Math.abs(m_drivetrainSubsystem.getVisionRotationAngle()) < 500)){
+                double wantedDeltaAngle = m_drivetrainSubsystem.getVisionRotationAngle();
+                System.out.println("Doing vision: " + wantedDeltaAngle);
+                double pidVal = getRotationPID(wantedDeltaAngle);
+                System.out.println("Doing vision pid: " + pidVal);
+                m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, pidVal, m_drivetrainSubsystem.getGyroscopeRotation()));
+            } else{
+                m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, m_drivetrainSubsystem.getGyroscopeRotation()));
+            }
         }
+        //System.out.println(m_drivetrainSubsystem.getGyroscopeRotation().getRadians());
+    }
+
+    private double getRotationPID(double wantedDeltaAngle){
+        double setpoint = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle;
+        //System.out.println(setpoint);
+        return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), setpoint);
     }
 
     @Override
@@ -56,14 +79,12 @@ public class AutonPathCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        // TODO: Has to be something going wrong here
-        // !commandGroup.isScheduled() - maybe it takes some time to schedule the command
-        //commandGroup.isFinished()
-        //System.out.println("is finished: " + commandGroup.isFinished() + "   scheduled: " + commandGroup.isScheduled());
         if (m_drivetrainSubsystem.lastPointCommand && currentID == path.getPathId()){
-            System.out.println("Finished Path:  isScheduled=" + commandGroup.isScheduled() + "   ids match=" + (currentID == path.getPathId()));
-            if (path.getPathId() == auton.getPathCount()-1)
-                m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, m_drivetrainSubsystem.getGyroscopeRotation()));
+            //System.out.println("Finished Path:  isScheduled=" + commandGroup.isScheduled() + "   ids match=" + (currentID == path.getPathId()));
+            if (path.getPathId() == auton.getPathCount()-1){
+                lastPath = true;
+                return false;
+            }
             return true;
         }
         return false;

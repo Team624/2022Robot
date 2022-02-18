@@ -21,25 +21,26 @@ public class AutonomousDrive extends CommandBase {
   public AutonomousDrive(Drivetrain drivetrainSubsystem, Auton auton) {
     this.m_drivetrainSubsystem = drivetrainSubsystem;
     this.auton = auton;
-    addRequirements(m_drivetrainSubsystem);
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.addRequirements(drivetrainSubsystem);
+    addRequirements(drivetrainSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_drivetrainSubsystem.setAuton(true);
     m_drivetrainSubsystem.setPose();
     commandGroup = new SequentialCommandGroup();
     for (int i = 0; i < auton.getPathCount(); i++){
       commandGroup.addCommands(new AutonPathCommand(m_drivetrainSubsystem, auton.auton[i], auton));
     }
-    commandGroup.schedule();
+    //this.alongWith(commandGroup);
+    commandGroup.schedule(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("In Main Auotnomous Drive");
   }
 
   // Called once the command ends or is interrupted.

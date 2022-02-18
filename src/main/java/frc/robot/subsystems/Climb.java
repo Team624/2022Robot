@@ -7,13 +7,9 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAnalogSensor.Mode;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,13 +33,12 @@ public class Climb extends SubsystemBase {
   public Climb(PneumaticHub hub) {
     centerWinchSpark.setIdleMode(IdleMode.kBrake);
     this.hub = hub;
-    bottomSolenoid = hub.makeSolenoid(10);
-    upperSolenoid = hub.makeSolenoid(11);
+    bottomSolenoid = this.hub.makeSolenoid(10);
+    upperSolenoid = this.hub.makeSolenoid(11);
   }
 
   @Override
   public void periodic() {
-    //System.out.println(climbStatus);
     // This method will be called once per scheduler run
   }
 
@@ -56,13 +51,16 @@ public class Climb extends SubsystemBase {
   }
 
   public void actuateLowerPistons(){
+    bottomSolenoid.set(true);
+  }
+
+  public void retractLowerPistons(){
+    bottomSolenoid.set(false);
   }
 
   public void actuateUpperPistons(){
     upperSolenoid.set(true);
   }
-
-  public void retractLowerPistons(){}
 
   public void retractUpperPistons(){
     upperSolenoid.set(false);

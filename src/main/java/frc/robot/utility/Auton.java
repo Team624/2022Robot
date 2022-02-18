@@ -31,7 +31,7 @@ public class Auton {
     }
   
     public void sendAutoChoice(){
-      Number autoChoice = autoChoiceGet.getNumber(10.0);
+      Number autoChoice = autoChoiceGet.getNumber(0.0);
       pathRange = (double)pathPointRange.getNumber(Constants.Drivetrain.PATH_POINT_RANGE);
       SmartDashboard.putNumber("/auto/select", (double)autoChoice);
     }
@@ -90,6 +90,23 @@ public class Auton {
 
     public double getPathPointRange(){
         return pathRange;
+    }
+
+    // States
+    public String getShooterState(){
+        return SmartDashboard.getEntry("/auto/shooter/state").getString("idle");
+    }
+
+    public String getFlywheelState(){
+        return SmartDashboard.getEntry("/auto/flywheel/state").getString("idle");
+    }
+
+    public String getHoodState(){
+        return SmartDashboard.getEntry("/auto/hood/state").getString("idle");
+    }
+
+    public String getIntakeState(){
+        return SmartDashboard.getEntry("/auto/intake/state").getString("retract");
     }
     
 }

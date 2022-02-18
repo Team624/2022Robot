@@ -4,23 +4,42 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAnalogSensor.Mode;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
-  private PWMSparkMax winchSpark = new PWMSparkMax(Constants.Climb.winchMotorID);
-  private Solenoid bottomLeft = new Solenoid(PneumaticsModuleType.REVPH, Constants.Climb.bottomLeftPistonID);
-  private Solenoid bottomRight = new Solenoid(PneumaticsModuleType.REVPH, Constants.Climb.bottomRightPistonID);
-  private Solenoid topLeft = new Solenoid(PneumaticsModuleType.REVPH, Constants.Climb.topLeftPistonID);
-  private Solenoid topRight = new Solenoid(PneumaticsModuleType.REVPH, Constants.Climb.topRightPistonID);
+  private ShuffleboardTab tab = Shuffleboard.getTab("Climb");
+  private NetworkTableEntry centerSpeed = tab.add("Center Speed", 0.0).withPosition(0, 0).getEntry();
+  private NetworkTableEntry armSpeed = tab.add("Arm Speed", 0.0).withPosition(0, 1).getEntry();
+
+  private CANSparkMax centerWinchSpark = new CANSparkMax(Constants.Climb.centerWinchMotorID, MotorType.kBrushless);
+  private CANSparkMax armWinchSpark = new CANSparkMax(Constants.Climb.armWinchMotorID, MotorType.kBrushless);
+  private PneumaticHub hub;
+  private Solenoid bottomSolenoid;
+  private Solenoid upperSolenoid;
+
 
   private boolean climbStatus = false;
 
   /** Creates a new Climb. */
-  public Climb() {}
+  public Climb(PneumaticHub hub) {
+    centerWinchSpark.setIdleMode(IdleMode.kBrake);
+    this.hub = hub;
+    bottomSolenoid = hub.makeSolenoid(10);
+    upperSolenoid = hub.makeSolenoid(11);
+  }
 
   @Override
   public void periodic() {
@@ -36,23 +55,40 @@ public class Climb extends SubsystemBase {
     climbStatus = false;
   }
 
-  public void actuateLowerPistons(){}
+  public void actuateLowerPistons(){
+  }
 
-  public void actuateUpperPistons(){}
+  public void actuateUpperPistons(){
+    upperSolenoid.set(true);
+  }
 
   public void retractLowerPistons(){}
 
-  public void retractUpperPistons(){}
+  public void retractUpperPistons(){
+    upperSolenoid.set(false);
+  }
 
-  public void extendCenterWinch(){}
+  public void extendCenterWinch(){
+    centerWinchSpark.set(-centerSpeed.getDouble(0.0));
+  }
 
-  public void retractCenterWinch(){}
+  public void retractCenterWinch(){
+    centerWinchSpark.set(centerSpeed.getDouble(0.0));
+  }
+
+  public void stopCenterWinch(){
+    centerWinchSpark.stopMotor();
+  }
 
   public void extendArmWinch(){
-    System.out.println("Extending Arm Winch");
+    armWinchSpark.set(-armSpeed.getDouble(0.0));
   }
 
   public void retractArmWinch(){
-    System.out.println("Retracting Arm Winch");
+    armWinchSpark.set(armSpeed.getDouble(0.0));
+  }
+
+  public void stopArmWinch(){
+    armWinchSpark.stopMotor();
   }
 }

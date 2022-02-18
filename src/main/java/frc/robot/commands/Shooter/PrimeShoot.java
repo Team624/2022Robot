@@ -28,8 +28,8 @@ public class PrimeShoot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setRPM(vision.calculateRPM());
-    shooter.setHood(vision.calculateHood());
+    // shooter.setRPM(vision.calculateRPM());
+    // shooter.setHood(vision.calculateHood());
   }
 
   // Called once the command ends or is interrupted.

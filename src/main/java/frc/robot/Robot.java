@@ -6,7 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utility.Auton;
 
@@ -33,9 +36,10 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     hub = new PneumaticHub(30);
     compressor = hub.makeCompressor();
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    m_robotContainer = new RobotContainer(hub);
     auton.setState(false);
   }
 
@@ -86,7 +90,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    //compressor.enableDigital();
+    compressor.enableDigital();
+    //test.set(false);
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
       m_robotContainer.getAutonomousDriveCommand(auton).cancel();
     }
@@ -95,7 +100,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    //System.out.println("Here: " + test.get());
+  }
 
   @Override
   public void testInit() {

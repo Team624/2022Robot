@@ -2,6 +2,7 @@ package frc.robot.commands.Drivetrain;
 
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
@@ -12,6 +13,9 @@ public class DefaultDriveCommand extends CommandBase {
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
+
+    private SlewRateLimiter filterX = new SlewRateLimiter(7);
+    private SlewRateLimiter filterY = new SlewRateLimiter(7);
 
     public DefaultDriveCommand(Drivetrain drivetrainSubsystem, DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
         this.m_drivetrainSubsystem = drivetrainSubsystem;
@@ -29,8 +33,8 @@ public class DefaultDriveCommand extends CommandBase {
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                    m_translationXSupplier.getAsDouble(),
-                    m_translationYSupplier.getAsDouble(),
+                    filterX.calculate(m_translationXSupplier.getAsDouble()),
+                    filterY.calculate(m_translationYSupplier.getAsDouble()),
                     m_rotationSupplier.getAsDouble(),
                     m_drivetrainSubsystem.getGyroscopeRotation()
                 )

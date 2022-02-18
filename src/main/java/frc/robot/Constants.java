@@ -16,24 +16,26 @@ public final class Constants {
 
     public static final class Climb{
         //FIXME 
-        public static final int winchMotorID = 0;
+        public static final int centerWinchMotorID = 12;
 
-        public static final int bottomLeftPistonID = 0;
-        public static final int bottomRightPistonID = 1;
-        public static final int topLeftPistonID = 2;
-        public static final int topRightPistonID = 3;
+        public static final int armWinchMotorID = 5;
+
+        public static final int bottomLeftPistonID = 10;
+        public static final int bottomRightPistonID = 10;
+        public static final int topLeftPistonID = 11;
+        public static final int topRightPistonID = 11;
     }
 
     public static final class Shooter{
         //FIXME
         public static final int leftFlywheelMotorID = 3;
         public static final int rightFlywheelMotorID = 13;
-        public static final int flywheelSolenoidID = 1;
+        public static final int flywheelSolenoidID = 9;
 
-        public static final double kP = 0.0;
+        public static final double kP = 0.3;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
-        public static final double kF = 0.0;
+        public static final double kF = 0.049;
         public static final double kIzone = 0.0;
 
         public static final double manualPercent = 1;
@@ -56,10 +58,19 @@ public final class Constants {
     public static final class Intake{
         //FIXME
         public static final int intakeMotorID = 4;
-        public static final int leftIntakeSolenoidID = 0;
-        public static final int rightIntakeSolenoidID = 2;
+        public static final int leftIntakeSolenoidID = 8;
+        public static final int rightIntakeSolenoidID = 8;
 
-        public static final double intakePower = .7;
+        public static final double intakePower = 1;
+
+        public static final double P = 0.00003; 
+        public static final double I = 0;
+        public static final double D = 0; 
+        public static final double Iz = 0; 
+        public static final double FF = 0; 
+        public static final double MaxOutput = 1; 
+        public static final double MinOutput = -1;
+        public static final double maxRPM = 5676;
     }
 
     public static final class Feeder{

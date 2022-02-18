@@ -4,11 +4,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Climb.ExtendCenterWinch;
+import frc.robot.commands.Climb.IdleClimb;
+import frc.robot.commands.Climb.RetractCenterWinch;
 import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
@@ -29,30 +33,43 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tower;
 import frc.robot.utility.Auton;
 import frc.robot.utility.ShooterVision;
+import frc.robot.Triggers.*;
 
 public class RobotContainer {
-  private final Climb m_climb = new Climb();
-  private final Drivetrain m_drivetrainSubsystem = new Drivetrain();
-  private final Intake m_intake = new Intake();
-  private final Feeder m_feeder = new Feeder();
-  private final Tower m_tower = new Tower();
-  private final Shooter m_shooter = new Shooter();
-  private final ShooterVision m_shooterVision = new ShooterVision(m_shooter);
+  private PneumaticHub hub;
+
+  private final Climb m_climb;
+  private final Drivetrain m_drivetrainSubsystem;
+  private final Intake m_intake;
+  private final Feeder m_feeder;
+  private final Tower m_tower;
+  private final Shooter m_shooter;
+  private final ShooterVision m_shooterVision;
 
   public final XboxController d_controller = new XboxController(0);
   private final XboxController m_controller = new XboxController(1);
 
-  private Trigger mLeftUp = new Trigger(() -> m_controller.getLeftY() > .5);
-  private Trigger mLeftDown = new Trigger(() -> m_controller.getLeftY() < -.5);
-  private Trigger mRightUp = new Trigger(() -> m_controller.getRightY() > .5);
-  private Trigger mRightDown = new Trigger(() -> m_controller.getRightY() < -.5);
+  private Trigger mLeftDown = new mLeftDown(m_controller);
+  private Trigger mLeftUp = new mLeftUp(m_controller);
 
-  // private Trigger driverLeftTrigger = new Trigger(() -> d_controller.getLeftTriggerAxis() > .5);
-  // private Trigger driverRightTrigger = new Trigger(() -> d_controller.getRightTriggerAxis() > .5);
+  private Trigger mRightDown = new mRightUp(m_controller);
+  private Trigger mRightUp = new mRightDown(m_controller);
+
+  private Trigger driverLeftTrigger = new Trigger(() -> d_controller.getLeftTriggerAxis() > .5);
+  private Trigger driverRightTrigger = new Trigger(() -> d_controller.getRightTriggerAxis() > .5);
   private Trigger mLeftTrigger = new Trigger(() -> m_controller.getLeftTriggerAxis() > .5);
   private Trigger mRightTrigger = new Trigger(() -> m_controller.getRightTriggerAxis() > .5);
 
-  public RobotContainer() {
+  public RobotContainer(PneumaticHub hub) {
+    this.hub = hub;
+    m_climb = new Climb(this.hub);
+    m_drivetrainSubsystem = new Drivetrain();
+    m_intake = new Intake(this.hub);
+    m_feeder = new Feeder();
+    m_tower = new Tower();
+    m_shooter = new Shooter(this.hub);
+    m_shooterVision = new ShooterVision(m_shooter);
+    m_climb.setDefaultCommand(new IdleClimb(m_climb));
     m_intake.setDefaultCommand(new IdleIntake(m_intake));
     m_feeder.setDefaultCommand(new StopFeeder(m_feeder));
     m_tower.setDefaultCommand(new IdleTower(m_tower));
@@ -97,13 +114,17 @@ public class RobotContainer {
 
     mLeftTrigger.whenActive(new PrimeShoot(m_shooter, m_shooterVision));
 
+
+
     new Button(m_controller::getStartButton).whenPressed(m_climb::activateClimb);
 
     new Button(m_controller::getStartButton).whenReleased(m_climb::deactiveClimb);
 
-    mLeftUp.whenActive(m_climb::extendCenterWinch);
-
     mLeftDown.whenActive(m_climb::retractCenterWinch);
+
+    mLeftDown.whenInactive(m_climb::stopCenterWinch);
+
+    mLeftUp.whenActive(m_climb::extendCenterWinch);
 
     mRightUp.whenActive(m_climb::extendArmWinch);
 
@@ -116,6 +137,8 @@ public class RobotContainer {
     new POVButton(m_controller, 90).whenPressed(m_climb::actuateLowerPistons);
 
     new POVButton(m_controller, 270).whenPressed(m_climb::retractLowerPistons);
+
+
 
     new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
 

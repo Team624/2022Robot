@@ -12,11 +12,15 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 
 public class Shooter extends SubsystemBase {
+  private PneumaticHub hub;
+  private Solenoid hood;
 
   private boolean manualShoot, manualHood, isAutoShoot, autoHood;
 
@@ -26,7 +30,6 @@ public class Shooter extends SubsystemBase {
 
   private TalonFX leftFlywheel = new TalonFX(Constants.Shooter.leftFlywheelMotorID);
   private TalonFX rightFlywheel = new TalonFX(Constants.Shooter.rightFlywheelMotorID);
-  //private Solenoid hood = new Solenoid(PneumaticsModuleType.REVPH, Constants.Shooter.flywheelSolenoidID);
 
   private boolean hoodActuated;
   private boolean isPriming;
@@ -49,7 +52,10 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry tuningPID = shootTab.add("Tuning PID?", false).withPosition(3,1).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
   /** Creates a new Shooter. */
-  public Shooter() {
+  public Shooter(PneumaticHub hub) {
+    this.hub = hub;
+    hood = hub.makeSolenoid(9);
+
     rightFlywheel.setInverted(true);
 
     leftFlywheel.configFactoryDefault();
@@ -87,11 +93,11 @@ public class Shooter extends SubsystemBase {
     return leftFlywheel.getSelectedSensorVelocity();
   }
 
-  public void setRPM(double rpm) {
-    goalRPM = rpm;
-    dashSetRPM.setNumber(rpm);
+  public void setRPM() {
+    goalRPM = manualRPM.getDouble(0);
     leftFlywheel.set(TalonFXControlMode.Velocity, goalRPM);
-    rightFlywheel.set(TalonFXControlMode.Velocity, -goalRPM);
+    rightFlywheel.set(TalonFXControlMode.Velocity, goalRPM);
+    dashSetRPM.setNumber(goalRPM);
   }
 
   public void idleFlywheel() {
@@ -111,7 +117,7 @@ public class Shooter extends SubsystemBase {
 
   public void setHood(boolean isHoodUp) {
     hoodActuated = isHoodUp;
-    //hood.set(hoodActuated);
+    hood.set(hoodActuated);
   }
 
   public void setPriming(boolean priming) {
@@ -162,12 +168,10 @@ public class Shooter extends SubsystemBase {
   }
 
   public void testHoodOn(){
-    hoodActuated = true;
     setHood(true);
   }
 
   public void testHoodOff(){
-    hoodActuated = false;
     setHood(false);
   }
 }

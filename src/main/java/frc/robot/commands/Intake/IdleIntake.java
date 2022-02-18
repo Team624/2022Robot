@@ -20,7 +20,7 @@ public class IdleIntake extends CommandBase {
   @Override
   public void initialize() {
     intake.stopIntake();
-    //intake.retractSolenoids();
+    intake.retractSolenoids();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,7 +31,7 @@ public class IdleIntake extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     intake.stopIntake();
-    //intake.retractSolenoids();
+    intake.retractSolenoids();
   }
 
   // Returns true when the command should end.

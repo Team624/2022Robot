@@ -118,13 +118,13 @@ public class Auton {
 
     public String getShooterState(){
         String state = SmartDashboard.getEntry("/auto/shooter/state").getString("idle");
-        if(state.equals("Shoot")){
-            new Shoot(tower);
-            new PrimeShoot(shooter, vision);
-        }else if(state.equals("Prime")){
-            new PrimeShoot(shooter, vision);
+        if(state.equals("shoot")){
+            new Shoot(tower).schedule();
+            new PrimeShoot(shooter, vision).schedule();
+        }else if(state.equals("prime")){
+            new PrimeShoot(shooter, vision).schedule();
         }else{
-            new IdleShoot(shooter);
+            new IdleShoot(shooter).schedule();
         }
         return state;
     }
@@ -132,10 +132,10 @@ public class Auton {
     public void getIntakeState(){
         String state = SmartDashboard.getEntry("/auto/intake/state").getString("retract"); 
         if(state.equals("deploy")){
-            new DeployIntake(intake);
-            new ActiveFeed(feeder);
+            new DeployIntake(intake).schedule();
+            new ActiveFeed(feeder).schedule();
         }else{
-            new IdleIntake(intake);
+            new IdleIntake(intake).schedule();
         }
     }
     

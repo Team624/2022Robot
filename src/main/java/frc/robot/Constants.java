@@ -44,12 +44,12 @@ public final class Constants {
         public static final double hoodSwitchAngle = 10;
         public static final double hoodDeadBandSize = 2;
         public static final double[][] shooterExperimentDataHigh = {
-        //  {angle, rpm, actualDistance}
+        //  {cam-distance, rpm, actualDistance}
             {15, 100, 1},
             {16, 120, 5}
         };
         public static final double[][] shooterExperimentDataLow = {
-        //  {angle, rpm, actualDistance}
+        //  {cam-distance, rpm, actualDistance}
             {5, 100, 1},
             {6, 110, 5}
         };

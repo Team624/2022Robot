@@ -5,6 +5,7 @@
 package frc.robot.commands.Drivetrain;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
@@ -23,6 +24,9 @@ public class VisionTurn extends CommandBase {
 
   private double quickTurnTolerance = 15;
   private double visionResetTolerance = 4;
+
+  private SlewRateLimiter filterX = new SlewRateLimiter(7);
+  private SlewRateLimiter filterY = new SlewRateLimiter(7);
 
   private double[] targetPose = {8.2423, -4.0513};
 
@@ -75,8 +79,8 @@ public class VisionTurn extends CommandBase {
       thVelocity = getQuickTurnPID(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + (wantedDeltaAngle * (180/Math.PI)));
     }
 
-    double vx = m_translationXSupplier.getAsDouble();
-    double vy = m_translationYSupplier.getAsDouble();
+    double vx = filterX.calculate(m_translationXSupplier.getAsDouble());
+    double vy = filterY.calculate(m_translationYSupplier.getAsDouble());
     if (m_drivetrainSubsystem.isCreepin){
       vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
       vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;

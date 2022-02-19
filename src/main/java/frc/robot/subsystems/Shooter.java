@@ -16,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 
 public class Shooter extends SubsystemBase {
@@ -36,6 +37,8 @@ public class Shooter extends SubsystemBase {
 
   private double goalRPM;
 
+  private XboxController test;
+
   // Set up the dashboard
   private ShuffleboardTab shootTab = Shuffleboard.getTab("Shooter");
   private NetworkTableEntry dashSetRPM = shootTab.add("Goal RPM:", 0).withPosition(0, 1).getEntry();
@@ -52,7 +55,8 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry tuningPID = shootTab.add("Tuning PID?", false).withPosition(3,1).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
   /** Creates a new Shooter. */
-  public Shooter(PneumaticHub hub) {
+  public Shooter(PneumaticHub hub, XboxController test) {
+    this.test = test;
     this.hub = hub;
     hood = hub.makeSolenoid(9);
 
@@ -87,6 +91,8 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
     updateDash();
     updatePID();
+    System.out.println("Get Left Y = " + test.getLeftY());
+    System.out.println("Get Left Trigger = " + test.getLeftTriggerAxis());
   }
 
   private double getRPM() {

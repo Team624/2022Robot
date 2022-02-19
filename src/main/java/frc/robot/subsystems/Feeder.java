@@ -41,6 +41,8 @@ public class Feeder extends SubsystemBase {
   private NetworkTableEntry setPoint = tab.add("Setpoint", 0.0).withPosition(2, 0).getEntry();
   private NetworkTableEntry currentSpeed = tab.add("Encoder", 0.0).withPosition(2, 1).getEntry();
 
+  private NetworkTableEntry leoFeed = tab.add("Leo Feed", false).withPosition(3, 0).getEntry();
+
   private NetworkTableEntry Pterm = tab.add("P Term", 0.0).withPosition(1, 0).getEntry();
   private NetworkTableEntry Iterm = tab.add("I Term", 0.0).withPosition(1, 1).getEntry();
   private NetworkTableEntry Dterm = tab.add("D Term", 0.0).withPosition(1, 2).getEntry();
@@ -105,10 +107,13 @@ public class Feeder extends SubsystemBase {
   public void powerFeeder() {
     feederPID.setReference(feederPower * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
     setPoint.setDouble(feederPower);
-    
   }
 
   public void stopFeeder() {
     feederMotor.stopMotor();
+  }
+
+  public boolean getLeoFeed(){
+    return leoFeed.getBoolean(false);
   }
 }

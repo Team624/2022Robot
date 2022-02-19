@@ -45,6 +45,8 @@ public class Tower extends SubsystemBase {
   private NetworkTableEntry setPoint = tab.add("Setpoint", 0.0).withPosition(2, 0).getEntry();
   private NetworkTableEntry currentSpeed = tab.add("Encoder", 0.0).withPosition(2, 1).getEntry();
 
+  private NetworkTableEntry leoShoot = tab.add("Leo Shoot", false).withPosition(3, 0).getEntry();
+
   private NetworkTableEntry Pterm = tab.add("P Term", 0.0).withPosition(1, 0).getEntry();
   private NetworkTableEntry Iterm = tab.add("I Term", 0.0).withPosition(1, 1).getEntry();
   private NetworkTableEntry Dterm = tab.add("D Term", 0.0).withPosition(1, 2).getEntry();
@@ -116,11 +118,20 @@ public class Tower extends SubsystemBase {
   }
 
   public void loadTower(){
-    towerPID.setReference(autoLoadPower * Constants.Tower.maxRPM, CANSparkMax.ControlType.kVelocity);
-    setPoint.setDouble(autoLoadPower);
+    if(!checkIR()){
+      towerPID.setReference(autoLoadPower * Constants.Tower.maxRPM, CANSparkMax.ControlType.kVelocity);
+      setPoint.setDouble(autoLoadPower);
+    }else{
+      towerPID.setReference(0, CANSparkMax.ControlType.kVelocity);
+      setPoint.setDouble(0);
+    }
   }
 
   public void stopTower(){
     towerMotor.stopMotor();
+  }
+
+  public boolean getLeoShoot(){
+    return leoShoot.getBoolean(false);
   }
 }

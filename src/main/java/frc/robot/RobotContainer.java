@@ -6,14 +6,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Climb.ExtendCenterWinch;
 import frc.robot.commands.Climb.IdleClimb;
-import frc.robot.commands.Climb.RetractCenterWinch;
 import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.BlankDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
@@ -26,6 +22,7 @@ import frc.robot.commands.Shooter.ManualShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Tower.IdleTower;
 import frc.robot.commands.Tower.ManualTower;
+import frc.robot.commands.Tower.Shoot;
 import frc.robot.commands.Intake.DeployIntake;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
@@ -53,24 +50,21 @@ public class RobotContainer {
 
   private Trigger mLeftDown = new mLeftDown(m_controller);
   private Trigger mLeftUp = new mLeftUp(m_controller);
-
   private Trigger mRightDown = new mRightUp(m_controller);
   private Trigger mRightUp = new mRightDown(m_controller);
-
-  private Trigger driverLeftTrigger = new Trigger(() -> d_controller.getLeftTriggerAxis() > .5);
-  private Trigger driverRightTrigger = new Trigger(() -> d_controller.getRightTriggerAxis() > .5);
-  private Trigger mLeftTrigger = new Trigger(() -> m_controller.getLeftTriggerAxis() > .5);
-  private Trigger mRightTrigger = new Trigger(() -> m_controller.getRightTriggerAxis() > .5);
+  private Trigger mLeftTrigger = new mLeftTrigger(m_controller);
 
   public RobotContainer(PneumaticHub hub) {
     this.hub = hub;
+
     m_climb = new Climb(this.hub);
     m_drivetrainSubsystem = new Drivetrain();
     m_intake = new Intake(this.hub);
     m_feeder = new Feeder();
     m_tower = new Tower();
-    m_shooter = new Shooter(this.hub);
+    m_shooter = new Shooter(this.hub, m_controller);
     m_shooterVision = new ShooterVision(m_shooter);
+
     m_climb.setDefaultCommand(new IdleClimb(m_climb));
     m_intake.setDefaultCommand(new IdleIntake(m_intake));
     m_feeder.setDefaultCommand(new StopFeeder(m_feeder));
@@ -106,6 +100,8 @@ public class RobotContainer {
        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER
     ));
 
+//=====================================================================================
+
     new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));
 
     new Button(m_controller::getAButton).whenHeld(new ManualFeed(m_feeder));
@@ -116,7 +112,11 @@ public class RobotContainer {
 
     mLeftTrigger.whenActive(new PrimeShoot(m_shooter, m_shooterVision));
 
+    new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
 
+    new Button(m_controller::getBButton).whenReleased(m_shooter::testHoodOff);
+
+//================================================================================================
 
     new Button(m_controller::getStartButton).whenPressed(m_climb::activateClimb);
 
@@ -140,11 +140,6 @@ public class RobotContainer {
 
     new POVButton(m_controller, 270).whenPressed(m_climb::retractLowerPistons);
 
-
-
-    new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
-
-    new Button(m_controller::getBButton).whenReleased(m_shooter::testHoodOff);
   }
 
 
@@ -153,9 +148,6 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousDriveCommand(Auton auton) {
-    return new AutonomousDrive(m_drivetrainSubsystem, auton);
-  }
 
   private static double deadband(double value, double deadband) {
     if (Math.abs(value) > deadband) {
@@ -191,4 +183,29 @@ public class RobotContainer {
   public void setBlankDrivetrainCommand(){
     m_drivetrainSubsystem.setDefaultCommand(new BlankDrive(m_drivetrainSubsystem));
   }
+
+  public Drivetrain getDrivetrain(){
+    return m_drivetrainSubsystem;
+  }
+
+  public Intake getIntake(){
+    return m_intake;
+  }
+
+  public Feeder getFeeder(){
+    return m_feeder;
+  }
+
+  public Tower getTower(){
+    return m_tower;
+  }
+
+  public Shooter getShooter(){
+    return m_shooter;
+  }
+
+  public ShooterVision getShooterVision(){
+    return m_shooterVision;
+  }
+
 }

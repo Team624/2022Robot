@@ -6,14 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utility.Auton;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -24,7 +19,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
-  private Auton auton = new Auton();
+  private Auton auton;
 
   private PneumaticHub hub;
 
@@ -42,8 +37,18 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer(hub);
+
+    auton = new Auton(
+      m_robotContainer.getDrivetrain(),
+      m_robotContainer.getFeeder(),
+      m_robotContainer.getIntake(),
+      m_robotContainer.getTower(),
+      m_robotContainer.getShooter(),
+      m_robotContainer.getShooterVision()
+    );
+
     auton.setState(false);
-    //compressor.enableDigital();
+    compressor.enableDigital();
   }
 
   /**
@@ -68,10 +73,6 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     compressor.disable();
     auton.setState(false);
-    // TODO: Im not sure if not properly canceling the command could cause the issues but I guess we'll see lol
-    if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
-      m_robotContainer.getAutonomousDriveCommand(auton).cancel();
-    }
   }
 
   @Override
@@ -83,31 +84,24 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     compressor.enableDigital();
-    m_robotContainer.setBlankDrivetrainCommand();
-    //compressor.enableDigital();
     auton.setState(true);
-    m_robotContainer.getAutonomousDriveCommand(auton).schedule(true);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+
+  }
 
   @Override
   public void teleopInit() {
     compressor.enableDigital();
-    m_robotContainer.setDrivetrainDefaultCommand();
-    if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
-      m_robotContainer.getAutonomousDriveCommand(auton).cancel();
-    }
     auton.setState(false);
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    //System.out.println("Here: " + test.get());
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {

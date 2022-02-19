@@ -2,35 +2,37 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Climb;
+package frc.robot.commands.Feeder;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.Feeder;
 
-public class ExtendCenterWinch extends CommandBase {
-  private final Climb climb;
-  /** Creates a new ExtendCenterWinch. */
-  public ExtendCenterWinch(Climb climb) {
-    this.climb = climb;
-    addRequirements(this.climb);
+public class AutonomousFeed extends CommandBase {
+  private final Feeder feeder;
+  /** Creates a new AutonomousFeed. */
+  public AutonomousFeed(Feeder feeder) {
+    this.feeder = feeder;
+    addRequirements(feeder);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    climb.extendCenterWinch();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if(feeder.getLeoFeed()){
+      feeder.powerFeeder();
+    }else{
+      feeder.stopFeeder();
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    climb.stopCenterWinch();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

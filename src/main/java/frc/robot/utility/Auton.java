@@ -5,6 +5,17 @@
 package frc.robot.utility;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.commands.Feeder.ActiveFeed;
+import frc.robot.commands.Intake.DeployIntake;
+import frc.robot.commands.Intake.IdleIntake;
+import frc.robot.commands.Shooter.IdleShoot;
+import frc.robot.commands.Shooter.PrimeShoot;
+import frc.robot.commands.Tower.Shoot;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Feeder;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Tower;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -15,6 +26,13 @@ public class Auton {
 
     public Path[] auton;
 
+    private Drivetrain drivetrain;
+    private Feeder feeder;
+    private Intake intake;
+    private Tower tower;
+    private Shooter shooter;
+    private ShooterVision vision;
+
     private ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
   
     private NetworkTableEntry autoChoiceGet = autoTab.add("Auton Choice", 10).withPosition(0, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
@@ -22,8 +40,14 @@ public class Auton {
 
     private double pathRange;
 
-    public Auton(){
+    public Auton(Drivetrain drivetrain, Feeder feeder, Intake intake, Tower tower, Shooter shooter, ShooterVision vision){
         auton = getAuto();
+        this.drivetrain = drivetrain;
+        this.feeder = feeder;
+        this.intake = intake;
+        this.tower = tower;
+        this.shooter = shooter;
+        this.vision = vision;
     }
 
     public void updatePaths(){
@@ -67,7 +91,7 @@ public class Auton {
             SmartDashboard.getEntry(pathString + "Vx").getDouble(0.0), 
             SmartDashboard.getEntry(pathString + "Vy").getDouble(0.0), 
             SmartDashboard.getEntry(pathString + "Heading").getDouble(0.0),  
-            SmartDashboard.getEntry(pathString + "Vision").getDouble(0.0)
+            SmartDashboard.getEntry(pathString + "Tolerance").getDouble(0.0)
         );
         return point;
     }
@@ -92,21 +116,27 @@ public class Auton {
         return pathRange;
     }
 
-    // States
     public String getShooterState(){
-        return SmartDashboard.getEntry("/auto/shooter/state").getString("idle");
+        String state = SmartDashboard.getEntry("/auto/shooter/state").getString("idle");
+        if(state.equals("Shoot")){
+            new Shoot(tower);
+            new PrimeShoot(shooter, vision);
+        }else if(state.equals("Prime")){
+            new PrimeShoot(shooter, vision);
+        }else{
+            new IdleShoot(shooter);
+        }
+        return state;
     }
 
-    public String getFlywheelState(){
-        return SmartDashboard.getEntry("/auto/flywheel/state").getString("idle");
-    }
-
-    public String getHoodState(){
-        return SmartDashboard.getEntry("/auto/hood/state").getString("idle");
-    }
-
-    public String getIntakeState(){
-        return SmartDashboard.getEntry("/auto/intake/state").getString("retract");
+    public void getIntakeState(){
+        String state = SmartDashboard.getEntry("/auto/intake/state").getString("retract"); 
+        if(state.equals("deploy")){
+            new DeployIntake(intake);
+            new ActiveFeed(feeder);
+        }else{
+            new IdleIntake(intake);
+        }
     }
     
 }

@@ -73,8 +73,12 @@ public class VisionTurn extends CommandBase {
 
       thVelocity = getRotationPID(visionRot);
       System.out.println("THIS HERE: " + thVelocity);
-      if (thVelocity > 0.1){
-        thVelocity = 0.1;
+      double lim = 0.8;
+      if (thVelocity > lim){
+        thVelocity = lim;
+      }
+      if (thVelocity < -lim){
+        thVelocity = -lim;
       }
       
     } else{

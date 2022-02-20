@@ -11,6 +11,7 @@ import frc.robot.Constants;
 public class DefaultDriveCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;
 
+    private final DoubleSupplier m_leftTriggerSupplier;
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
@@ -18,8 +19,9 @@ public class DefaultDriveCommand extends CommandBase {
     private SlewRateLimiter filterX = new SlewRateLimiter(7);
     private SlewRateLimiter filterY = new SlewRateLimiter(7);
 
-    public DefaultDriveCommand(Drivetrain drivetrainSubsystem, DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
+    public DefaultDriveCommand(Drivetrain drivetrainSubsystem, DoubleSupplier triggerSupplier, DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
         this.m_drivetrainSubsystem = drivetrainSubsystem;
+        this.m_leftTriggerSupplier = triggerSupplier;
         this.m_translationXSupplier = translationXSupplier;
         this.m_translationYSupplier = translationYSupplier;
         this.m_rotationSupplier = rotationSupplier;
@@ -45,8 +47,13 @@ public class DefaultDriveCommand extends CommandBase {
             vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
             omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
         }
-        //System.out.println("Default Drive ::::::::");
-        m_drivetrainSubsystem.drive(
+
+        if (Math.abs(m_leftTriggerSupplier.getAsDouble()) > 0.5){
+            m_drivetrainSubsystem.drive(
+                new ChassisSpeeds(vx, vy, omega)
+            );
+        } else {
+            m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     vx,
                     vy,
@@ -54,6 +61,7 @@ public class DefaultDriveCommand extends CommandBase {
                     m_drivetrainSubsystem.getGyroscopeRotation()
                 )
         );
+        }
     }
 
     @Override

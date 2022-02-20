@@ -14,6 +14,8 @@ import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.BlankDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
+import frc.robot.commands.Feeder.ActiveFeed;
+import frc.robot.commands.Feeder.IdleFeeder;
 import frc.robot.commands.Feeder.ManualFeed;
 import frc.robot.commands.Feeder.StopFeeder;
 import frc.robot.commands.Intake.IdleIntake;
@@ -53,6 +55,7 @@ public class RobotContainer {
   private Trigger mRightDown = new mRightUp(m_controller);
   private Trigger mRightUp = new mRightDown(m_controller);
   private Trigger mLeftTrigger = new mLeftTrigger(m_controller);
+  private Trigger mRightTrigger = new mRightTrigger(m_controller);
 
   public RobotContainer(PneumaticHub hub) {
     this.hub = hub;
@@ -104,13 +107,19 @@ public class RobotContainer {
 
     new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));
 
-    new Button(m_controller::getAButton).whenHeld(new ManualFeed(m_feeder));
+    new Button(m_controller::getXButton).whenHeld(new IdleFeeder(m_feeder));
 
-    new Button(m_controller::getAButton).whenHeld(new ManualTower(m_tower));
+    //new Button(m_controller::getXButton).when(new DeployIntake(m_intake));
 
-    new Button(m_controller::getYButton).whenHeld(new ManualShoot(m_shooter));
+    new Button(m_controller::getRightBumper).whenHeld(new ActiveFeed(m_feeder));
 
-    mLeftTrigger.whenActive(new PrimeShoot(m_shooter, m_shooterVision));
+    new Button(m_controller::getRightBumper).whenHeld(new Shoot(m_tower));
+
+    new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision));
+
+    // mRightTrigger.whenActive(new Shoot(m_tower));
+
+    // mRightTrigger.whenActive(new ActiveFeed(m_feeder));
 
     new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
 

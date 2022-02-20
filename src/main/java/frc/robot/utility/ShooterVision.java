@@ -8,8 +8,8 @@ import frc.robot.subsystems.Shooter;
 public class ShooterVision {
   private final Shooter shooter;
 
-  private final NetworkTableEntry distanceAngleEntry = SmartDashboard.getEntry("/vision/distance_angle");
-  private final NetworkTableEntry rotationAngleEntry = SmartDashboard.getEntry("/vision/rotation_angle");
+  private final NetworkTableEntry distanceAngleEntry = SmartDashboard.getEntry("/vision/distanceAngle");
+  private final NetworkTableEntry rotationAngleEntry = SmartDashboard.getEntry("/vision/rotationAngle");
 
   public ShooterVision(Shooter shooter) {
     this.shooter = shooter;
@@ -27,12 +27,16 @@ public class ShooterVision {
     int upperDataPoint = getUpperExperimentPoint(getDistanceAngle());
     double[][] experimentData = getCurrentExperimentMatrix();
 
-    double lowerAngle = experimentData[upperDataPoint - 1][0];
-    double lowerRpm = experimentData[upperDataPoint - 1][1];
-    double upperAngle = experimentData[upperDataPoint][0];
-    double upperRpm = experimentData[upperDataPoint][1];
-
-    return pointSlope(lowerAngle, lowerRpm, upperAngle, upperRpm, getDistanceAngle());
+    try{
+      double lowerAngle = experimentData[upperDataPoint - 1][0];
+      double lowerRpm = experimentData[upperDataPoint - 1][1];
+      double upperAngle = experimentData[upperDataPoint][0];
+      double upperRpm = experimentData[upperDataPoint][1];
+      return pointSlope(lowerAngle, lowerRpm, upperAngle, upperRpm, getDistanceAngle());
+    } 
+    catch(Exception e){
+      return 0;
+    }
   }
 
   public double calculateActualDistance() {
@@ -48,16 +52,17 @@ public class ShooterVision {
   }
 
   public boolean calculateHood() {
-    double deadBandLow = Constants.Shooter.hoodSwitchAngle - (0.5 * Constants.Shooter.hoodDeadBandSize);
-    double deadBandHigh = Constants.Shooter.hoodSwitchAngle + (0.5 * Constants.Shooter.hoodDeadBandSize);
+    // double deadBandLow = Constants.Shooter.hoodSwitchAngle - (0.5 * Constants.Shooter.hoodDeadBandSize);
+    // double deadBandHigh = Constants.Shooter.hoodSwitchAngle + (0.5 * Constants.Shooter.hoodDeadBandSize);
 
-    if (getDistanceAngle() < deadBandLow && shooter.getHood()) {
-      return false;
-    } else if (getDistanceAngle() > deadBandHigh && !shooter.getHood()) {
-      return true;
-    }
+    // if (getDistanceAngle() < deadBandLow && shooter.getHood()) {
+    //   return false;
+    // } else if (getDistanceAngle() > deadBandHigh && !shooter.getHood()) {
+    //   return true;
+    // }
 
-    return shooter.getHood();
+    // return shooter.getHood();
+    return false;
   }
 
   public double pointSlope(double x1, double y1, double x2, double y2, double x) {

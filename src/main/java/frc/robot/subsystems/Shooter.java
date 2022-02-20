@@ -91,8 +91,6 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
     updateDash();
     updatePID();
-    System.out.println("Get Left Y = " + test.getLeftY());
-    System.out.println("Get Left Trigger = " + test.getLeftTriggerAxis());
   }
 
   private double getRPM() {

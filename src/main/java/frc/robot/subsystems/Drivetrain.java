@@ -24,8 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
 import com.kauailabs.navx.frc.AHRS;
 
 public class Drivetrain extends SubsystemBase {
@@ -176,11 +174,11 @@ public class Drivetrain extends SubsystemBase {
           isAuton = state;
   }
   public PIDController getRotationPID(){
-        return new PIDController(Constants.Drivetrain.visionP, Constants.Drivetrain.visionI, Constants.Drivetrain.visionD); 
+        return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD)); 
   }
 
   public PIDController getRotationPathPID(){
-        return new PIDController(0.06, 0, 0);
+        return new PIDController(.06, 0, 0);
   }
 
   public double normalizeAngle(double angle){

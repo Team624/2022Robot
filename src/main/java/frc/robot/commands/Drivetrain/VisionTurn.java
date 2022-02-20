@@ -68,10 +68,14 @@ public class VisionTurn extends CommandBase {
       System.out.println("Vision targeting error = " + visionRot);
       // If doing normal vision targeting
       if (Math.abs(visionRot) < visionResetTolerance){
-        System.out.println("reseting robot pose");
+        //System.out.println("reseting robot pose");
       }
 
       thVelocity = getRotationPID(visionRot);
+      System.out.println("THIS HERE: " + thVelocity);
+      if (thVelocity > 0.1){
+        thVelocity = 0.1;
+      }
       
     } else{
       System.out.println("Quick turn error = " + m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() % 360);
@@ -107,6 +111,7 @@ public class VisionTurn extends CommandBase {
   }
 
   private double getRotationPID(double wantedDeltaAngle){
+    //System.out.println(pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle));
     return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
   }
 

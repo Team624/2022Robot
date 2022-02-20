@@ -97,7 +97,7 @@ public class RobotContainer {
     new Button(d_controller::getRightBumper)
               .whenReleased(m_drivetrainSubsystem::noCreepMode);
     
-    new Button(d_controller::getYButton).whenHeld(new VisionTurn(
+    new Button(d_controller::getLeftBumper).whenHeld(new VisionTurn(
        m_drivetrainSubsystem,
        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER

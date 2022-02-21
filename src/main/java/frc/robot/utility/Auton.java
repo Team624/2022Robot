@@ -116,9 +116,9 @@ public class Auton {
         String state = SmartDashboard.getEntry("/auto/shooter/state").getString("idle");
         if(state.equals("shoot")){
             new Shoot(tower).schedule();
-            new PrimeShoot(shooter, vision).schedule();
+            new PrimeShoot(shooter, vision, drivetrain).schedule();
         }else if(state.equals("prime")){
-            new PrimeShoot(shooter, vision).schedule();
+            new PrimeShoot(shooter, vision, drivetrain).schedule();
         }else{
             new IdleShoot(shooter).schedule();
         }

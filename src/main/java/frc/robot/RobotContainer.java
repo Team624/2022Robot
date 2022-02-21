@@ -106,7 +106,7 @@ public class RobotContainer {
 
     new Button(m_controller::getRightBumper).whenHeld(new Shoot(m_tower));
 
-    new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision));
+    new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
 
     new Button(m_controller::getBButton).whenHeld(new Reverse(m_tower));
 

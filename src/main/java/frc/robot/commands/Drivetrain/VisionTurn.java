@@ -115,6 +115,9 @@ public class VisionTurn extends CommandBase {
         m_drivetrainSubsystem.getGyroscopeRotation()
       )
     );
+    m_drivetrainSubsystem.updateFieldRelVelocity(new ChassisSpeeds(vx, vy, thVelocity));
+    
+    System.out.println(m_drivetrainSubsystem.getGoalRelVelocity(getQuickTurnValue()));
   }
 
   private double getQuickTurnValue(){

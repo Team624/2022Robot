@@ -5,17 +5,20 @@
 package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.utility.ShooterVision;
 
 public class PrimeShoot extends CommandBase {
   private final Shooter shooter;
   private final ShooterVision vision;
+  private Drivetrain drivetrain;
 
   /** Creates a new PrimeShoot. */
-  public PrimeShoot(Shooter shooter, ShooterVision vision) {
+  public PrimeShoot(Shooter shooter, ShooterVision vision, Drivetrain drivetrain) {
     this.shooter = shooter;
     this.vision = vision;
+    this.drivetrain = drivetrain;
     addRequirements(this.shooter);
   }
 

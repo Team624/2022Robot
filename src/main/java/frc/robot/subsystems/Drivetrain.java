@@ -209,10 +209,19 @@ public class Drivetrain extends SubsystemBase {
 
   public void quickZeroPose(){
         zeroGyroscope();
+        // zero point against driver station wall
         double[] startPosition = {0.406,-6.0198,0};
         Rotation2d newRot = new Rotation2d(-startPosition[2]);
         Pose2d newPose = new Pose2d(startPosition[0], startPosition[1], newRot);
         m_odometry.resetPosition(newPose, newRot);
+        ahrs.setAngleAdjustment(newRot.getDegrees());
+  }
+
+  public void visionCorrectPose(double x, double y){
+        Rotation2d newRot = getGyroscopeRotation();
+        Pose2d newPose = new Pose2d(x, y, newRot);
+        m_odometry.resetPosition(newPose, newRot);
+        // Not sure if needed
         ahrs.setAngleAdjustment(newRot.getDegrees());
 }
 

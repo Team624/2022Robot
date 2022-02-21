@@ -68,9 +68,8 @@ public class RobotContainer {
     // TODO: Change once second IR is on
     //m_tower.setDefaultCommand(new IdleTower(m_tower));
     m_tower.setDefaultCommand(new Stop(m_tower));
-    
+
     m_shooter.setDefaultCommand(new IdleShoot(m_shooter));
-    //m_drivetrainSubsystem.setDefaultCommand(new PlayMusic(m_drivetrainSubsystem, m_controller.getPOV()));
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem,
         () -> -modifyAxis(d_controller.getLeftTriggerAxis()), 
@@ -96,6 +95,7 @@ public class RobotContainer {
     
     new Button(d_controller::getLeftBumper).whenHeld(new VisionTurn(
        m_drivetrainSubsystem,
+       m_shooterVision,
        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER
     ));

@@ -9,6 +9,8 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.utility.ShooterVision;
+
 import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -18,6 +20,8 @@ public class VisionTurn extends CommandBase {
 
   private final DoubleSupplier m_translationXSupplier;
   private final DoubleSupplier m_translationYSupplier;
+
+  private final ShooterVision shooterVision;
 
   private PIDController pid;
   private PIDController pidQuickTurn;
@@ -32,9 +36,11 @@ public class VisionTurn extends CommandBase {
 
   /** Creates a new PositionTurn. */
   public VisionTurn(Drivetrain drivetrainSubsystem,
+                      ShooterVision shooterVision,
                       DoubleSupplier translationXSupplier,
                       DoubleSupplier translationYSupplier) {
     this.m_drivetrainSubsystem = drivetrainSubsystem;
+    this.shooterVision = shooterVision;
     this.m_translationXSupplier = translationXSupplier;
     this.m_translationYSupplier = translationYSupplier;
 
@@ -68,7 +74,14 @@ public class VisionTurn extends CommandBase {
       System.out.println("Vision targeting error = " + visionRot);
       // If doing normal vision targeting
       if (Math.abs(visionRot) < visionResetTolerance){
-        //System.out.println("reseting robot pose");
+        System.out.println("reseting robot pose");
+        double radius = shooterVision.calculateActualDistance();
+        double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians();
+        double x = radius * Math.cos(degree % (Math.PI * 2));
+        double y = radius * Math.sin(degree % (Math.PI * 2));
+
+        // TODO: Turn on for vision correction
+        //m_drivetrainSubsystem.visionCorrectPose(targetPose[0] - x, targetPose[1] - y);
       }
 
       thVelocity = getRotationPID(visionRot);

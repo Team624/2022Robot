@@ -41,6 +41,7 @@ public class Tower extends SubsystemBase {
   private ShuffleboardTab tab = Shuffleboard.getTab("Tower");
   private NetworkTableEntry setSpeed = tab.add("Set Speed", false).withPosition(0, 0).getEntry();
   private NetworkTableEntry towerSpeed = tab.add("Tower Speed", 0.0).withPosition(0, 1).getEntry();
+  private NetworkTableEntry autoSpeed = tab.add("Auto Speed", 0.0).withPosition(0, 2).getEntry();
 
   private NetworkTableEntry setPoint = tab.add("Setpoint", 0.0).withPosition(2, 0).getEntry();
   private NetworkTableEntry currentSpeed = tab.add("Encoder", 0.0).withPosition(2, 1).getEntry();
@@ -88,6 +89,7 @@ public class Tower extends SubsystemBase {
   private void checkNT(){
     if(setSpeed.getBoolean(false)){
       towerPower = towerSpeed.getDouble(Constants.Tower.towerPower);
+      autoLoadPower = autoSpeed.getDouble(Constants.Tower.autoLoadPower);
     }else{
       towerPower = Constants.Tower.towerPower;
     }
@@ -109,7 +111,7 @@ public class Tower extends SubsystemBase {
   }
 
   public boolean checkIR(){
-    return IrSensor.get();
+    return true;
   }
 
   public void powerTower(){

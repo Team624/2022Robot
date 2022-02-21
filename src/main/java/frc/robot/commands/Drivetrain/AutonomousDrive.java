@@ -5,7 +5,7 @@
 package frc.robot.commands.Drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.Drivetrain.auton.*;
+import frc.robot.commands.Drivetrain.Auton.*;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utility.Auton;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;

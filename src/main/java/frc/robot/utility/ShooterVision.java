@@ -43,12 +43,16 @@ public class ShooterVision {
     int upperDataPoint = getUpperExperimentPoint(getDistanceAngle());
     double[][] experimentData = getCurrentExperimentMatrix();
 
-    double lowerAngle = experimentData[upperDataPoint - 1][0];
-    double lowerActualDistance = experimentData[upperDataPoint - 1][2];
-    double upperAngle = experimentData[upperDataPoint][0];
-    double upperActualDistance = experimentData[upperDataPoint][2];
-
-    return pointSlope(lowerAngle, lowerActualDistance, upperAngle, upperActualDistance, getDistanceAngle());
+    try{
+      double lowerAngle = experimentData[upperDataPoint - 1][0];
+      double lowerActualDistance = experimentData[upperDataPoint - 1][2];
+      double upperAngle = experimentData[upperDataPoint][0];
+      double upperActualDistance = experimentData[upperDataPoint][2];
+      return pointSlope(lowerAngle, lowerActualDistance, upperAngle, upperActualDistance, getDistanceAngle());
+    } 
+    catch(Exception e){
+      return 0;
+    }
   }
 
   public boolean calculateHood() {

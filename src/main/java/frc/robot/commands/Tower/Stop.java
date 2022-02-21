@@ -7,10 +7,10 @@ package frc.robot.commands.Tower;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Tower;
 
-public class ManualTower extends CommandBase {
-  private Tower tower;
-  /** Creates a new Tower. */
-  public ManualTower(Tower tower) {
+public class Stop extends CommandBase {
+  private final Tower tower;
+  /** Creates a new Stop. */
+  public Stop(Tower tower) {
     this.tower = tower;
     addRequirements(this.tower);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -18,19 +18,18 @@ public class ManualTower extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    tower.powerTower();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    tower.stopTower();
+    tower.stopFeeder();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    tower.powerTower();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

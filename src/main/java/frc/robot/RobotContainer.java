@@ -14,21 +14,17 @@ import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.BlankDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
-import frc.robot.commands.Feeder.ActiveFeed;
-import frc.robot.commands.Feeder.IdleFeeder;
-import frc.robot.commands.Feeder.ManualFeed;
-import frc.robot.commands.Feeder.StopFeeder;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.ManualShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Tower.IdleTower;
-import frc.robot.commands.Tower.ManualTower;
+import frc.robot.commands.Tower.Reverse;
 import frc.robot.commands.Tower.Shoot;
+import frc.robot.commands.Tower.Stop;
 import frc.robot.commands.Intake.DeployIntake;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tower;
@@ -42,7 +38,6 @@ public class RobotContainer {
   private final Climb m_climb;
   private final Drivetrain m_drivetrainSubsystem;
   private final Intake m_intake;
-  private final Feeder m_feeder;
   private final Tower m_tower;
   private final Shooter m_shooter;
   private final ShooterVision m_shooterVision;
@@ -63,15 +58,17 @@ public class RobotContainer {
     m_climb = new Climb(this.hub);
     m_drivetrainSubsystem = new Drivetrain();
     m_intake = new Intake(this.hub);
-    m_feeder = new Feeder();
     m_tower = new Tower();
     m_shooter = new Shooter(this.hub, m_controller);
     m_shooterVision = new ShooterVision(m_shooter);
 
     m_climb.setDefaultCommand(new IdleClimb(m_climb));
     m_intake.setDefaultCommand(new IdleIntake(m_intake));
-    m_feeder.setDefaultCommand(new StopFeeder(m_feeder));
-    m_tower.setDefaultCommand(new IdleTower(m_tower));
+
+    // TODO: Change once second IR is on
+    //m_tower.setDefaultCommand(new IdleTower(m_tower));
+    m_tower.setDefaultCommand(new Stop(m_tower));
+    
     m_shooter.setDefaultCommand(new IdleShoot(m_shooter));
     //m_drivetrainSubsystem.setDefaultCommand(new PlayMusic(m_drivetrainSubsystem, m_controller.getPOV()));
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
@@ -88,7 +85,6 @@ public class RobotContainer {
     new Button(d_controller::getAButton)
              .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
     
-    //FIXME Solely for debugging. Remove in master
     new Button(d_controller::getBButton)
               .whenPressed(m_drivetrainSubsystem::quickZeroPose);
 
@@ -108,23 +104,11 @@ public class RobotContainer {
 
     new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));
 
-    new Button(m_controller::getXButton).whenHeld(new IdleFeeder(m_feeder));
-
-    //new Button(m_controller::getXButton).when(new DeployIntake(m_intake));
-
-    new Button(m_controller::getRightBumper).whenHeld(new ActiveFeed(m_feeder));
-
     new Button(m_controller::getRightBumper).whenHeld(new Shoot(m_tower));
 
     new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision));
 
-    // mRightTrigger.whenActive(new Shoot(m_tower));
-
-    // mRightTrigger.whenActive(new ActiveFeed(m_feeder));
-
-    new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
-
-    new Button(m_controller::getBButton).whenReleased(m_shooter::testHoodOff);
+    new Button(m_controller::getBButton).whenHeld(new Reverse(m_tower));
 
 //================================================================================================
 
@@ -201,10 +185,6 @@ public class RobotContainer {
 
   public Intake getIntake(){
     return m_intake;
-  }
-
-  public Feeder getFeeder(){
-    return m_feeder;
   }
 
   public Tower getTower(){

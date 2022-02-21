@@ -40,7 +40,6 @@ public class Robot extends TimedRobot {
 
     auton = new Auton(
       m_robotContainer.getDrivetrain(),
-      m_robotContainer.getFeeder(),
       m_robotContainer.getIntake(),
       m_robotContainer.getTower(),
       m_robotContainer.getShooter(),

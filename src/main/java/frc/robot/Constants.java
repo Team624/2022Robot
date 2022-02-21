@@ -124,6 +124,7 @@ public final class Constants {
     }
 
     public static final class Drivetrain{
+        // FIXME: deadband of 0 prob not good but make sure it doesnt effect the vision turning pid only joystick
         public static final double DRIVETRAIN_INPUT_DEADBAND = 0;
         public static final double DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER = .6;
         public static final double DRIVETRAIN_INPUT_ROTATION_MULTIPLIER = .6;

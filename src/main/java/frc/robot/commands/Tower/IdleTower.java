@@ -9,7 +9,6 @@ import frc.robot.subsystems.Tower;
 
 public class IdleTower extends CommandBase {
   private final Tower tower;
-  private boolean IRState;
   /** Creates a new IdleTower. */
   public IdleTower(Tower tower) {
     this.tower = tower;
@@ -20,18 +19,12 @@ public class IdleTower extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    tower.stopTower();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    IRState = tower.checkIR();
-    if(IRState){
-      tower.loadTower();
-    }else{
-      tower.stopTower();
-    }
+    tower.loadBalls();
   }
 
   // Called once the command ends or is interrupted.

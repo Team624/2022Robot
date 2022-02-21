@@ -5,14 +5,12 @@
 package frc.robot.utility;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.commands.Feeder.ActiveFeed;
 import frc.robot.commands.Intake.DeployIntake;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Tower.Shoot;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tower;
@@ -27,7 +25,6 @@ public class Auton {
     public Path[] auton;
 
     private Drivetrain drivetrain;
-    private Feeder feeder;
     private Intake intake;
     private Tower tower;
     private Shooter shooter;
@@ -40,10 +37,9 @@ public class Auton {
 
     private double pathRange;
 
-    public Auton(Drivetrain drivetrain, Feeder feeder, Intake intake, Tower tower, Shooter shooter, ShooterVision vision){
+    public Auton(Drivetrain drivetrain, Intake intake, Tower tower, Shooter shooter, ShooterVision vision){
         auton = getAuto();
         this.drivetrain = drivetrain;
-        this.feeder = feeder;
         this.intake = intake;
         this.tower = tower;
         this.shooter = shooter;
@@ -133,7 +129,6 @@ public class Auton {
         String state = SmartDashboard.getEntry("/auto/intake/state").getString("retract"); 
         if(state.equals("deploy")){
             new DeployIntake(intake).schedule();
-            new ActiveFeed(feeder).schedule();
         }else{
             new IdleIntake(intake).schedule();
         }

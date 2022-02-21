@@ -19,7 +19,8 @@ public class Shoot extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    tower.powerTower();
+    tower.powerTower(false);
+    tower.powerFeeder(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

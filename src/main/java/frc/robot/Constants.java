@@ -33,13 +33,13 @@ public final class Constants {
         public static final int flywheelSolenoidID = 9;
 
         public static final double kP = 0.3;
-        public static final double kI = 0.0;
+        public static final double kI = 0.001;
         public static final double kD = 0.0;
         public static final double kF = 0.049;
-        public static final double kIzone = 0.0;
+        public static final double kIzone = 200.0;
 
-        public static final double manualPercent = 1;
         public static final double idlePercent = .2;
+        public static final double lowGoalRPM = 4000;
 
         public static final double hoodSwitchAngle = 10;
         public static final double hoodDeadBandSize = 2;
@@ -72,7 +72,6 @@ public final class Constants {
     }
 
     public static final class Intake{
-        //FIXME
         public static final int intakeMotorID = 4;
         public static final int leftIntakeSolenoidID = 8;
         public static final int rightIntakeSolenoidID = 8;
@@ -90,7 +89,6 @@ public final class Constants {
     }
 
     public static final class Feeder{
-        //FIXME
         public static final int feederMotorID = 14;
 
         public static final double feederPower = .7;
@@ -106,7 +104,6 @@ public final class Constants {
     }
 
     public static final class Tower{
-        //FIXME
         public static final int towerMotorID = 2;
 
         public static final double towerPower = .7;
@@ -132,18 +129,9 @@ public final class Constants {
         public static final double visionP = .09;
         public static final double visionI = .0;
         public static final double visionD = .0035;
-        /**
-         * The left-to-right distance between the drivetrain wheels
-         *
-         * Should be measured from center to center.
-         */
+
         public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.466598;
-        /**
-         * The front-to-back distance between the drivetrain wheels.
-         *
-         * Should be measured from center to center.
-         */
-        //bad code. smh
+
         public static final double DRIVETRAIN_WHEELBASE_METERS = 0.466598;
 
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;

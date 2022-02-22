@@ -2,24 +2,25 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Feeder;
+package frc.robot.commands.Shooter;
 
-import frc.robot.subsystems.Feeder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.subsystems.Shooter;
 
-public class IdleFeed extends CommandBase {
-  private final Feeder feeder;
-  /** Creates a new Hopper. */
-  public IdleFeed(Feeder feeder) {
-    this.feeder = feeder;
-    addRequirements(feeder);
+public class LowGoal extends CommandBase {
+  private final Shooter shooter;
+  /** Creates a new LowBall. */
+  public LowGoal(Shooter shooter) {
+    this.shooter = shooter;
+    addRequirements(this.shooter);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    feeder.stopFeeder();
+    shooter.setRPM(Constants.Shooter.lowGoalRPM);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

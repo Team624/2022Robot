@@ -17,6 +17,7 @@ import frc.robot.commands.Feeder.ActiveFeed;
 import frc.robot.commands.Feeder.IdleFeed;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
+import frc.robot.commands.Shooter.LowGoal;
 import frc.robot.commands.Shooter.ManualShoot;
 import frc.robot.commands.Tower.IdleTower;
 import frc.robot.commands.Tower.Shoot;
@@ -34,6 +35,8 @@ import frc.robot.Triggers.Joysticks.mLeftUp;
 import frc.robot.Triggers.Joysticks.mRightCenter;
 import frc.robot.Triggers.Joysticks.mRightDown;
 import frc.robot.Triggers.Joysticks.mRightUp;
+import frc.robot.Triggers.Triggers.mLeftTriggerDown;
+import frc.robot.Triggers.Triggers.mLeftTriggerUp;
 import frc.robot.Triggers.Triggers.mRightTriggerDown;
 import frc.robot.Triggers.Triggers.mRightTriggerUp;
 
@@ -59,6 +62,9 @@ public class RobotContainer {
   private Trigger mRightCenter = new mRightCenter(m_controller);
   private Trigger mRightTriggerDown = new mRightTriggerDown(m_controller);
   private Trigger mRightTriggerUp = new mRightTriggerUp(m_controller);
+  private Trigger mLeftTriggerDown = new mLeftTriggerDown(m_controller);
+  private Trigger mLeftTriggerUp = new mLeftTriggerUp(m_controller);
+  
 
   public RobotContainer(PneumaticHub hub) {
     this.hub = hub;
@@ -111,13 +117,29 @@ public class RobotContainer {
 
     new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));
 
-    mRightTriggerDown.whenActive(new ActiveFeed(m_feeder));
+    new Button(m_controller::getRightBumper).whenHeld(new Shoot(m_tower));
 
-    mRightTriggerDown.whenActive(new Shoot(m_tower));
+    new Button(m_controller::getRightBumper).whenHeld(new ActiveFeed(m_feeder));
 
-    mRightTriggerUp.whenActive(new IdleFeed(m_feeder));
+    // mRightTriggerDown.whenActive(new ActiveFeed(m_feeder));
 
-    mRightTriggerUp.whenActive(new IdleTower(m_tower));
+    // mRightTriggerDown.whenActive(new Shoot(m_tower));
+
+    // mRightTriggerUp.whenActive(new IdleFeed(m_feeder));
+
+    // mRightTriggerUp.whenActive(new IdleTower(m_tower));
+
+    // mLeftTriggerDown.whenActive(new ActiveFeed(m_feeder));
+
+    // mLeftTriggerDown.whenActive(new Shoot(m_tower));
+
+    // mLeftTriggerDown.whenActive(new LowGoal(m_shooter));
+
+    // mLeftTriggerUp.whenActive(new IdleFeed(m_feeder));
+
+    // mLeftTriggerUp.whenActive(new IdleTower(m_tower));
+
+    // mLeftTriggerUp.whenActive(new IdleShoot(m_shooter));
 
     new Button(m_controller::getYButton).whenHeld(new ManualShoot(m_shooter));
 

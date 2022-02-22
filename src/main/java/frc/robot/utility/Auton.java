@@ -11,6 +11,7 @@ import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Tower.Shoot;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -38,7 +39,7 @@ public class Auton {
 
     private double pathRange;
 
-    public Auton(Feeder feeder, Intake intake, Tower tower, Shooter shooter, ShooterVision vision){
+    public Auton(Drivetrain drivetrain, Feeder feeder, Intake intake, Tower tower, Shooter shooter, ShooterVision vision){
         auton = getAuto();
         this.feeder = feeder;
         this.intake = intake;

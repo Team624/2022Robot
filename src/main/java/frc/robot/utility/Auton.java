@@ -9,6 +9,7 @@ import frc.robot.commands.Intake.DeployIntake;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
+import frc.robot.commands.Shooter.ShortShoot;
 import frc.robot.commands.Tower.Shoot;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -117,9 +118,11 @@ public class Auton {
         if(state.equals("shoot")){
             new Shoot(tower).schedule();
             new PrimeShoot(shooter, vision).schedule();
-        }else if(state.equals("prime")){
+        } else if(state.equals("prime")){
             new PrimeShoot(shooter, vision).schedule();
-        }else{
+        } else if(state.equals("hide")){
+            new ShortShoot(shooter).schedule();
+        } else{
             new IdleShoot(shooter).schedule();
         }
         return state;

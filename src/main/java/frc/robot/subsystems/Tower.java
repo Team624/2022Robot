@@ -233,16 +233,16 @@ public class Tower extends SubsystemBase {
   }
 
   public boolean checkFeederIR(){
-    return IrSensor_tower.get();
+    return IrSensor_feeder.get();
   }
 
   // Overall functions
   public void loadBalls(){
-    if(checkTowerIR()){
+    if(!checkTowerIR()){
       powerTower(false);
       powerFeeder(false);
     } else{
-      if (checkFeederIR()){
+      if (!checkFeederIR()){
         powerFeeder(false);
         stopTower();
       } else{

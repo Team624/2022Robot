@@ -178,6 +178,11 @@ public class Drivetrain extends SubsystemBase {
         return new PIDController(0.1, 0, 0);  
   }
 
+  public PIDController getAutonRotationPID(){
+        return new PIDController(Constants.Drivetrain.visionP, Constants.Drivetrain.visionI, Constants.Drivetrain.visionD);  
+  }
+
+
   public PIDController getRotationPathPID(){
         return new PIDController(.06, 0, 0);
   }

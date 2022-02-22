@@ -72,6 +72,9 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     compressor.disable();
     auton.setState(false);
+    if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
+      m_robotContainer.getAutonomousDriveCommand(auton).cancel();
+    }
   }
 
   @Override
@@ -84,6 +87,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     compressor.enableDigital();
     auton.setState(true);
+    m_robotContainer.setBlankDrivetrainCommand();
+    m_robotContainer.getAutonomousDriveCommand(auton).schedule(true);
   }
 
   /** This function is called periodically during autonomous. */
@@ -95,6 +100,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     compressor.enableDigital();
+    m_robotContainer.setDrivetrainDefaultCommand();
+    if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
+      m_robotContainer.getAutonomousDriveCommand(auton).cancel();
+    }
     auton.setState(false);
   }
 

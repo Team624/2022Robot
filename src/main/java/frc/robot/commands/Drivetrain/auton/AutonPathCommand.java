@@ -33,7 +33,7 @@ public class AutonPathCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        pid = m_drivetrainSubsystem.getRotationPID();
+        pid = m_drivetrainSubsystem.getAutonRotationPID();
         commandGroup = new SequentialCommandGroup();
         for (int i = 0; i < path.getLength(); i++) {
             commandGroup.addCommands(new AutonPointCommand(m_drivetrainSubsystem, path, i, auton));
@@ -44,6 +44,7 @@ public class AutonPathCommand extends CommandBase {
     
     @Override
     public void execute() {
+        auton.getIntakeState();
         if (auton.getStartPathIndex() >= path.getPathId() && currentID != path.getPathId()){
             // Starts the path once
             System.out.println("STARTED NEW PATH: " + path.getPathId());

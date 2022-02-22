@@ -2,22 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.Triggers;
+package frc.robot.Triggers.Triggers;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /** Add your docs here. */
-public class mLeftUp extends Trigger {
+public class mLeftTriggerDown extends Trigger {
   XboxController cont;
 
-  public mLeftUp(XboxController controller){
+  public mLeftTriggerDown(XboxController controller){
     cont = controller;
   }
 
   @Override
   public boolean get() {
-    return cont.getLeftY() < -.5;
+    return cont.getLeftY() > .5;
   }
-
 }

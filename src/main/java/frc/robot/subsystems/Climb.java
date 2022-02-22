@@ -32,6 +32,7 @@ public class Climb extends SubsystemBase {
   /** Creates a new Climb. */
   public Climb(PneumaticHub hub) {
     centerWinchSpark.setIdleMode(IdleMode.kBrake);
+    armWinchSpark.setIdleMode(IdleMode.kBrake);
     this.hub = hub;
     bottomSolenoid = this.hub.makeSolenoid(10);
     upperSolenoid = this.hub.makeSolenoid(11);

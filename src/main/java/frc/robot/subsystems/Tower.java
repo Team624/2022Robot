@@ -36,7 +36,7 @@ public class Tower extends SubsystemBase {
   private double Iznew;
   private double FFnew;
 
-  private DigitalInput IrSensor = new DigitalInput(0);
+  private DigitalInput TowerSensor = new DigitalInput(0);
 
   private ShuffleboardTab tab = Shuffleboard.getTab("Tower");
   private NetworkTableEntry setSpeed = tab.add("Set Speed", false).withPosition(0, 0).getEntry();
@@ -45,8 +45,6 @@ public class Tower extends SubsystemBase {
 
   private NetworkTableEntry setPoint = tab.add("Setpoint", 0.0).withPosition(2, 0).getEntry();
   private NetworkTableEntry currentSpeed = tab.add("Encoder", 0.0).withPosition(2, 1).getEntry();
-
-  private NetworkTableEntry leoShoot = tab.add("Leo Shoot", false).withPosition(3, 0).getEntry();
 
   private NetworkTableEntry Pterm = tab.add("P Term", 0.0).withPosition(1, 0).getEntry();
   private NetworkTableEntry Iterm = tab.add("I Term", 0.0).withPosition(1, 1).getEntry();
@@ -121,8 +119,8 @@ public class Tower extends SubsystemBase {
 
   public void loadTower(){
     if(!checkIR()){
-      towerPID.setReference(autoLoadPower * Constants.Tower.maxRPM, CANSparkMax.ControlType.kVelocity);
-      setPoint.setDouble(autoLoadPower);
+      towerPID.setReference(towerPower * Constants.Tower.maxRPM, CANSparkMax.ControlType.kVelocity);
+      setPoint.setDouble(towerPower);
     }else{
       towerPID.setReference(0, CANSparkMax.ControlType.kVelocity);
       setPoint.setDouble(0);
@@ -133,7 +131,4 @@ public class Tower extends SubsystemBase {
     towerMotor.stopMotor();
   }
 
-  public boolean getLeoShoot(){
-    return leoShoot.getBoolean(false);
-  }
 }

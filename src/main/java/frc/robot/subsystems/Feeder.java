@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -50,6 +51,8 @@ public class Feeder extends SubsystemBase {
   private NetworkTableEntry FFterm = tab.add("FF Term", 0.0).withPosition(1, 4).getEntry();
 
   private double feederPower = Constants.Feeder.feederPower;
+
+  private DigitalInput feederSensor = new DigitalInput(2);
 
   /** Creates a new Hopper. */
   public Feeder() {
@@ -104,12 +107,22 @@ public class Feeder extends SubsystemBase {
     setPoint.setDouble(feederPower * Constants.Feeder.maxRPM);
   }
 
-  public void powerFeeder() {
+  public void powerFeeder(){
     feederPID.setReference(feederPower * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
     setPoint.setDouble(feederPower);
   }
 
-  public void stopFeeder() {
+  public void loadFeeder(){
+    if(!feederSensor.get()){
+      feederPID.setReference(feederPower * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
+      setPoint.setDouble(feederPower);
+    }else{
+      feederPID.setReference(0, CANSparkMax.ControlType.kVelocity);
+      setPoint.setDouble(0);
+    }
+  }
+
+  public void stopFeeder(){
     feederMotor.stopMotor();
   }
 

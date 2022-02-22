@@ -127,9 +127,9 @@ public class RobotContainer {
 
 //================================================================================================
 
-    new Button(m_controller::getStartButton).whenPressed(m_climb::activateClimb);
+    new Button(m_controller::getStartButton).whenActive(m_climb::activateClimb);
 
-    new Button(m_controller::getStartButton).whenReleased(m_climb::deactiveClimb);
+    new Button(m_controller::getStartButton).whenInactive(m_climb::deactiveClimb);
 
     mLeftDown.whenActive(m_climb::retractCenterWinch);
 

@@ -9,7 +9,7 @@ import frc.robot.subsystems.Tower;
 
 public class IdleTower extends CommandBase {
   private final Tower tower;
-  private boolean IRState;
+
   /** Creates a new IdleTower. */
   public IdleTower(Tower tower) {
     this.tower = tower;

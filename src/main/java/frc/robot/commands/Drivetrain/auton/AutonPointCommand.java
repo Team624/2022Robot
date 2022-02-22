@@ -5,7 +5,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.utility.Auton;
 import frc.robot.utility.Path;
 import frc.robot.utility.PathPoint;
 import frc.robot.Constants;
@@ -17,18 +16,15 @@ public class AutonPointCommand extends CommandBase {
     private PIDController pidVision;
     private PIDController pidPathRotation;
 
-    private Auton auton;
-
     private double currentX = 0;
     private double currentY = 0;
 
 
-    public AutonPointCommand (Drivetrain drive, Path path, int point, Auton auton) {
+    public AutonPointCommand (Drivetrain drive, Path path, int point) {
 
         this.m_drivetrainSubsystem = drive;
         this.path = path;
         this.point = point;
-        this.auton = auton;
         addRequirements(drive);
         
     }

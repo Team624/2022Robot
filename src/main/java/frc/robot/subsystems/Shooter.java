@@ -138,14 +138,6 @@ public class Shooter extends SubsystemBase {
     return hoodActuated;
   }
 
-  public double getRotationAngle() {
-    return SmartDashboard.getEntry("/vision/rotation_angle").getNumber(-1).doubleValue();
-  }
-
-  public double getDistanceAngle() {
-    return SmartDashboard.getEntry("/vision/distance_angle").getNumber(-1).doubleValue();
-  }
-
   private void updateDash() {
     dashSetRPM.setDouble(goalRPM);
     dashCurrentRPM.setDouble(getRPM());

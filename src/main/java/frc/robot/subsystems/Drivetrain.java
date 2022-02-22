@@ -177,8 +177,14 @@ public class Drivetrain extends SubsystemBase {
           isAuton = state;
   }
   public PIDController getRotationPID(){
-        return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD)); 
+        //return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
+        return new PIDController(0.1, 0, 0);  
   }
+
+  public PIDController getAutonRotationPID(){
+        return new PIDController(Constants.Drivetrain.visionP, Constants.Drivetrain.visionI, Constants.Drivetrain.visionD);  
+  }
+
 
   public PIDController getRotationPathPID(){
         return new PIDController(.06, 0, 0);
@@ -225,7 +231,7 @@ public class Drivetrain extends SubsystemBase {
         Pose2d newPose = new Pose2d(x, y, newRot);
         m_odometry.resetPosition(newPose, newRot);
         // Not sure if needed
-        ahrs.setAngleAdjustment(newRot.getDegrees());
+        //ahrs.setAngleAdjustment(newRot.getDegrees());
 }
 
   public void updateLeoPose(){

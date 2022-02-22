@@ -74,18 +74,18 @@ public class VisionTurn extends CommandBase {
       System.out.println("Vision targeting error = " + visionRot);
       // If doing normal vision targeting
       if (Math.abs(visionRot) < visionResetTolerance){
-        System.out.println("reseting robot pose");
         double radius = shooterVision.calculateActualDistance();
         double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians();
         double x = radius * Math.cos(degree % (Math.PI * 2));
         double y = radius * Math.sin(degree % (Math.PI * 2));
 
+        System.out.println("reseting robot pose: " + radius);
+
         // TODO: Turn on for vision correction
-        //m_drivetrainSubsystem.visionCorrectPose(targetPose[0] - x, targetPose[1] - y);
+        m_drivetrainSubsystem.visionCorrectPose(targetPose[0] - x, targetPose[1] - y);
       }
 
       thVelocity = getRotationPID(visionRot);
-      System.out.println("THIS HERE: " + thVelocity);
       // TODO: Tune this to work
       double lim = 0.8;
       if (thVelocity > lim){

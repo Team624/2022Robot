@@ -68,6 +68,7 @@ public class VisionTurn extends CommandBase {
     wantedDeltaAngle = Math.abs(errorB) < Math.abs(errorC) ? errorB : errorC;
     wantedDeltaAngle = Math.abs(wantedDeltaAngle) < Math.abs(errorA) ? wantedDeltaAngle : errorA;
 
+    System.out.println("Shoot onrun angle: " + getShootOnRunAngle());
     double visionRot = m_drivetrainSubsystem.getVisionRotationAngle() - (getShootOnRunAngle() * Constants.Drivetrain.shootOnRunAngleMult);
 
     if((Math.abs(wantedDeltaAngle) < quickTurnTolerance) && (Math.abs(visionRot) < 500)){
@@ -137,7 +138,7 @@ public class VisionTurn extends CommandBase {
 
     double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 
-    return Math.asin(goalRelVel[1]/distance);
+    return Math.asin(goalRelVel[1]/distance) * (180/Math.PI);
   }
 
   private double getRotationPID(double wantedDeltaAngle){

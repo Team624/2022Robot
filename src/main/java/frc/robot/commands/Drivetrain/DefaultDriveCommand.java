@@ -62,6 +62,7 @@ public class DefaultDriveCommand extends CommandBase {
                 )
         );
         }
+        m_drivetrainSubsystem.updateFieldRelVelocity(new ChassisSpeeds(vx, vy, omega));
     }
 
     @Override

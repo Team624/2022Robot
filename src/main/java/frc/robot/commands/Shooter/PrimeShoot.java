@@ -36,7 +36,6 @@ public class PrimeShoot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println(vision.calculateRPM());
     shooter.setRPM(vision.calculateRPM() - (drivetrain.getGoalRelVelocity(getQuickTurnValue())[0]) * Constants.Drivetrain.shootOnRunShooterMult);
     shooter.setHood(vision.calculateHood());
   }

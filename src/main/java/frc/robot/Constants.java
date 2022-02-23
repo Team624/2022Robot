@@ -13,9 +13,12 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final class LED{
+        public static final int LedID = 0;
+        public static final int LedLength = 0;
+    }
 
     public static final class Climb{
-        //FIXME 
         public static final int centerWinchMotorID = 12;
 
         public static final int armWinchMotorID = 5;
@@ -27,7 +30,6 @@ public final class Constants {
     }
 
     public static final class Shooter{
-        //FIXME
         public static final int leftFlywheelMotorID = 3;
         public static final int rightFlywheelMotorID = 13;
         public static final int flywheelSolenoidID = 9;

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.swervedrivespecialties.swervelib.Mk4ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
@@ -70,11 +71,16 @@ public class Drivetrain extends SubsystemBase {
 
   public boolean lastPointCommand = false;
 
+  private Mk4ModuleConfiguration moduleConfig;
+
   public Drivetrain() {
+         moduleConfig = configModule();
+
           m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                   tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                   .withSize(2, 4)
                   .withPosition(0, 0),
+                  //moduleConfig,
                   Mk4SwerveModuleHelper.GearRatio.L2,
                   Constants.Drivetrain.FRONT_LEFT_MODULE_DRIVE_MOTOR, 
                   Constants.Drivetrain.FRONT_LEFT_MODULE_STEER_MOTOR, 
@@ -154,6 +160,14 @@ public class Drivetrain extends SubsystemBase {
                         lstates = current;
          }
           return current; 
+  }
+
+  private Mk4ModuleConfiguration configModule(){
+        Mk4ModuleConfiguration send = new Mk4ModuleConfiguration();
+        send.setNominalVoltage(13);
+        send.setDriveCurrentLimit(80);
+        send.setSteerCurrentLimit(20);
+        return send;
   }
 
   public Rotation2d getGyroscopeRotation() {

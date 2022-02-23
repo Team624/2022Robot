@@ -68,7 +68,7 @@ public class VisionTurn extends CommandBase {
     wantedDeltaAngle = Math.abs(errorB) < Math.abs(errorC) ? errorB : errorC;
     wantedDeltaAngle = Math.abs(wantedDeltaAngle) < Math.abs(errorA) ? wantedDeltaAngle : errorA;
 
-    double visionRot = m_drivetrainSubsystem.getVisionRotationAngle();
+    double visionRot = m_drivetrainSubsystem.getVisionRotationAngle() - (getShootOnRunAngle() * Constants.Drivetrain.shootOnRunAngleMult);
 
     if((Math.abs(wantedDeltaAngle) < quickTurnTolerance) && (Math.abs(visionRot) < 500)){
       System.out.println("Vision targeting error = " + visionRot);
@@ -116,8 +116,6 @@ public class VisionTurn extends CommandBase {
       )
     );
     m_drivetrainSubsystem.updateFieldRelVelocity(new ChassisSpeeds(vx, vy, thVelocity));
-    
-    System.out.println(m_drivetrainSubsystem.getGoalRelVelocity(getQuickTurnValue()));
   }
 
   private double getQuickTurnValue(){
@@ -129,6 +127,17 @@ public class VisionTurn extends CommandBase {
       angle += Math.PI * 2;
     }
     return angle;
+  }
+
+  private double getShootOnRunAngle(){
+    double[] goalRelVel = m_drivetrainSubsystem.getGoalRelVelocity(getQuickTurnValue());
+    
+    double x = targetPose[0] - m_drivetrainSubsystem.getSwervePose()[0];
+    double y = targetPose[1] - m_drivetrainSubsystem.getSwervePose()[1];
+
+    double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+
+    return Math.asin(goalRelVel[1]/distance);
   }
 
   private double getRotationPID(double wantedDeltaAngle){

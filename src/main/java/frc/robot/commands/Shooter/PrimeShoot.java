@@ -4,7 +4,10 @@
 
 package frc.robot.commands.Shooter;
 
+import org.ejml.dense.block.MatrixOps_DDRB;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.utility.ShooterVision;
@@ -13,6 +16,8 @@ public class PrimeShoot extends CommandBase {
   private final Shooter shooter;
   private final ShooterVision vision;
   private Drivetrain drivetrain;
+
+  private double[] targetPose = {8.2423, -4.0513};
 
   /** Creates a new PrimeShoot. */
   public PrimeShoot(Shooter shooter, ShooterVision vision, Drivetrain drivetrain) {
@@ -32,8 +37,19 @@ public class PrimeShoot extends CommandBase {
   @Override
   public void execute() {
     System.out.println(vision.calculateRPM());
-    shooter.setRPM(vision.calculateRPM());
+    shooter.setRPM(vision.calculateRPM() - (drivetrain.getGoalRelVelocity(getQuickTurnValue())[0]) * Constants.Drivetrain.shootOnRunShooterMult);
     shooter.setHood(vision.calculateHood());
+  }
+
+  private double getQuickTurnValue(){
+    double x = targetPose[0] - drivetrain.getSwervePose()[0];
+    double y = targetPose[1] - drivetrain.getSwervePose()[1];
+
+    double angle = Math.atan2(y, x);
+    if (angle < 0){
+      angle += Math.PI * 2;
+    }
+    return angle;
   }
 
   // Called once the command ends or is interrupted.

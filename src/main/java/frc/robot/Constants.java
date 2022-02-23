@@ -133,6 +133,10 @@ public final class Constants {
         public static final double visionP = .09;
         public static final double visionI = .0;
         public static final double visionD = .0035;
+
+        public static final double shootOnRunAngleMult = 1.0;
+        public static final double shootOnRunShooterMult = 1500;
+
         /**
          * The left-to-right distance between the drivetrain wheels
          *

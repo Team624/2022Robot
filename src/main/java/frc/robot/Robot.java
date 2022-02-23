@@ -4,9 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.utility.Auton;
 
@@ -31,6 +35,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    ShuffleboardTab tab_cam = Shuffleboard.getTab("Camera");
+    //tab_cam.addCamera("USB Camera 0", "USB Camera 0", "USB Camera 0").withPosition(0, 0);
+    tab_cam.add(CameraServer.startAutomaticCapture()).withPosition(0, 0).withSize(4, 4);
+
     hub = new PneumaticHub(30);
     compressor = hub.makeCompressor();
 

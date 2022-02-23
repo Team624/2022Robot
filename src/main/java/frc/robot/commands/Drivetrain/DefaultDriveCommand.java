@@ -50,7 +50,7 @@ public class DefaultDriveCommand extends CommandBase {
 
         if (Math.abs(m_leftTriggerSupplier.getAsDouble()) > 0.5){
             m_drivetrainSubsystem.drive(
-                new ChassisSpeeds(vx, vy, omega)
+                new ChassisSpeeds(-vx, vy, omega)
             );
         } else {
             m_drivetrainSubsystem.drive(

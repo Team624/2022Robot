@@ -16,6 +16,7 @@ public class DeployIntake extends CommandBase {
 
   /** Creates a new DeployIntake. */
   public DeployIntake(Intake intake) {
+    
     this.intake = intake;
     addRequirements(this.intake);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,8 +25,11 @@ public class DeployIntake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    timer = new Timer();
+    timer.reset();
     timer.start();
     intake.actuateSolenoids();
+    powered = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

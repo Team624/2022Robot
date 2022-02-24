@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 
-public class LowGoal extends CommandBase {
+public class LowShoot extends CommandBase {
   private final Shooter shooter;
   /** Creates a new LowBall. */
-  public LowGoal(Shooter shooter) {
+  public LowShoot(Shooter shooter) {
     this.shooter = shooter;
     addRequirements(this.shooter);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -21,6 +21,7 @@ public class LowGoal extends CommandBase {
   @Override
   public void initialize() {
     shooter.setRPM(Constants.Shooter.lowGoalRPM);
+    shooter.setHood(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

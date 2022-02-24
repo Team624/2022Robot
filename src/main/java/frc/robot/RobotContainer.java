@@ -11,13 +11,14 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Climb.IdleClimb;
+import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.BlankDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
-import frc.robot.commands.Shooter.LowGoal;
 import frc.robot.commands.Shooter.ManualShoot;
+import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Tower.IdleTower;
 import frc.robot.commands.Tower.Reverse;
 import frc.robot.commands.Tower.Shoot;
@@ -28,6 +29,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tower;
+import frc.robot.utility.Auton;
 import frc.robot.utility.ShooterVision;
 import frc.robot.Triggers.Joysticks.mLeftCenter;
 import frc.robot.Triggers.Joysticks.mLeftDown;
@@ -79,8 +81,8 @@ public class RobotContainer {
     m_intake.setDefaultCommand(new IdleIntake(m_intake));
 
     // TODO: Change once second IR is on
-    //m_tower.setDefaultCommand(new IdleTower(m_tower));
-    m_tower.setDefaultCommand(new Stop(m_tower));
+    m_tower.setDefaultCommand(new IdleTower(m_tower));
+    //m_tower.setDefaultCommand(new Stop(m_tower));
 
     m_shooter.setDefaultCommand(new IdleShoot(m_shooter));
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(

@@ -11,14 +11,13 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Climb.IdleClimb;
-import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.BlankDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
+import frc.robot.commands.Shooter.LowGoal;
 import frc.robot.commands.Shooter.ManualShoot;
-import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Tower.IdleTower;
 import frc.robot.commands.Tower.Reverse;
 import frc.robot.commands.Tower.Shoot;
@@ -29,9 +28,17 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tower;
-import frc.robot.utility.Auton;
 import frc.robot.utility.ShooterVision;
-import frc.robot.Triggers.*;
+import frc.robot.Triggers.Joysticks.mLeftCenter;
+import frc.robot.Triggers.Joysticks.mLeftDown;
+import frc.robot.Triggers.Joysticks.mLeftUp;
+import frc.robot.Triggers.Joysticks.mRightCenter;
+import frc.robot.Triggers.Joysticks.mRightDown;
+import frc.robot.Triggers.Joysticks.mRightUp;
+import frc.robot.Triggers.Triggers.mLeftTriggerDown;
+import frc.robot.Triggers.Triggers.mLeftTriggerUp;
+import frc.robot.Triggers.Triggers.mRightTriggerDown;
+import frc.robot.Triggers.Triggers.mRightTriggerUp;
 
 public class RobotContainer {
   private PneumaticHub hub;
@@ -48,10 +55,15 @@ public class RobotContainer {
 
   private Trigger mLeftDown = new mLeftDown(m_controller);
   private Trigger mLeftUp = new mLeftUp(m_controller);
+  private Trigger mLeftCenter = new mLeftCenter(m_controller);
   private Trigger mRightDown = new mRightUp(m_controller);
   private Trigger mRightUp = new mRightDown(m_controller);
-  private Trigger mLeftTrigger = new mLeftTrigger(m_controller);
-  private Trigger mRightTrigger = new mRightTrigger(m_controller);
+  private Trigger mRightCenter = new mRightCenter(m_controller);
+  private Trigger mRightTriggerDown = new mRightTriggerDown(m_controller);
+  private Trigger mRightTriggerUp = new mRightTriggerUp(m_controller);
+  private Trigger mLeftTriggerDown = new mLeftTriggerDown(m_controller);
+  private Trigger mLeftTriggerUp = new mLeftTriggerUp(m_controller);
+  
 
   public RobotContainer(PneumaticHub hub) {
     this.hub = hub;
@@ -109,23 +121,29 @@ public class RobotContainer {
 
     new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
 
-    new Button(m_controller::getBButton).whenHeld(new Reverse(m_tower));
+    new Button(m_controller::getAButton).whenHeld(new Reverse(m_tower));
+
+    new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
+
+    new Button(m_controller::getBButton).whenReleased(m_shooter::testHoodOff);
 
 //================================================================================================
 
-    new Button(m_controller::getStartButton).whenPressed(m_climb::activateClimb);
+    new Button(m_controller::getStartButton).whenActive(m_climb::activateClimb);
 
-    new Button(m_controller::getStartButton).whenReleased(m_climb::deactiveClimb);
+    new Button(m_controller::getStartButton).whenInactive(m_climb::deactiveClimb);
 
     mLeftDown.whenActive(m_climb::retractCenterWinch);
 
-    mLeftDown.whenInactive(m_climb::stopCenterWinch);
-
     mLeftUp.whenActive(m_climb::extendCenterWinch);
+
+    mLeftCenter.whenActive(m_climb::stopCenterWinch);
 
     mRightUp.whenActive(m_climb::extendArmWinch);
 
     mRightDown.whenActive(m_climb::retractArmWinch);
+
+    mRightCenter.whenActive(m_climb::stopArmWinch);
 
     new POVButton(m_controller, 0).whenPressed(m_climb::actuateUpperPistons);
 
@@ -136,7 +154,6 @@ public class RobotContainer {
     new POVButton(m_controller, 270).whenPressed(m_climb::retractLowerPistons);
 
   }
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

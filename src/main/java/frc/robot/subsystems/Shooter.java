@@ -83,7 +83,6 @@ public class Shooter extends SubsystemBase {
     leftFlywheel.config_IntegralZone(0, Constants.Shooter.kIzone);
 
     ntUpdatePID = false;
-    updatedPID = false;
   }
 
   @Override
@@ -99,7 +98,7 @@ public class Shooter extends SubsystemBase {
 
   public void setRPM(double goalRPM) {
     leftFlywheel.set(TalonFXControlMode.Velocity, goalRPM);
-    rightFlywheel.set(TalonFXControlMode.Velocity, goalRPM);
+    //rightFlywheel.set(TalonFXControlMode.Velocity, goalRPM);
     dashSetRPM.setNumber(goalRPM);
   }
 
@@ -120,12 +119,8 @@ public class Shooter extends SubsystemBase {
     rightFlywheel.set(TalonFXControlMode.PercentOutput, 0.0);
   }
 
-  public void setNTPercentage(){
-    leftFlywheel.set(TalonFXControlMode.PercentOutput, manualPercent.getDouble(Constants.Shooter.manualPercent));
-    rightFlywheel.set(TalonFXControlMode.PercentOutput, manualPercent.getDouble(Constants.Shooter.manualPercent));
-  }
-
   public void setHood(boolean isHoodUp) {
+    System.out.println(isHoodUp);
     hoodActuated = isHoodUp;
     hood.set(hoodActuated);
   }

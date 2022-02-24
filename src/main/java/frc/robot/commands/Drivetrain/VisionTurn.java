@@ -12,7 +12,6 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.utility.ShooterVision;
 
 import java.util.function.DoubleSupplier;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class VisionTurn extends CommandBase {

@@ -47,8 +47,6 @@ public class Intake extends SubsystemBase {
   private NetworkTableEntry setPoint = tab.add("Setpoint", 0.0).withPosition(2, 0).getEntry();
   private NetworkTableEntry currentSpeed = tab.add("Encoder", 0.0).withPosition(2, 1).getEntry();
 
-  private NetworkTableEntry leoIntake = tab.add("Leo Intake", false).withPosition(3, 0).getEntry();
-
   private NetworkTableEntry Pterm = tab.add("P Term", 0.0).withPosition(1, 0).getEntry();
   private NetworkTableEntry Iterm = tab.add("I Term", 0.0).withPosition(1, 1).getEntry();
   private NetworkTableEntry Dterm = tab.add("D Term", 0.0).withPosition(1, 2).getEntry();
@@ -126,10 +124,6 @@ public class Intake extends SubsystemBase {
 
   public void retractSolenoids(){
     intakeSolenoid.set(false);
-  }
-
-  public boolean getLeoIntake(){
-    return leoIntake.getBoolean(false);
   }
 
 }

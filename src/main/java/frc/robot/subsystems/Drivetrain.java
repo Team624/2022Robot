@@ -4,11 +4,11 @@
 
 package frc.robot.subsystems;
 
+import com.swervedrivespecialties.swervelib.Mk4ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -64,7 +64,6 @@ public class Drivetrain extends SubsystemBase {
   private SwerveModuleState[] lstates = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
   private ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
-  private NetworkTableEntry getRotationConts = tab.add("Set Constants", false).withPosition(8, 0).getEntry();
   private NetworkTableEntry rotationP = tab.add("Tracking P", 0.0).withPosition(8, 1).getEntry();
   private NetworkTableEntry rotationI = tab.add("Tracking I", 0.0).withPosition(8, 2).getEntry();
   private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();
@@ -75,11 +74,16 @@ public class Drivetrain extends SubsystemBase {
 
   public boolean lastPointCommand = false;
 
+  private Mk4ModuleConfiguration moduleConfig;
+
   public Drivetrain() {
+         moduleConfig = configModule();
+
           m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                   tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                   .withSize(2, 4)
                   .withPosition(0, 0),
+                  //moduleConfig,
                   Mk4SwerveModuleHelper.GearRatio.L2,
                   Constants.Drivetrain.FRONT_LEFT_MODULE_DRIVE_MOTOR, 
                   Constants.Drivetrain.FRONT_LEFT_MODULE_STEER_MOTOR, 
@@ -128,7 +132,6 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
           SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
           states = freezeLogic(states);
-          //states = creepify(states);
           SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);       
           m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
           m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
@@ -161,8 +164,16 @@ public class Drivetrain extends SubsystemBase {
           return current; 
   }
 
+  private Mk4ModuleConfiguration configModule(){
+        Mk4ModuleConfiguration send = new Mk4ModuleConfiguration();
+        send.setNominalVoltage(13);
+        send.setDriveCurrentLimit(80);
+        send.setSteerCurrentLimit(20);
+        return send;
+  }
+
   public Rotation2d getGyroscopeRotation() {
-          return Rotation2d.fromDegrees(-ahrs.getAngle());
+        return Rotation2d.fromDegrees(-ahrs.getAngle());
   }
 
   public void yesCreepMode(){

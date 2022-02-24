@@ -32,14 +32,10 @@ public class Climb extends SubsystemBase {
   /** Creates a new Climb. */
   public Climb(PneumaticHub hub) {
     centerWinchSpark.setIdleMode(IdleMode.kBrake);
+    armWinchSpark.setIdleMode(IdleMode.kBrake);
     this.hub = hub;
     bottomSolenoid = this.hub.makeSolenoid(10);
     upperSolenoid = this.hub.makeSolenoid(11);
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
   }
 
   public void activateClimb(){
@@ -51,42 +47,62 @@ public class Climb extends SubsystemBase {
   }
 
   public void actuateLowerPistons(){
-    bottomSolenoid.set(true);
+    if(climbStatus){
+      bottomSolenoid.set(true);
+    }
   }
 
   public void retractLowerPistons(){
-    bottomSolenoid.set(false);
+    if(climbStatus){
+      bottomSolenoid.set(false);
+    }
   }
 
   public void actuateUpperPistons(){
-    upperSolenoid.set(true);
+    if(climbStatus){
+      upperSolenoid.set(true);
+    }
   }
 
   public void retractUpperPistons(){
-    upperSolenoid.set(false);
+    if(climbStatus){
+      upperSolenoid.set(false);
+    }
   }
 
   public void extendCenterWinch(){
-    centerWinchSpark.set(-centerSpeed.getDouble(0.0));
+    if(climbStatus){
+      centerWinchSpark.set(-centerSpeed.getDouble(0.0));
+    }
   }
 
   public void retractCenterWinch(){
-    centerWinchSpark.set(centerSpeed.getDouble(0.0));
+    if(climbStatus){
+      centerWinchSpark.set(centerSpeed.getDouble(0.0));
+    }
   }
 
   public void stopCenterWinch(){
-    centerWinchSpark.stopMotor();
+    if(climbStatus){
+      centerWinchSpark.stopMotor(); 
+    }
   }
 
   public void extendArmWinch(){
-    armWinchSpark.set(-armSpeed.getDouble(0.0));
+    if(climbStatus){
+      armWinchSpark.set(-armSpeed.getDouble(0.0)); 
+    }
   }
 
   public void retractArmWinch(){
-    armWinchSpark.set(armSpeed.getDouble(0.0));
+    if(climbStatus){
+      armWinchSpark.set(armSpeed.getDouble(0.0));
+    }
   }
 
   public void stopArmWinch(){
-    armWinchSpark.stopMotor();
+    if(climbStatus){
+      armWinchSpark.stopMotor();
+    }
   }
 }

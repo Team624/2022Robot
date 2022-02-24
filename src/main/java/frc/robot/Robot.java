@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -29,6 +31,10 @@ public class Robot extends TimedRobot {
 
   private Compressor compressor;
 
+  private AddressableLED m_led;
+
+  private AddressableLEDBuffer m_ledBuffer;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -41,9 +47,10 @@ public class Robot extends TimedRobot {
 
     hub = new PneumaticHub(30);
     compressor = hub.makeCompressor();
+    compressor.enableDigital();
 
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
+    setLED();
+
     m_robotContainer = new RobotContainer(hub);
 
     auton = new Auton(
@@ -55,7 +62,19 @@ public class Robot extends TimedRobot {
     );
 
     auton.setState(false);
-    compressor.enableDigital();
+  }
+
+  public void setLED(){
+    m_led = new AddressableLED(Constants.LED.LedID);
+    m_ledBuffer = new AddressableLEDBuffer(Constants.LED.LedLength);
+    m_led.setLength(m_ledBuffer.getLength());
+
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, 0, 233, 16);
+    }
+    
+    m_led.setData(m_ledBuffer);
+    m_led.start();
   }
 
   /**

@@ -129,7 +129,6 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
           SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
           states = freezeLogic(states);
-          //states = creepify(states);
           SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);       
           m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
           m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());

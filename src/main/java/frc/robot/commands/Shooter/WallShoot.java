@@ -5,6 +5,7 @@
 package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 
 public class WallShoot extends CommandBase {
@@ -18,7 +19,7 @@ public class WallShoot extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setRPM(13000);
+    shooter.setRPM(Constants.Shooter.wallShootRPM);
     shooter.setHood(false);
   }
 

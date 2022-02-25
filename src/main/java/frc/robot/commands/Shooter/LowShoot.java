@@ -20,7 +20,7 @@ public class LowShoot extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setRPM(Constants.Shooter.lowGoalRPM);
+    shooter.setRPM(Constants.Shooter.lowShootRPM);
     shooter.setHood(false);
   }
 

@@ -23,6 +23,9 @@ public final class Constants {
 
         public static final int armWinchMotorID = 5;
 
+        public static final double centerWinchSpeed = .7;
+        public static final double armWinchSpeed = .7;
+
         public static final int bottomLeftPistonID = 10;
         public static final int bottomRightPistonID = 10;
         public static final int topLeftPistonID = 11;
@@ -43,33 +46,48 @@ public final class Constants {
         public static final double idlePercent = .2;
         public static final double lowGoalRPM = 4000;
 
-        public static final double hoodSwitchAngle = 10;
-        public static final double hoodDeadBandSize = 2;
+        public static final double hoodSwitchAngle = 223;
+        public static final double hoodDeadBandSize = 7;
         public static final double[][] shooterExperimentDataHigh = {
         //  {cam-distance, rpm, actualDistance}
-            {15, 100, 1},
-            {16, 120, 5}
+            {206, 11000, 144/39.37},
+            {215, 11001, 150/39.37},
+            {223, 11200, 156/39.37},
+            {231, 11250, 162/39.37},
+            {237, 11350, 168/39.37},
+            {243, 11425, 174/39.37},
+            {250, 11450, 180/39.37},
+            {256, 11500, 186/39.37},
+            {261, 11700, 192/39.37},
+            {266, 12100, 198/39.37},
+            {271, 12350, 204/39.37},
+            {275, 12500, 210/39.37},
+            {279, 12700, 216/39.37},
+            {283, 13000, 222/39.37},
+            {287, 13300, 228/39.37},
+            {290, 13550, 234/39.37},
+            {292, 13800, 240/39.37},
+            {296, 14100, 246/39.37},
+            {298, 14300, 252/39.37}
         };
         public static final double[][] shooterExperimentDataLow = {
         //  {cam-distance, rpm, actualDistance (meters)}
-            {115, 11500, 108/39.37},
-            {127, 11750, 114/39.37},
-            {138, 11750, 120/39.37},
-            {148, 12000, 126/39.37},
-            {157, 12125, 132/39.37},
-            {166, 12250, 138/39.37},
-            {174, 12250, 144/39.37},
-            {183, 12375, 150/39.37},
-            {190, 12475, 156/39.37},
-            {197, 12675, 162/39.37},
-            {204, 12800, 168/39.37},
-            {210, 13000, 174/39.37},
-            {217, 13500, 180/39.37},
-            {222, 13650, 186/39.37},
-            {227, 13850, 192/39.37},
-            {232, 13950, 198/39.37},
-            {237, 14100, 204/39.37},
-            {241, 14300, 210/39.37}
+            {74, 9000, 78/39.37},
+            {91, 9250, 84/39.37},
+            {106, 9500, 90/39.37},
+            {122, 9750, 96/39.37},
+            {136, 10000, 102/39.37},
+            {149, 10250, 108/39.37},
+            {160, 10400, 114/39.37},
+            {171, 10500, 120/39.37},
+            {181, 10650, 126/39.37},
+            {189, 10750, 132/39.37},
+            {198, 10800, 138/39.37},
+            {206, 11200, 144/39.37},
+            {215, 11300, 150/39.37},
+            {223, 11900, 156/39.37},
+            {231, 12200, 162/39.37},
+            {237, 12550, 168/39.37}
         };
     }
 
@@ -79,6 +97,9 @@ public final class Constants {
         public static final int rightIntakeSolenoidID = 8;
 
         public static final double intakePower = 1;
+
+        public static final double agitateTime = .3;
+        public static final double agitateSpeed = -.1;
 
         public static final double P = 0.00003; 
         public static final double I = 0;
@@ -93,7 +114,7 @@ public final class Constants {
     public static final class Feeder{
         public static final int feederMotorID = 14;
 
-        public static final double feederPower = .7;
+        public static final double feederPower = 2;
 
         public static final double P = 0.00003; 
         public static final double I = 0;
@@ -108,7 +129,7 @@ public final class Constants {
     public static final class Tower{
         public static final int towerMotorID = 2;
 
-        public static final double towerPower = .7;
+        public static final double towerPower = 1;
 
         public static final double autoLoadPower = 0;
 

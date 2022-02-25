@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -102,6 +103,7 @@ public class Tower extends SubsystemBase {
     // TOWER STUFF
     towerMotor = new CANSparkMax(Constants.Tower.towerMotorID, MotorType.kBrushless);
     towerMotor.restoreFactoryDefaults();
+    towerMotor.setIdleMode(IdleMode.kBrake);
     towerMotor.setInverted(true);
     towerEncoder = towerMotor.getEncoder();
     towerPID = towerMotor.getPIDController();
@@ -124,10 +126,12 @@ public class Tower extends SubsystemBase {
 
     // FEEDER STUFF
     feederMotor = new CANSparkMax(Constants.Feeder.feederMotorID, MotorType.kBrushless);
+    
     feederEncoder = feederMotor.getEncoder();
     feederPID = feederMotor.getPIDController();
 
     feederMotor.restoreFactoryDefaults();
+    feederMotor.setIdleMode(IdleMode.kBrake);
 
     P_feeder = Constants.Feeder.P;
     I_feeder = Constants.Feeder.I;

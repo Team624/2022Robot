@@ -17,8 +17,8 @@ import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
   private ShuffleboardTab tab = Shuffleboard.getTab("Climb");
-  private NetworkTableEntry centerSpeed = tab.add("Center Speed", 0.0).withPosition(0, 0).getEntry();
-  private NetworkTableEntry armSpeed = tab.add("Arm Speed", 0.0).withPosition(0, 1).getEntry();
+  private NetworkTableEntry centerSpeed = tab.add("Center Speed", Constants.Climb.centerWinchSpeed).withPosition(0, 0).getEntry();
+  private NetworkTableEntry armSpeed = tab.add("Arm Speed", Constants.Climb.armWinchSpeed).withPosition(0, 1).getEntry();
 
   private CANSparkMax centerWinchSpark = new CANSparkMax(Constants.Climb.centerWinchMotorID, MotorType.kBrushless);
   private CANSparkMax armWinchSpark = new CANSparkMax(Constants.Climb.armWinchMotorID, MotorType.kBrushless);

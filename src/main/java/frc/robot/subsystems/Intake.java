@@ -53,6 +53,9 @@ public class Intake extends SubsystemBase {
   private NetworkTableEntry IzTerm = tab.add("Iz Term", 0.0).withPosition(1, 3).getEntry();
   private NetworkTableEntry FFterm = tab.add("FF Term", 0.0).withPosition(1, 4).getEntry();
 
+  private NetworkTableEntry AgitateTime = tab.add("Agitate Time", Constants.Intake.agitateTime).withPosition(3, 0).getEntry();
+  private NetworkTableEntry AgitateSpeed = tab.add("Agitate Speed", Constants.Intake.agitateSpeed).withPosition(3,1).getEntry();
+
   private double intakePower = Constants.Intake.intakePower;
 
   /** Creates a new Intake. */
@@ -112,6 +115,10 @@ public class Intake extends SubsystemBase {
 
   public void powerIntake(){
     intakeMotor.set(intakePower);
+  }
+
+  public void agitate(){
+    intakeMotor.set(AgitateSpeed.getDouble(Constants.Intake.agitateSpeed));
   }
 
   public void stopIntake(){

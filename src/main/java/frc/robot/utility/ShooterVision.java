@@ -56,17 +56,16 @@ public class ShooterVision {
   }
 
   public boolean calculateHood() {
-    // double deadBandLow = Constants.Shooter.hoodSwitchAngle - (0.5 * Constants.Shooter.hoodDeadBandSize);
-    // double deadBandHigh = Constants.Shooter.hoodSwitchAngle + (0.5 * Constants.Shooter.hoodDeadBandSize);
+    double deadBandLow = Constants.Shooter.hoodSwitchAngle - (0.5 * Constants.Shooter.hoodDeadBandSize);
+    double deadBandHigh = Constants.Shooter.hoodSwitchAngle + (0.5 * Constants.Shooter.hoodDeadBandSize);
 
-    // if (getDistanceAngle() < deadBandLow && shooter.getHood()) {
-    //   return false;
-    // } else if (getDistanceAngle() > deadBandHigh && !shooter.getHood()) {
-    //   return true;
-    // }
+    if (getDistanceAngle() < deadBandLow && shooter.getHood()) {
+      return false;
+    } else if (getDistanceAngle() > deadBandHigh && !shooter.getHood()) {
+      return true;
+    }
 
-    // return shooter.getHood();
-    return false;
+    return shooter.getHood();
   }
 
   public double pointSlope(double x1, double y1, double x2, double y2, double x) {

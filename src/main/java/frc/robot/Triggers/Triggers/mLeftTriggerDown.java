@@ -17,6 +17,6 @@ public class mLeftTriggerDown extends Trigger {
 
   @Override
   public boolean get() {
-    return cont.getLeftY() > .5;
+    return cont.getLeftTriggerAxis() > .75;
   }
 }

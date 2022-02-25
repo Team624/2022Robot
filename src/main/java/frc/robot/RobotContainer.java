@@ -121,7 +121,7 @@ public class RobotContainer {
 
     new Button(m_controller::getRightBumper).whenHeld(new Shoot(m_tower));
 
-    new Button(m_controller::getYButton).whenHeld(new ManualShoot(m_shooter));
+    new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
 
     //new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
 
@@ -133,7 +133,7 @@ public class RobotContainer {
 
 //================================================================================================
 
-    new Button(m_controller::getStartButton).whenActive(m_climb::activateClimb);
+    new Button(m_controller::getStartButton).whenPressed(m_climb::activateClimb);
 
     new Button(m_controller::getStartButton).whenInactive(m_climb::deactiveClimb);
 

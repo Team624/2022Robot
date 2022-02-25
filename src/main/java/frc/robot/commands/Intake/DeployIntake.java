@@ -12,8 +12,6 @@ public class DeployIntake extends CommandBase {
   private final Intake intake;
   private Timer timer;
 
-  private boolean powered = false;
-
   /** Creates a new DeployIntake. */
   public DeployIntake(Intake intake) {
     
@@ -29,15 +27,18 @@ public class DeployIntake extends CommandBase {
     timer.reset();
     timer.start();
     intake.actuateSolenoids();
-    powered = false;
+    System.out.println("DEPLOYING");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(timer.get() > .5 && !powered){
+    if(timer.get() > .3){
+      System.out.println("POWERRING");
       intake.powerIntake();
-      powered = true;
+    }else{
+      intake.agitate();
+      System.out.println("AGITATING");
     }
   }
 

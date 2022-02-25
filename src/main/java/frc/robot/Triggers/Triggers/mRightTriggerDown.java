@@ -17,6 +17,6 @@ public class mRightTriggerDown extends Trigger {
 
   @Override
   public boolean get() {
-    return cont.getRightY() > .5;
+    return cont.getRightTriggerAxis() > .75;
   }
 }

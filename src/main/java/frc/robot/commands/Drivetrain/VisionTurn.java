@@ -67,14 +67,13 @@ public class VisionTurn extends CommandBase {
     wantedDeltaAngle = Math.abs(errorB) < Math.abs(errorC) ? errorB : errorC;
     wantedDeltaAngle = Math.abs(wantedDeltaAngle) < Math.abs(errorA) ? wantedDeltaAngle : errorA;
 
-    System.out.println("Shoot onrun angle: " + getShootOnRunAngle());
     double visionRot = m_drivetrainSubsystem.getVisionRotationAngle() - (getShootOnRunAngle() * Constants.Drivetrain.shootOnRunAngleMult);
 
     if((Math.abs(wantedDeltaAngle) < quickTurnTolerance) && (Math.abs(visionRot) < 500)){
       System.out.println("Vision targeting error = " + visionRot);
       // If doing normal vision targeting
-      if (Math.abs(visionRot) < visionResetTolerance){
-        double radius = shooterVision.calculateActualDistance();
+      double radius = shooterVision.calculateActualDistance();
+      if (Math.abs(visionRot) < visionResetTolerance && radius > 0){
         double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians();
         double x = radius * Math.cos(degree % (Math.PI * 2));
         double y = radius * Math.sin(degree % (Math.PI * 2));

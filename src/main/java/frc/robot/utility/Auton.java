@@ -38,6 +38,10 @@ public class Auton {
 
     private double pathRange;
 
+    // States so that we don't schedule more than once
+    private String shooterState = "none";
+    private String intakeState = "none";
+
     public Auton(Drivetrain drivetrain, Intake intake, Tower tower, Shooter shooter, ShooterVision vision){
         auton = getAuto();
         this.drivetrain = drivetrain;
@@ -115,14 +119,18 @@ public class Auton {
 
     public String getShooterState(){
         String state = SmartDashboard.getEntry("/auto/shooter/state").getString("idle");
-        if(state.equals("shoot")){
+        if(state.equals("shoot") && !shooterState.equals("shoot")){
+            shooterState = state;
             new Shoot(tower).schedule();
             new PrimeShoot(shooter, vision, drivetrain).schedule();
-        }else if(state.equals("prime")){
+        }else if(state.equals("prime") && !shooterState.equals("prime")){
+            shooterState = state;
             new PrimeShoot(shooter, vision, drivetrain).schedule();
-        }else if(state.equals("hide")){
+        }else if(state.equals("hide") && !shooterState.equals("hide")){
+            shooterState = state;
             new LowShoot(shooter).schedule();
-        }else{
+        }else if (!shooterState.equals("idle")){
+            shooterState = state;
             new IdleShoot(shooter).schedule();
         }
         return state;
@@ -130,9 +138,11 @@ public class Auton {
 
     public void getIntakeState(){
         String state = SmartDashboard.getEntry("/auto/intake/state").getString("retract"); 
-        if(state.equals("deploy")){
+        if(state.equals("deploy") && !intakeState.equals("deploy")){
+            intakeState = state;
             new DeployIntake(intake).schedule();
-        }else{
+        }else if(!intakeState.equals("retract")){
+            intakeState = state;
             new IdleIntake(intake).schedule();
         }
     }

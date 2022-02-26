@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,12 +39,12 @@ public class Climb extends SubsystemBase {
     upperSolenoid = this.hub.makeSolenoid(11);
   }
 
-  public void activateClimb(){
-    climbStatus = true;
-  }
-
-  public void deactiveClimb(){
-    climbStatus = false;
+  public void setMode(){
+    if(climbStatus){
+      climbStatus = false;
+    }else{
+      climbStatus = true;
+    }
   }
 
   public void actuateLowerPistons(){
@@ -76,6 +77,8 @@ public class Climb extends SubsystemBase {
     }
   }
 
+
+
   public void retractCenterWinch(){
     if(climbStatus){
       centerWinchSpark.set(centerSpeed.getDouble(0.0));
@@ -83,6 +86,7 @@ public class Climb extends SubsystemBase {
   }
 
   public void stopCenterWinch(){
+    System.out.println("STOPPING");
     if(climbStatus){
       centerWinchSpark.stopMotor(); 
     }

@@ -133,9 +133,7 @@ public class RobotContainer {
 
 //================================================================================================
 
-    new Button(m_controller::getStartButton).whenPressed(m_climb::activateClimb);
-
-    new Button(m_controller::getStartButton).whenInactive(m_climb::deactiveClimb);
+    new Button(m_controller::getStartButton).whenPressed(m_climb::setMode);
 
     mLeftDown.whenActive(m_climb::retractCenterWinch);
 
@@ -153,9 +151,9 @@ public class RobotContainer {
 
     new POVButton(m_controller, 180).whenPressed(m_climb::retractUpperPistons);
 
-    new POVButton(m_controller, 90).whenPressed(m_climb::actuateLowerPistons);
+    new POVButton(m_controller, 270).whenPressed(m_climb::actuateLowerPistons);
 
-    new POVButton(m_controller, 270).whenPressed(m_climb::retractLowerPistons);
+    new POVButton(m_controller, 90).whenPressed(m_climb::retractLowerPistons);
 
   }
 

@@ -129,6 +129,10 @@ public class Auton {
         }else if(state.equals("hide") && !shooterState.equals("hide")){
             shooterState = state;
             new LowShoot(shooter).schedule();
+        }else if(state.equals("hide_shoot") && !shooterState.equals("hide_shoot")){
+            shooterState = state;
+            new LowShoot(shooter).schedule();
+            new Shoot(tower).schedule();
         }else if (!shooterState.equals("idle")){
             shooterState = state;
             new IdleShoot(shooter).schedule();

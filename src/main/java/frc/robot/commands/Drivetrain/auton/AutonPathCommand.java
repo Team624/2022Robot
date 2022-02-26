@@ -45,6 +45,8 @@ public class AutonPathCommand extends CommandBase {
     @Override
     public void execute() {
         auton.getIntakeState();
+        auton.getShooterState();
+        
         if (auton.getStartPathIndex() >= path.getPathId() && currentID != path.getPathId()){
             // Starts the path once
             System.out.println("STARTED NEW PATH: " + path.getPathId());

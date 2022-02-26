@@ -10,6 +10,7 @@ import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Shooter.LowShoot;
+import frc.robot.commands.Tower.IdleTower;
 import frc.robot.commands.Tower.Shoot;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -119,6 +120,7 @@ public class Auton {
 
     public String getShooterState(){
         String state = SmartDashboard.getEntry("/auto/shooter/state").getString("idle");
+        System.out.println("STATE: " + state);
         if(state.equals("shoot") && !shooterState.equals("shoot")){
             shooterState = state;
             new Shoot(tower).schedule();
@@ -133,9 +135,10 @@ public class Auton {
             shooterState = state;
             new LowShoot(shooter).schedule();
             new Shoot(tower).schedule();
-        }else if (!shooterState.equals("idle")){
+        }else if (state.equals("idle") && !shooterState.equals("idle")){
             shooterState = state;
             new IdleShoot(shooter).schedule();
+            new IdleTower(tower).schedule();
         }
         return state;
     }
@@ -145,7 +148,7 @@ public class Auton {
         if(state.equals("deploy") && !intakeState.equals("deploy")){
             intakeState = state;
             new DeployIntake(intake).schedule();
-        }else if(!intakeState.equals("retract")){
+        }else if(state.equals("retract") && !intakeState.equals("retract")){
             intakeState = state;
             new IdleIntake(intake).schedule();
         }

@@ -132,13 +132,13 @@ public class Climb extends SubsystemBase {
 
   public void extendArmWinch(){
     if(climbStatus){
-      armWinchSpark.set(-armSpeed.getDouble(0.0)); 
+      armWinchSpark.set(armSpeed.getDouble(0.0)); 
     }
   }
 
   public void retractArmWinch(){
     if(climbStatus){
-      armWinchSpark.set(armSpeed.getDouble(0.0));
+      armWinchSpark.set(-armSpeed.getDouble(0.0));
     }
   }
 

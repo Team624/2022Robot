@@ -120,7 +120,7 @@ public class Auton {
 
     public String getShooterState(){
         String state = SmartDashboard.getEntry("/auto/shooter/state").getString("idle");
-        System.out.println("STATE: " + state);
+        //System.out.println("STATE: " + state);
         if(state.equals("shoot") && !shooterState.equals("shoot")){
             shooterState = state;
             new Shoot(tower).schedule();

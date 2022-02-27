@@ -44,17 +44,22 @@ public class AutonPointCommand extends CommandBase {
 
     @Override
     public void execute () {
-        currentX = m_drivetrainSubsystem.getSwervePose()[0];
-        currentY = m_drivetrainSubsystem.getSwervePose()[1];
+        if (!m_drivetrainSubsystem.stopAuton){
+          currentX = m_drivetrainSubsystem.getSwervePose()[0];
+          currentY = m_drivetrainSubsystem.getSwervePose()[1];
 
-        PathPoint pathPoint = path.getPoint(point);
-        if (point < path.getLength()-1){
-          double[] nearestPoint = getClosestPointOnLine(pathPoint.getX(), pathPoint.getY(), path.getPoint(point+1).getX(), path.getPoint(point + 1).getY(), currentX, currentY);
+          PathPoint pathPoint = path.getPoint(point);
+          if (point < path.getLength()-1){
+            double[] nearestPoint = getClosestPointOnLine(pathPoint.getX(), pathPoint.getY(), path.getPoint(point+1).getX(), path.getPoint(point + 1).getY(), currentX, currentY);
 
-          double velocityX = pathPoint.getVx() + (nearestPoint[0] - currentX) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
-          double velocityY = pathPoint.getVy() + (nearestPoint[1] - currentY) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
- 
-          autonDrive(velocityX, velocityY, pathPoint.getHeading());
+            double velocityX = pathPoint.getVx() + (nearestPoint[0] - currentX) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
+            double velocityY = pathPoint.getVy() + (nearestPoint[1] - currentY) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
+  
+            autonDrive(velocityX, velocityY, pathPoint.getHeading());
+          }
+        }
+        else {
+          System.out.println("E Stopped Auton");
         }
     }
 
@@ -153,6 +158,7 @@ public class AutonPointCommand extends CommandBase {
         }
         double distance = calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY());
         if (distance > 1.0){
+          System.out.println("EMERGENCY STOPPED AUTON");
           m_drivetrainSubsystem.stopAuton = true;
           return true;
         }

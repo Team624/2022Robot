@@ -30,6 +30,8 @@ public final class Constants {
         public static final int bottomRightPistonID = 10;
         public static final int topLeftPistonID = 11;
         public static final int topRightPistonID = 11;
+
+        public static double upperLowerdelay = .1;
     }
 
     public static final class Shooter{
@@ -165,6 +167,7 @@ public final class Constants {
         public static final double DRIVETRAIN_TRACKWIDTH_METERS = 0.466598;
 
         public static final double DRIVETRAIN_WHEELBASE_METERS = 0.466598;
+
 
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 20;

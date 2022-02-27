@@ -121,7 +121,6 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setHood(boolean isHoodUp) {
-    System.out.println(isHoodUp);
     hoodActuated = isHoodUp;
     hood.set(hoodActuated);
   }

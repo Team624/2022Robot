@@ -27,6 +27,7 @@ public class AutonomousDrive extends CommandBase {
   @Override
   public void initialize() {
     m_drivetrainSubsystem.setAuton(true);
+    m_drivetrainSubsystem.stopAuton = false;
     m_drivetrainSubsystem.setPose();
     commandGroup = new SequentialCommandGroup();
     for (int i = 0; i < auton.getPathCount(); i++){

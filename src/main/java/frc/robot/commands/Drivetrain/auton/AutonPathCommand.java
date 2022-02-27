@@ -44,17 +44,19 @@ public class AutonPathCommand extends CommandBase {
     
     @Override
     public void execute() {
-        auton.getIntakeState();
-        auton.getShooterState();
+        if (!m_drivetrainSubsystem.stopAuton){
+            auton.getIntakeState();
+            auton.getShooterState();
+        }
         
-        if (auton.getStartPathIndex() >= path.getPathId() && currentID != path.getPathId()){
+        if (auton.getStartPathIndex() >= path.getPathId() && currentID != path.getPathId() && !m_drivetrainSubsystem.stopAuton){
             // Starts the path once
             System.out.println("STARTED NEW PATH: " + path.getPathId());
             commandGroup.schedule(false);
             SmartDashboard.getEntry("/pathTable/status/path").setNumber(path.getPathId());
             currentID = path.getPathId();
         }
-        if (currentID != path.getPathId() || lastPath){
+        if ((currentID != path.getPathId() || lastPath) && !m_drivetrainSubsystem.stopAuton){
             // When the path is not currently running
             if ((auton.getShooterState().equals("prime")|| auton.getShooterState().equals("shoot")) && (Math.abs(m_drivetrainSubsystem.getVisionRotationAngle()) < 500)){
                 double wantedDeltaAngle = m_drivetrainSubsystem.getVisionRotationAngle();

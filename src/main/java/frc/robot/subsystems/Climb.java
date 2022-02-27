@@ -20,6 +20,7 @@ public class Climb extends SubsystemBase {
   private ShuffleboardTab tab = Shuffleboard.getTab("Climb");
   private NetworkTableEntry centerSpeed = tab.add("Center Speed", Constants.Climb.centerWinchSpeed).withPosition(0, 0).getEntry();
   private NetworkTableEntry armSpeed = tab.add("Arm Speed", Constants.Climb.armWinchSpeed).withPosition(0, 1).getEntry();
+  private NetworkTableEntry upDelay = tab.add("Up Delay", Constants.Climb.upperLowerdelay).withPosition(0, 2).getEntry();
 
   private CANSparkMax centerWinchSpark = new CANSparkMax(Constants.Climb.centerWinchMotorID, MotorType.kBrushless);
   private CANSparkMax armWinchSpark = new CANSparkMax(Constants.Climb.armWinchMotorID, MotorType.kBrushless);
@@ -27,11 +28,15 @@ public class Climb extends SubsystemBase {
   private Solenoid bottomSolenoid;
   private Solenoid upperSolenoid;
 
+  private Timer timer;
 
   private boolean climbStatus = false;
+  private boolean timerStatus = false;
+  private boolean isTimerRunning = false;
 
   /** Creates a new Climb. */
   public Climb(PneumaticHub hub) {
+    timer = new Timer();
     centerWinchSpark.setIdleMode(IdleMode.kBrake);
     armWinchSpark.setIdleMode(IdleMode.kBrake);
     this.hub = hub;
@@ -39,11 +44,45 @@ public class Climb extends SubsystemBase {
     upperSolenoid = this.hub.makeSolenoid(11);
   }
 
+  @Override
+  public void periodic() {
+    setTimer();
+    checkTimer();
+  }
+
   public void setMode(){
     if(climbStatus){
       climbStatus = false;
     }else{
       climbStatus = true;
+    }
+  }
+
+  public void actuateSet(){
+    if(climbStatus){
+      timerStatus = true;
+      upperSolenoid.set(true);
+    }
+  }
+
+  private void setTimer(){
+    if(timerStatus){
+      if(!isTimerRunning){
+        timer.reset();
+        timer.start();
+        isTimerRunning = true;
+      }
+    }else{
+      isTimerRunning = false;
+    }
+  }
+
+  private void checkTimer(){
+    if(timer.get() > upDelay.getDouble(Constants.Climb.upperLowerdelay) && !bottomSolenoid.get()){
+      bottomSolenoid.set(true);
+      timer.stop();
+      timer.reset();
+      timerStatus = false;
     }
   }
 
@@ -73,7 +112,7 @@ public class Climb extends SubsystemBase {
 
   public void extendCenterWinch(){
     if(climbStatus){
-      centerWinchSpark.set(-centerSpeed.getDouble(0.0));
+      centerWinchSpark.set(centerSpeed.getDouble(0.0));
     }
   }
 
@@ -81,12 +120,11 @@ public class Climb extends SubsystemBase {
 
   public void retractCenterWinch(){
     if(climbStatus){
-      centerWinchSpark.set(centerSpeed.getDouble(0.0));
+      centerWinchSpark.set(-centerSpeed.getDouble(0.0));
     }
   }
 
   public void stopCenterWinch(){
-    System.out.println("STOPPING");
     if(climbStatus){
       centerWinchSpark.stopMotor(); 
     }

@@ -73,6 +73,7 @@ public class Drivetrain extends SubsystemBase {
   public boolean isAuton = false;
 
   public boolean lastPointCommand = false;
+  public boolean stopAuton = false;
 
   private Mk4ModuleConfiguration moduleConfig;
 
@@ -124,7 +125,6 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
-          //System.out.println("I be drivin: " + chassisSpeeds.omegaRadiansPerSecond);
           m_chassisSpeeds = chassisSpeeds;
   }
 

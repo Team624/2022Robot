@@ -59,7 +59,7 @@ public class AutonPointCommand extends CommandBase {
     }
 
     private void autonDrive(double xVelocity, double yVelocity, double theta){
-        System.out.println("Still driving in auton");
+        //System.out.println("Still driving in auton");
         double wantedAngle = m_drivetrainSubsystem.normalizeAngle(theta);
         // Check left and right angles to see which way of rotation will make it quicker (subtract from pi)
         double errorA = wantedAngle - m_drivetrainSubsystem.normalizeAngle(m_drivetrainSubsystem.getGyroscopeRotation().getRadians());
@@ -151,6 +151,11 @@ public class AutonPointCommand extends CommandBase {
           SmartDashboard.getEntry("/pathTable/status/finishedPath").setBoolean(true);
           return true;
         }
-        return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < path.getPoint(point).getTolerance();
+        double distance = calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY());
+        if (distance > 1.0){
+          m_drivetrainSubsystem.stopAuton = true;
+          return true;
+        }
+        return distance < path.getPoint(point).getTolerance();
     }
 }

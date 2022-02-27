@@ -27,18 +27,15 @@ public class DeployIntake extends CommandBase {
     timer.reset();
     timer.start();
     intake.actuateSolenoids();
-    System.out.println("DEPLOYING");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if(timer.get() > .3){
-      System.out.println("POWERRING");
       intake.powerIntake();
     }else{
       intake.agitate();
-      System.out.println("AGITATING");
     }
   }
 

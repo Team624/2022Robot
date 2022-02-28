@@ -12,6 +12,7 @@ public class DefaultDriveCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;
 
     private final DoubleSupplier m_leftTriggerSupplier;
+    private final DoubleSupplier m_rightTriggerSupplier;
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
@@ -19,9 +20,10 @@ public class DefaultDriveCommand extends CommandBase {
     private SlewRateLimiter filterX = new SlewRateLimiter(7);
     private SlewRateLimiter filterY = new SlewRateLimiter(7);
 
-    public DefaultDriveCommand(Drivetrain drivetrainSubsystem, DoubleSupplier triggerSupplier, DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
+    public DefaultDriveCommand(Drivetrain drivetrainSubsystem, DoubleSupplier triggerSupplierL, DoubleSupplier triggerSupplierR, DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
         this.m_drivetrainSubsystem = drivetrainSubsystem;
-        this.m_leftTriggerSupplier = triggerSupplier;
+        this.m_leftTriggerSupplier = triggerSupplierL;
+        this.m_rightTriggerSupplier = triggerSupplierR;
         this.m_translationXSupplier = translationXSupplier;
         this.m_translationYSupplier = translationYSupplier;
         this.m_rotationSupplier = rotationSupplier;
@@ -42,6 +44,15 @@ public class DefaultDriveCommand extends CommandBase {
         double vx = filterX.calculate(m_translationXSupplier.getAsDouble());
         double vy = filterY.calculate(m_translationYSupplier.getAsDouble());
         double omega = m_rotationSupplier.getAsDouble();
+
+        // the speed mode
+        if (!(Math.abs(m_rightTriggerSupplier.getAsDouble()) > 0.5)){
+            vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER;
+            vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER;
+            omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER;
+        }
+
+        // the creep mode
         if (m_drivetrainSubsystem.isCreepin){
             vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
             vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;

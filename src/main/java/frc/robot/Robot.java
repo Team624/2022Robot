@@ -126,17 +126,19 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    auton.setState(false);
     compressor.enableDigital();
-    m_robotContainer.setDrivetrainDefaultCommand();
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
       m_robotContainer.getAutonomousDriveCommand(auton).cancel();
     }
-    auton.setState(false);
+    m_robotContainer.setDrivetrainDefaultCommand();
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    m_robotContainer.setDrivetrainDefaultCommand();
+  }
 
   @Override
   public void testInit() {

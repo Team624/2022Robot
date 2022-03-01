@@ -37,12 +37,13 @@ public class DefaultDriveCommand extends CommandBase {
 
     @Override
     public void execute() {
+        System.out.println("In DEFAULT");
         //System.out.println(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees());
         //System.out.println(RobotContainer.deadband(-cont.getRawAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND *.5, .05));
         //System.out.println(RobotContainer.deadband(cont.getRightX() * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND *.5, .05));
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
-        double vx = filterX.calculate(m_translationXSupplier.getAsDouble());
-        double vy = filterY.calculate(m_translationYSupplier.getAsDouble());
+        double vx = m_translationXSupplier.getAsDouble();
+        double vy = m_translationYSupplier.getAsDouble();
         double omega = m_rotationSupplier.getAsDouble();
 
         // the speed mode
@@ -66,8 +67,8 @@ public class DefaultDriveCommand extends CommandBase {
         } else {
             m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                    vx,
-                    vy,
+                    filterX.calculate(vx),
+                    filterY.calculate(vy),
                     omega,
                     m_drivetrainSubsystem.getGyroscopeRotation()
                 )

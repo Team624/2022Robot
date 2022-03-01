@@ -210,9 +210,7 @@ public class Tower extends SubsystemBase {
 
   public void powerTower(boolean reverse){
     double power = towerPower;
-    if (reverse)
-      power *= -1;
-
+    if(reverse){power = power *-1;}
     towerPID.setReference(power * Constants.Tower.maxRPM, CANSparkMax.ControlType.kVelocity);
     setPoint_tower.setDouble(power);
   }

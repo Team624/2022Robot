@@ -96,16 +96,16 @@ public class VisionTurn extends CommandBase {
       thVelocity = getQuickTurnPID(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + (wantedDeltaAngle * (180/Math.PI)));
     }
 
-    double vx = filterX.calculate(m_translationXSupplier.getAsDouble());
-    double vy = filterY.calculate(m_translationYSupplier.getAsDouble());
+    double vx = m_translationXSupplier.getAsDouble();
+    double vy = m_translationYSupplier.getAsDouble();
     if (m_drivetrainSubsystem.isCreepin){
       vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
       vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
     }
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
-        vx,
-        vy,
+        filterX.calculate(vx),
+        filterY.calculate(vy),
         thVelocity,
         m_drivetrainSubsystem.getGyroscopeRotation()
       )

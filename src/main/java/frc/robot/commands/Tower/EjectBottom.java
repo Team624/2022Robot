@@ -2,16 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Drivetrain;
+package frc.robot.commands.Tower;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Tower;
 
-public class BlankDrive extends CommandBase {
-  /** Creates a new BlankDrive. */
-  public BlankDrive(Drivetrain drive) {
+public class EjectBottom extends CommandBase {
+  private final Tower tower;
+  private boolean irState;
+  /** Creates a new Reverse. */
+  public EjectBottom(Tower tower) {
+    this.tower = tower;
+    addRequirements(this.tower);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(drive);
   }
 
   // Called when the command is initially scheduled.
@@ -21,7 +24,7 @@ public class BlankDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("In BLANK");
+    tower.powerFeeder(true);
   }
 
   // Called once the command ends or is interrupted.

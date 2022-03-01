@@ -16,6 +16,7 @@ import frc.robot.commands.Drivetrain.BlankDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Intake.IdleIntake;
+import frc.robot.commands.Intake.ClimbIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.LowShoot;
 import frc.robot.commands.Shooter.ManualShoot;
@@ -127,8 +128,6 @@ public class RobotContainer {
 
     new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
 
-    //new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
-
     new Button(m_controller::getAButton).whenHeld(new EjectBottom(m_tower));
 
     new Button(m_controller::getBButton).whenHeld(new Shoot(m_tower));
@@ -140,6 +139,8 @@ public class RobotContainer {
     new Button(m_controller::getStartButton).whenPressed(m_climb::setMode);
 
     new Button(m_controller::getLeftBumper).whenPressed(m_climb::actuateSet);
+
+    new Button(m_controller::getStartButton).toggleWhenPressed(new ClimbIntake(m_intake));
 
     mLeftDown.whenActive(m_climb::retractCenterWinch);
 

@@ -23,7 +23,7 @@ public final class Constants {
 
         public static final int armWinchMotorID = 5;
 
-        public static final double centerWinchSpeed = .7;
+        public static final double centerWinchSpeed = 1;
         public static final double armWinchSpeed = .7;
 
         public static final int bottomLeftPistonID = 10;
@@ -31,7 +31,7 @@ public final class Constants {
         public static final int topLeftPistonID = 11;
         public static final int topRightPistonID = 11;
 
-        public static double upperLowerdelay = .1;
+        public static final double upperLowerdelay = .1;
     }
 
     public static final class Shooter{

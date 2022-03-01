@@ -14,8 +14,6 @@ public class AutonPointCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;
     private final Path path;
     private final int point;
-    private PIDController pidVision;
-    private PIDController pidPathRotation;
 
     private Auton auton;
 
@@ -38,8 +36,7 @@ public class AutonPointCommand extends CommandBase {
       System.out.println("On point: " + point);
       SmartDashboard.getEntry("/pathTable/status/point").setNumber(point); 
       SmartDashboard.getEntry("/pathTable/status/finishedPath").setBoolean(false);  
-      pidPathRotation = m_drivetrainSubsystem.getRotationPathPID();
-      pidVision = m_drivetrainSubsystem.getRotationPID(); 
+      m_drivetrainSubsystem.autonPoint_pidPathRotation.reset();
     }
 
     @Override
@@ -94,12 +91,12 @@ public class AutonPointCommand extends CommandBase {
         );
     }
 
-    private double getRotationVisionPID(double wantedDeltaAngle){
-        return pidVision.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
-    }
+    // private double getRotationVisionPID(double wantedDeltaAngle){
+    //     return pidVision.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
+    // }
 
     private double getRotationPathPID(double wantedDeltaAngle){
-      return pidPathRotation.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
+      return m_drivetrainSubsystem.autonPoint_pidPathRotation.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
   }
 
     private double calculateDistance(double point1X, double point1Y, double point2X, double point2Y) {

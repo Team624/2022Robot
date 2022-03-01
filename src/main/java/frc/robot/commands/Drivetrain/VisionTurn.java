@@ -4,7 +4,6 @@
 
 package frc.robot.commands.Drivetrain;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -21,9 +20,6 @@ public class VisionTurn extends CommandBase {
   private final DoubleSupplier m_translationYSupplier;
 
   private final ShooterVision shooterVision;
-
-  private PIDController pid;
-  private PIDController pidQuickTurn;
 
   private double quickTurnTolerance = 15;
   private double visionResetTolerance = 4;
@@ -49,8 +45,8 @@ public class VisionTurn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pid = m_drivetrainSubsystem.getRotationPID();
-    pidQuickTurn = m_drivetrainSubsystem.getRotationPathPID();
+    m_drivetrainSubsystem.visionTurn_pid.reset();
+    m_drivetrainSubsystem.visionTurn_pidQuickTurn.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -141,11 +137,11 @@ public class VisionTurn extends CommandBase {
 
   private double getRotationPID(double wantedDeltaAngle){
     //System.out.println(pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle));
-    return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
+    return m_drivetrainSubsystem.visionTurn_pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
   }
 
   private double getQuickTurnPID(double wantedAngle){
-    return pidQuickTurn.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), wantedAngle);
+    return m_drivetrainSubsystem.visionTurn_pidQuickTurn.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), wantedAngle);
   }
 
   // Called once the command ends or is interrupted.

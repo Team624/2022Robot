@@ -77,8 +77,20 @@ public class Drivetrain extends SubsystemBase {
 
   private Mk4ModuleConfiguration moduleConfig;
 
+  public PIDController visionTurn_pid;
+  public PIDController visionTurn_pidQuickTurn;
+
+  public PIDController autonPoint_pidPathRotation;
+  public PIDController autonPath_pidVision;
+
   public Drivetrain() {
          moduleConfig = configModule();
+
+         visionTurn_pid = getRotationPID();
+         visionTurn_pidQuickTurn = getRotationPathPID();
+
+         autonPoint_pidPathRotation = getRotationPathPID();
+         autonPath_pidVision = getAutonRotationPID();
 
           m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                   tab.getLayout("Front Left Module", BuiltInLayouts.kList)
@@ -192,17 +204,17 @@ public class Drivetrain extends SubsystemBase {
   public void setAuton(boolean state){
           isAuton = state;
   }
-  public PIDController getRotationPID(){
+  private PIDController getRotationPID(){
         //return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
         return new PIDController(0.1, 0, 0);  
   }
 
-  public PIDController getAutonRotationPID(){
+  private PIDController getAutonRotationPID(){
         return new PIDController(Constants.Drivetrain.visionP, Constants.Drivetrain.visionI, Constants.Drivetrain.visionD);  
   }
 
 
-  public PIDController getRotationPathPID(){
+  private PIDController getRotationPathPID(){
         return new PIDController(.06, 0, 0);
   }
 

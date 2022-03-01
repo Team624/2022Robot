@@ -19,8 +19,6 @@ public class AutonPathCommand extends CommandBase {
 
     private int currentID = -1;
 
-    private PIDController pid;
-
     private boolean lastPath = false;
 
     public AutonPathCommand (Drivetrain drive, Path path, Auton auton) {
@@ -33,7 +31,7 @@ public class AutonPathCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        pid = m_drivetrainSubsystem.getAutonRotationPID();
+        m_drivetrainSubsystem.autonPath_pidVision.reset();
         commandGroup = new SequentialCommandGroup();
         for (int i = 0; i < path.getLength(); i++) {
             commandGroup.addCommands(new AutonPointCommand(m_drivetrainSubsystem, path, i, auton));
@@ -77,7 +75,7 @@ public class AutonPathCommand extends CommandBase {
     private double getRotationPID(double wantedDeltaAngle){
         double setpoint = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle;
         //System.out.println(setpoint);
-        return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), setpoint);
+        return m_drivetrainSubsystem.autonPath_pidVision.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), setpoint);
     }
 
     @Override

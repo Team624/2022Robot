@@ -34,10 +34,7 @@ public class Auton {
 
     private ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
   
-    private NetworkTableEntry autoChoiceGet = autoTab.add("Auton Choice", 10).withPosition(0, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
-    private NetworkTableEntry pathPointRange = autoTab.add("Path Point Range", Constants.Drivetrain.PATH_POINT_RANGE).withPosition(1, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
-
-    private double pathRange;
+    private NetworkTableEntry autoChoiceGet = autoTab.add("Auton Choice", 0).withPosition(0, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
     // States so that we don't schedule more than once
     private String shooterState = "none";
@@ -58,7 +55,6 @@ public class Auton {
   
     public void sendAutoChoice(){
       Number autoChoice = autoChoiceGet.getNumber(0.0);
-      pathRange = (double)pathPointRange.getNumber(Constants.Drivetrain.PATH_POINT_RANGE);
       SmartDashboard.putNumber("/auto/select", (double)autoChoice);
     }
 
@@ -112,10 +108,6 @@ public class Auton {
 
     public int getStartPathIndex(){
         return SmartDashboard.getEntry("/pathTable/startPathIndex").getNumber(-1).intValue();
-    }
-
-    public double getPathPointRange(){
-        return pathRange;
     }
 
     public String getShooterState(){

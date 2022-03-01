@@ -32,6 +32,8 @@ public class Auton {
     private Shooter shooter;
     private ShooterVision vision;
 
+    public boolean isAuton = false;
+
     private ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
   
     private NetworkTableEntry autoChoiceGet = autoTab.add("Auton Choice", 0).withPosition(0, 0).withWidget(BuiltInWidgets.kTextView).getEntry();
@@ -103,6 +105,7 @@ public class Auton {
     }
 
     public void setState(boolean state){
+        isAuton = state;
         SmartDashboard.putBoolean("/auto/state", state);
     }
 

@@ -70,7 +70,7 @@ public class Drivetrain extends SubsystemBase {
 
   public boolean isCreepin = false;
 
-  public boolean isAuton = false;
+  private boolean isAuton = false;
 
   public boolean lastPointCommand = false;
   public boolean stopAuton = false;

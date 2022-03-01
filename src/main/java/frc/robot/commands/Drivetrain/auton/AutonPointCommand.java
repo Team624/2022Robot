@@ -41,6 +41,11 @@ public class AutonPointCommand extends CommandBase {
 
     @Override
     public void execute () {
+        if (!auton.isAuton){
+          m_drivetrainSubsystem.drive(new ChassisSpeeds(0,0,0));
+          System.out.println("CANCELED POINT COMMAND");
+          this.cancel();
+        }
         if (!m_drivetrainSubsystem.stopAuton){
           currentX = m_drivetrainSubsystem.getSwervePose()[0];
           currentY = m_drivetrainSubsystem.getSwervePose()[1];

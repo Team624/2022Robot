@@ -42,6 +42,11 @@ public class AutonPathCommand extends CommandBase {
     
     @Override
     public void execute() {
+        if (!auton.isAuton){
+            m_drivetrainSubsystem.drive(new ChassisSpeeds(0,0,0));
+            System.out.println("CANCELED PATH COMMAND");
+            this.cancel();
+        }
         if (!m_drivetrainSubsystem.stopAuton){
             auton.getIntakeState();
             auton.getShooterState();

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -20,14 +21,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 
 public class Shooter extends SubsystemBase {
-  private PneumaticHub hub;
   private Solenoid hood;
 
-  private boolean manualShoot, manualHood, isAutoShoot, autoHood;
-
-  private boolean ntUpdatePID, updatedPID;
-
-  private double camDist;
+  private boolean ntUpdatePID;
 
   private TalonFX leftFlywheel = new TalonFX(Constants.Shooter.leftFlywheelMotorID);
   private TalonFX rightFlywheel = new TalonFX(Constants.Shooter.rightFlywheelMotorID);
@@ -36,8 +32,6 @@ public class Shooter extends SubsystemBase {
   private boolean isPriming;
 
   private double goalRPM;
-
-  private XboxController test;
 
   // Set up the dashboard
   private ShuffleboardTab shootTab = Shuffleboard.getTab("Shooter");
@@ -55,11 +49,8 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry tuningPID = shootTab.add("Tuning PID?", false).withPosition(3,1).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
   /** Creates a new Shooter. */
-  public Shooter(PneumaticHub hub, XboxController test) {
-    this.test = test;
-    this.hub = hub;
-    //hood = hub.makeSolenoid(Constants.Shooter.flywheelSolenoidID);
-    hood = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Shooter.flywheelSolenoidID);
+  public Shooter(XboxController test) {
+    hood = new Solenoid(30, PneumaticsModuleType.CTREPCM, Constants.Shooter.hoodSolenoidID);
 
     rightFlywheel.setInverted(true);
 

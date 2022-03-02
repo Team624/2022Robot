@@ -8,9 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -24,7 +22,6 @@ public class Intake extends SubsystemBase {
 
   private SparkMaxPIDController intakePID;
 
-  private PneumaticHub hub;
   private Solenoid intakeSolenoid;
 
   private double P;
@@ -60,10 +57,8 @@ public class Intake extends SubsystemBase {
   private double intakePower = Constants.Intake.intakePower;
 
   /** Creates a new Intake. */
-  public Intake(PneumaticHub hub) {
-    this.hub = hub;
-    //intakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Intake.intakeSolenoidID);
-    intakeSolenoid = this.hub.makeSolenoid(Constants.Intake.intakeSolenoidID);
+  public Intake() {
+    intakeSolenoid = new Solenoid(30, PneumaticsModuleType.CTREPCM, Constants.Intake.intakeSolenoidID);
     intakeMotor = new CANSparkMax(Constants.Intake.intakeMotorID, MotorType.kBrushless);
     intakeMotor.restoreFactoryDefaults();
     encoder = intakeMotor.getEncoder();

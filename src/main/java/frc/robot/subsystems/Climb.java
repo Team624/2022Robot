@@ -8,7 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -24,9 +24,9 @@ public class Climb extends SubsystemBase {
 
   private CANSparkMax centerWinchSpark = new CANSparkMax(Constants.Climb.centerWinchMotorID, MotorType.kBrushless);
   private CANSparkMax armWinchSpark = new CANSparkMax(Constants.Climb.armWinchMotorID, MotorType.kBrushless);
-  private PneumaticHub hub;
+
   private Solenoid bottomSolenoid;
-  private Solenoid upperSolenoid;
+  private Solenoid topSolenoid;
 
   private Timer timer;
 
@@ -35,13 +35,12 @@ public class Climb extends SubsystemBase {
   private boolean isTimerRunning = false;
 
   /** Creates a new Climb. */
-  public Climb(PneumaticHub hub) {
+  public Climb() {
     timer = new Timer();
     centerWinchSpark.setIdleMode(IdleMode.kBrake);
     armWinchSpark.setIdleMode(IdleMode.kBrake);
-    this.hub = hub;
-    bottomSolenoid = this.hub.makeSolenoid(Constants.Climb.bottomLeftPistonID);
-    upperSolenoid = this.hub.makeSolenoid(Constants.Climb.topLeftPistonID);
+    bottomSolenoid = new Solenoid(30, PneumaticsModuleType.CTREPCM, Constants.Climb.bottomPistonID);
+    topSolenoid = new Solenoid(30, PneumaticsModuleType.CTREPCM, Constants.Climb.topPistonID);
   }
 
   @Override
@@ -61,7 +60,7 @@ public class Climb extends SubsystemBase {
   public void actuateSet(){
     if(climbStatus){
       timerStatus = true;
-      upperSolenoid.set(true);
+      topSolenoid.set(true);
     }
   }
 
@@ -100,13 +99,13 @@ public class Climb extends SubsystemBase {
 
   public void actuateUpperPistons(){
     if(climbStatus){
-      upperSolenoid.set(true);
+      topSolenoid.set(true);
     }
   }
 
   public void retractUpperPistons(){
     if(climbStatus){
-      upperSolenoid.set(false);
+      topSolenoid.set(false);
     }
   }
 

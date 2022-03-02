@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsBase;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -27,9 +30,8 @@ public class Robot extends TimedRobot {
 
   private Auton auton;
 
-  private PneumaticHub hub;
-
   private Compressor compressor;
+  private Solenoid test;
 
   private AddressableLED m_led;
 
@@ -45,13 +47,12 @@ public class Robot extends TimedRobot {
     //tab_cam.addCamera("USB Camera 0", "USB Camera 0", "USB Camera 0").withPosition(0, 0);
     tab_cam.add(CameraServer.startAutomaticCapture()).withPosition(0, 0).withSize(4, 4);
 
-    hub = new PneumaticHub(30);
-    compressor = hub.makeCompressor();
-    //compressor.enableDigital();
+    compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);
+    test = new Solenoid(0, PneumaticsModuleType.CTREPCM, 0);
 
     setLED();
 
-    m_robotContainer = new RobotContainer(hub);
+    m_robotContainer = new RobotContainer();
 
     auton = new Auton(
       m_robotContainer.getDrivetrain(),

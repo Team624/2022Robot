@@ -193,14 +193,17 @@ public class RobotContainer {
   }
 
   public void setDrivetrainDefaultCommand(){
-    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
+    Command c = new DefaultDriveCommand(
       m_drivetrainSubsystem,
       () -> -modifyAxis(d_controller.getLeftTriggerAxis()), 
       () -> -modifyAxis(d_controller.getRightTriggerAxis()),
       () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
       () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
       () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-    ));
+    );
+
+    m_drivetrainSubsystem.setDefaultCommand(c);
+    c.schedule();
   }
 
   public void setBlankDrivetrainCommand(){

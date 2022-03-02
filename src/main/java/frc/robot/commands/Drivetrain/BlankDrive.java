@@ -8,8 +8,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 
 public class BlankDrive extends CommandBase {
+  private final Drivetrain m_drivetrainSubsystem;
+
   /** Creates a new BlankDrive. */
   public BlankDrive(Drivetrain drive) {
+    this.m_drivetrainSubsystem = drive;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drive);
   }
@@ -22,6 +25,10 @@ public class BlankDrive extends CommandBase {
   @Override
   public void execute() {
     System.out.println("In BLANK");
+    if (!m_drivetrainSubsystem.isAuton){
+      System.out.println("Killing its self");
+      this.cancel();
+    }
   }
 
   // Called once the command ends or is interrupted.

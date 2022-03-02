@@ -19,14 +19,12 @@ import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Intake.ClimbIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.LowShoot;
-import frc.robot.commands.Shooter.ManualShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
-import frc.robot.commands.Tower.DoublePoop;
+import frc.robot.commands.Shooter.WallShoot;
 import frc.robot.commands.Tower.EjectBottom;
 import frc.robot.commands.Tower.IdleTower;
 import frc.robot.commands.Tower.Reverse;
 import frc.robot.commands.Tower.Shoot;
-import frc.robot.commands.Tower.Stop;
 import frc.robot.commands.Intake.DeployIntake;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Drivetrain;
@@ -41,14 +39,12 @@ import frc.robot.Triggers.Joysticks.mLeftUp;
 import frc.robot.Triggers.Joysticks.mRightCenter;
 import frc.robot.Triggers.Joysticks.mRightDown;
 import frc.robot.Triggers.Joysticks.mRightUp;
-import frc.robot.Triggers.Triggers.mLeftTriggerDown;
-import frc.robot.Triggers.Triggers.mLeftTriggerUp;
-import frc.robot.Triggers.Triggers.mRightTriggerDown;
-import frc.robot.Triggers.Triggers.mRightTriggerUp;
+// import frc.robot.Triggers.Triggers.mLeftTriggerDown;
+// import frc.robot.Triggers.Triggers.mLeftTriggerUp;
+// import frc.robot.Triggers.Triggers.mRightTriggerDown;
+// import frc.robot.Triggers.Triggers.mRightTriggerUp;
 
 public class RobotContainer {
-  private PneumaticHub hub;
-
   private final Climb m_climb;
   private final Drivetrain m_drivetrainSubsystem;
   private final Intake m_intake;
@@ -65,29 +61,22 @@ public class RobotContainer {
   private Trigger mRightDown = new mRightUp(m_controller);
   private Trigger mRightUp = new mRightDown(m_controller);
   private Trigger mRightCenter = new mRightCenter(m_controller);
-  private Trigger mRightTriggerDown = new mRightTriggerDown(m_controller);
-  private Trigger mRightTriggerUp = new mRightTriggerUp(m_controller);
-  private Trigger mLeftTriggerDown = new mLeftTriggerDown(m_controller);
-  private Trigger mLeftTriggerUp = new mLeftTriggerUp(m_controller);
-  
+  // private Trigger mRightTriggerDown = new mRightTriggerDown(m_controller);
+  // private Trigger mRightTriggerUp = new mRightTriggerUp(m_controller);
+  // private Trigger mLeftTriggerDown = new mLeftTriggerDown(m_controller);
+  // private Trigger mLeftTriggerUp = new mLeftTriggerUp(m_controller);
 
-  public RobotContainer(PneumaticHub hub) {
-    this.hub = hub;
-
-    m_climb = new Climb(this.hub);
+  public RobotContainer() {
+    m_climb = new Climb();
     m_drivetrainSubsystem = new Drivetrain();
-    m_intake = new Intake(this.hub);
+    m_intake = new Intake();
     m_tower = new Tower();
-    m_shooter = new Shooter(this.hub, m_controller);
+    m_shooter = new Shooter(m_controller);
     m_shooterVision = new ShooterVision(m_shooter);
 
     m_climb.setDefaultCommand(new IdleClimb(m_climb));
     m_intake.setDefaultCommand(new IdleIntake(m_intake));
-
-    // TODO: Change once second IR is on
     m_tower.setDefaultCommand(new IdleTower(m_tower));
-    //m_tower.setDefaultCommand(new Stop(m_tower));
-
     m_shooter.setDefaultCommand(new IdleShoot(m_shooter));
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem,
@@ -126,19 +115,19 @@ public class RobotContainer {
 
     new Button(m_controller::getRightBumper).whenHeld(new Shoot(m_tower));
 
+    new Button(m_controller::getLeftBumper).whenPressed(new WallShoot(m_shooter));
+
     new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
 
     new Button(m_controller::getAButton).whenHeld(new EjectBottom(m_tower));
 
-    new Button(m_controller::getBButton).whenHeld(new Shoot(m_tower));
-
     new Button(m_controller::getBButton).whenHeld(new LowShoot(m_shooter));
+
+    new Button(m_controller::getLeftStickButton).whenHeld(new Reverse(m_tower));
 
 //================================================================================================
 
     new Button(m_controller::getStartButton).whenPressed(m_climb::setMode);
-
-    new Button(m_controller::getLeftBumper).whenPressed(m_climb::actuateSet);
 
     new Button(m_controller::getStartButton).toggleWhenPressed(new ClimbIntake(m_intake));
 

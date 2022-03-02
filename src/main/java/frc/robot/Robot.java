@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
 
     hub = new PneumaticHub(30);
     compressor = hub.makeCompressor();
-    compressor.enableDigital();
+    //compressor.enableDigital();
 
     setLED();
 
@@ -127,7 +127,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     auton.setState(false);
-    compressor.enableDigital();
+    //compressor.enableDigital();
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
       m_robotContainer.getAutonomousDriveCommand(auton).cancel();
     }

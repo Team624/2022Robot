@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -61,7 +62,8 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   public Intake(PneumaticHub hub) {
     this.hub = hub;
-    intakeSolenoid = this.hub.makeSolenoid(8);
+    //intakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Intake.intakeSolenoidID);
+    intakeSolenoid = this.hub.makeSolenoid(Constants.Intake.intakeSolenoidID);
     intakeMotor = new CANSparkMax(Constants.Intake.intakeMotorID, MotorType.kBrushless);
     intakeMotor.restoreFactoryDefaults();
     encoder = intakeMotor.getEncoder();

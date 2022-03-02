@@ -58,7 +58,8 @@ public class Shooter extends SubsystemBase {
   public Shooter(PneumaticHub hub, XboxController test) {
     this.test = test;
     this.hub = hub;
-    hood = hub.makeSolenoid(9);
+    //hood = hub.makeSolenoid(Constants.Shooter.flywheelSolenoidID);
+    hood = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Shooter.flywheelSolenoidID);
 
     rightFlywheel.setInverted(true);
 

@@ -26,10 +26,10 @@ public final class Constants {
         public static final double centerWinchSpeed = 1;
         public static final double armWinchSpeed = .7;
 
-        public static final int bottomLeftPistonID = 10;
-        public static final int bottomRightPistonID = 10;
-        public static final int topLeftPistonID = 11;
-        public static final int topRightPistonID = 11;
+        public static final int bottomLeftPistonID = 2;
+        public static final int bottomRightPistonID = 2;
+        public static final int topLeftPistonID = 3;
+        public static final int topRightPistonID = 3;
 
         public static final double upperLowerdelay = .1;
     }
@@ -37,7 +37,7 @@ public final class Constants {
     public static final class Shooter{
         public static final int leftFlywheelMotorID = 3;
         public static final int rightFlywheelMotorID = 13;
-        public static final int flywheelSolenoidID = 9;
+        public static final int flywheelSolenoidID = 1;
 
         public static final double kP = 0.3;
         public static final double kI = 0.001;
@@ -96,8 +96,7 @@ public final class Constants {
 
     public static final class Intake{
         public static final int intakeMotorID = 4;
-        public static final int leftIntakeSolenoidID = 8;
-        public static final int rightIntakeSolenoidID = 8;
+        public static final int intakeSolenoidID = 0;
 
         public static final double intakePower = 1;
 

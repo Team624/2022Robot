@@ -40,8 +40,8 @@ public class Climb extends SubsystemBase {
     centerWinchSpark.setIdleMode(IdleMode.kBrake);
     armWinchSpark.setIdleMode(IdleMode.kBrake);
     this.hub = hub;
-    bottomSolenoid = this.hub.makeSolenoid(10);
-    upperSolenoid = this.hub.makeSolenoid(11);
+    bottomSolenoid = this.hub.makeSolenoid(Constants.Climb.bottomLeftPistonID);
+    upperSolenoid = this.hub.makeSolenoid(Constants.Climb.topLeftPistonID);
   }
 
   @Override

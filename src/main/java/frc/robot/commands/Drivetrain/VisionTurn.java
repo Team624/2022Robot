@@ -82,7 +82,7 @@ public class VisionTurn extends CommandBase {
 
       thVelocity = getRotationPID(visionRot);
       // TODO: Tune this to work
-      double lim = 0.8;
+      double lim = 1;
       if (thVelocity > lim){
         thVelocity = lim;
       }

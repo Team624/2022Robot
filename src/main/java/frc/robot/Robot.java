@@ -48,7 +48,6 @@ public class Robot extends TimedRobot {
     tab_cam.add(CameraServer.startAutomaticCapture()).withPosition(0, 0).withSize(4, 4);
 
     compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);
-    test = new Solenoid(0, PneumaticsModuleType.CTREPCM, 0);
 
     setLED();
 

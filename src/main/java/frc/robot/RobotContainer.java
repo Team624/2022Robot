@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
@@ -21,6 +20,7 @@ import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.LowShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Shooter.WallShoot;
+import frc.robot.commands.Tower.ClimbTower;
 import frc.robot.commands.Tower.EjectBottom;
 import frc.robot.commands.Tower.IdleTower;
 import frc.robot.commands.Tower.Reverse;
@@ -130,6 +130,8 @@ public class RobotContainer {
     new Button(m_controller::getStartButton).whenPressed(m_climb::setMode);
 
     new Button(m_controller::getStartButton).toggleWhenPressed(new ClimbIntake(m_intake));
+
+    new Button(m_controller::getStartButton).toggleWhenPressed(new ClimbTower(m_tower));
 
     mLeftDown.whenActive(m_climb::retractCenterWinch);
 

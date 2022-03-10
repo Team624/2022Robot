@@ -47,8 +47,10 @@ public final class Constants {
         public static final double lowShootRPM = 4000;
         public static final double wallShootRPM = 13000;
 
-        public static final double hoodSwitchAngle = 223;
-        public static final double hoodDeadBandSize = 7;
+        public static final double hoodSwitchCam = 223;
+        public static final double hoodDeadBandSizeCam = 7;
+        public static final double hoodSwitchDis = 156/39.37;
+        public static final double hoodDeadBandSizeDis = 0.3;
         public static final double[][] shooterExperimentDataHigh = {
         //  {cam-distance, rpm, actualDistance}
             {206, 11000, 144/39.37},

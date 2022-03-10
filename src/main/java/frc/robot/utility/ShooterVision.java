@@ -24,7 +24,7 @@ public class ShooterVision {
   }
 
   public double calculateRPM() {
-    int upperDataPoint = getUpperExperimentPoint(getDistanceAngle());
+    int upperDataPoint = getUpperExperimentPoint(getDistanceAngle(), 0);
     double[][] experimentData = getCurrentExperimentMatrix();
 
     try{
@@ -40,15 +40,15 @@ public class ShooterVision {
   }
 
   public double calculateRPMShootOnRun(double distance) {
-    int upperDataPoint = getUpperExperimentPoint(getDistanceAngle());
+    int upperDataPoint = getUpperExperimentPoint(distance, 2);
     double[][] experimentData = getCurrentExperimentMatrix();
 
     try{
-      double lowerAngle = experimentData[upperDataPoint - 1][0];
+      double lowerDis = experimentData[upperDataPoint - 1][2];
       double lowerRpm = experimentData[upperDataPoint - 1][1];
-      double upperAngle = experimentData[upperDataPoint][0];
+      double upperDis = experimentData[upperDataPoint][2];
       double upperRpm = experimentData[upperDataPoint][1];
-      return pointSlope(lowerAngle, lowerRpm, upperAngle, upperRpm, getDistanceAngle());
+      return pointSlope(lowerDis, lowerRpm, upperDis, upperRpm, distance);
     } 
     catch(Exception e){
       return 0;
@@ -56,7 +56,7 @@ public class ShooterVision {
   }
 
   public double calculateActualDistance() {
-    int upperDataPoint = getUpperExperimentPoint(getDistanceAngle());
+    int upperDataPoint = getUpperExperimentPoint(getDistanceAngle(), 0);
     double[][] experimentData = getCurrentExperimentMatrix();
 
     try{
@@ -72,8 +72,8 @@ public class ShooterVision {
   }
 
   public boolean calculateHood() {
-    double deadBandLow = Constants.Shooter.hoodSwitchAngle - (0.5 * Constants.Shooter.hoodDeadBandSize);
-    double deadBandHigh = Constants.Shooter.hoodSwitchAngle + (0.5 * Constants.Shooter.hoodDeadBandSize);
+    double deadBandLow = Constants.Shooter.hoodSwitchCam - (0.5 * Constants.Shooter.hoodDeadBandSizeCam);
+    double deadBandHigh = Constants.Shooter.hoodSwitchCam + (0.5 * Constants.Shooter.hoodDeadBandSizeCam);
 
     if (getDistanceAngle() < deadBandLow && shooter.getHood()) {
       return false;
@@ -85,12 +85,12 @@ public class ShooterVision {
   }
 
   public boolean calculateHoodShootOnRun(double distance) {
-    double deadBandLow = Constants.Shooter.hoodSwitchAngle - (0.5 * Constants.Shooter.hoodDeadBandSize);
-    double deadBandHigh = Constants.Shooter.hoodSwitchAngle + (0.5 * Constants.Shooter.hoodDeadBandSize);
+    double deadBandLow = Constants.Shooter.hoodSwitchDis - (0.5 * Constants.Shooter.hoodDeadBandSizeDis);
+    double deadBandHigh = Constants.Shooter.hoodSwitchDis + (0.5 * Constants.Shooter.hoodDeadBandSizeDis);
 
-    if (getDistanceAngle() < deadBandLow && shooter.getHood()) {
+    if (distance < deadBandLow && shooter.getHood()) {
       return false;
-    } else if (getDistanceAngle() > deadBandHigh && !shooter.getHood()) {
+    } else if (distance > deadBandHigh && !shooter.getHood()) {
       return true;
     }
 
@@ -103,12 +103,12 @@ public class ShooterVision {
     return y;
   }
 
-  public int getUpperExperimentPoint(double distanceAngle) {
+  public int getUpperExperimentPoint(double distance, int disIndex) {
     double[][] experimentData = getCurrentExperimentMatrix();
 
     int upperDataPoint = experimentData.length - 1;
     for (int i = 0; i < experimentData.length; i++) {
-       if (distanceAngle < experimentData[i][0]) {
+       if (distance < experimentData[i][disIndex]) {
         upperDataPoint = i;
         break;
        }

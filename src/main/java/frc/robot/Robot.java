@@ -5,14 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.PneumaticsBase;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -31,7 +27,6 @@ public class Robot extends TimedRobot {
   private Auton auton;
 
   private Compressor compressor;
-  private Solenoid test;
 
   private AddressableLED m_led;
 
@@ -116,13 +111,12 @@ public class Robot extends TimedRobot {
     auton.setState(true);
     m_robotContainer.setBlankDrivetrainCommand();
     m_robotContainer.getAutonomousDriveCommand(auton).schedule(true);
+    m_robotContainer.resetClimbMode();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
@@ -132,6 +126,7 @@ public class Robot extends TimedRobot {
       m_robotContainer.getAutonomousDriveCommand(auton).cancel();
     }
     m_robotContainer.setDrivetrainDefaultCommand();
+    m_robotContainer.resetClimbMode();
   }
 
   /** This function is called periodically during operator control. */

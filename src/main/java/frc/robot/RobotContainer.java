@@ -225,4 +225,8 @@ public class RobotContainer {
     return new AutonomousDrive(m_drivetrainSubsystem, auton);
   }
 
+  public void resetClimbMode(){
+    m_climb.resetMode();
+  }
+
 }

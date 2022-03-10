@@ -4,14 +4,12 @@
 
 package frc.robot.utility;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
 import frc.robot.commands.Intake.DeployIntake;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
-import frc.robot.commands.Shooter.LowShoot;
-import frc.robot.commands.Tower.DoublePoop;
 import frc.robot.commands.Tower.IdleTower;
+import frc.robot.commands.Tower.Reverse;
 import frc.robot.commands.Tower.Shoot;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -126,7 +124,7 @@ public class Auton {
             new PrimeShoot(shooter, vision, drivetrain).schedule();
         }else if(state.equals("hide_shoot") && !shooterState.equals("hide_shoot")){
             shooterState = state;
-            new DoublePoop(tower).schedule();
+            new Reverse(tower).schedule();
         }else if (state.equals("idle") && !shooterState.equals("idle")){
             shooterState = state;
             new IdleShoot(shooter).schedule();

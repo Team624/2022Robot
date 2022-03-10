@@ -57,6 +57,10 @@ public class Climb extends SubsystemBase {
     }
   }
 
+  public void resetMode(){
+    climbStatus = false;
+  }
+
   public void actuateSet(){
     if(climbStatus){
       timerStatus = true;

@@ -5,6 +5,9 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
+import com.revrobotics.ColorSensorV3;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -12,8 +15,12 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -96,7 +103,12 @@ public class Tower extends SubsystemBase {
 
   private double feederPower = Constants.Feeder.feederPower;
 
+  private ColorSensorV3 cSense;
 
+  private final ColorMatch colorMatcher = new ColorMatch();
+
+  private final Color kBlueTarget = new Color(0.143, 0.427, 0.429);
+  private final Color kRedTarget = new Color(0.561, 0.232, 0.114);
 
   /** Creates a new Tower. */
   public Tower() {
@@ -107,6 +119,7 @@ public class Tower extends SubsystemBase {
     towerMotor.setInverted(true);
     towerEncoder = towerMotor.getEncoder();
     towerPID = towerMotor.getPIDController();
+    cSense = new ColorSensorV3(Port.kOnboard);
 
     P_tower = Constants.Tower.P;
     I_tower = Constants.Tower.I;
@@ -147,6 +160,9 @@ public class Tower extends SubsystemBase {
     feederPID.setIZone(Iz_feeder);
     feederPID.setFF(FF_feeder);
     feederPID.setOutputRange(MinOutput_feeder, MaxOutput_feeder);
+
+    colorMatcher.addColorMatch(kBlueTarget);
+    colorMatcher.addColorMatch(kRedTarget);
   }
 
   @Override
@@ -238,24 +254,20 @@ public class Tower extends SubsystemBase {
     return IrSensor_feeder.get();
   }
 
-  // Overall functions
-  public void loadBalls(){
-    if(!checkTowerIR()){
-      powerTower(false);
-      powerFeeder(false);
-    } else{
-      if (!checkFeederIR()){
-        powerFeeder(false);
-        stopTower();
-      } else{
-        stopTower();
-        stopFeeder();
-      }
-    }
-  }
-
   public void shootBalls(){
     powerTower(false);
     powerFeeder(false);
+  }
+
+  public int checkAlliance(){
+    Color detectedColor = cSense.getColor();
+    ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
+    if(match.color == kBlueTarget){
+      return 1;
+    }else if(match.color == kRedTarget){
+      return 2;
+    }else{
+      return 0;
+    }
   }
 }

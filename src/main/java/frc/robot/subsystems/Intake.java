@@ -20,6 +20,8 @@ public class Intake extends SubsystemBase {
   private CANSparkMax intakeMotor;
   private RelativeEncoder encoder;
 
+ 
+
   private SparkMaxPIDController intakePID;
 
   private Solenoid intakeSolenoid;
@@ -63,6 +65,7 @@ public class Intake extends SubsystemBase {
     intakeMotor.restoreFactoryDefaults();
     encoder = intakeMotor.getEncoder();
     intakePID = intakeMotor.getPIDController();
+    
 
     P = Constants.Intake.P;
     I = Constants.Tower.I;

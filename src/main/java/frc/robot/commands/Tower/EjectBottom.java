@@ -9,7 +9,7 @@ import frc.robot.subsystems.Tower;
 
 public class EjectBottom extends CommandBase {
   private final Tower tower;
-  private boolean irState;
+
   /** Creates a new Reverse. */
   public EjectBottom(Tower tower) {
     this.tower = tower;

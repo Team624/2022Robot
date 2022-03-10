@@ -36,8 +36,16 @@ public class PrimeShoot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setRPM(vision.calculateRPM() - (drivetrain.getGoalRelVelocity(getQuickTurnValue())[0]) * Constants.Drivetrain.shootOnRunShooterMult);
-    shooter.setHood(vision.calculateHood());
+    double[] goalRelVel = drivetrain.getGoalRelVelocity(getQuickTurnValue());
+    boolean isMoving = Math.abs(goalRelVel[0]) + Math.abs(goalRelVel[1]) < 0.3;
+    if (isMoving){
+      double targetDistance = getTargetDistance();
+      shooter.setRPM(vision.calculateRPMShootOnRun(targetDistance) - (goalRelVel[0]) * Constants.Drivetrain.shootOnRunShooterMult);
+      shooter.setHood(vision.calculateHoodShootOnRun(targetDistance));
+    } else{
+      shooter.setRPM(vision.calculateRPM());
+      shooter.setHood(vision.calculateHood());
+    }
   }
 
   private double getQuickTurnValue(){
@@ -49,6 +57,13 @@ public class PrimeShoot extends CommandBase {
       angle += Math.PI * 2;
     }
     return angle;
+  }
+
+  private double getTargetDistance(){
+    double x = targetPose[0] - drivetrain.getSwervePose()[0];
+    double y = targetPose[1] - drivetrain.getSwervePose()[1];
+
+    return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
   }
 
   // Called once the command ends or is interrupted.

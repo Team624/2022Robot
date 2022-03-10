@@ -35,7 +35,7 @@ public class AutonPointCommand extends CommandBase {
     public void initialize() {
       System.out.println("On point: " + point);
       SmartDashboard.getEntry("/pathTable/status/point").setNumber(point); 
-      SmartDashboard.getEntry("/pathTable/status/finishedPath").setBoolean(false);  
+      SmartDashboard.getEntry("/pathTable/status/finishedPath").setString("false " + path.getPathId()); 
       m_drivetrainSubsystem.autonPoint_pidPathRotation.reset();
     }
 
@@ -155,7 +155,7 @@ public class AutonPointCommand extends CommandBase {
         if (point == path.getLength() -1){
           System.out.println("LAST POINT IN PATH OF LENGTH: " + path.getLength());
           m_drivetrainSubsystem.lastPointCommand = true;
-          SmartDashboard.getEntry("/pathTable/status/finishedPath").setBoolean(true);
+          SmartDashboard.getEntry("/pathTable/status/finishedPath").setString("true " + path.getPathId());
           return true;
         }
         double distance = calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY());

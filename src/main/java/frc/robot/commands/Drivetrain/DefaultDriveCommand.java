@@ -37,7 +37,7 @@ public class DefaultDriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        System.out.println("In DEFAULT");
+        //System.out.println("In DEFAULT");
         //System.out.println(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees());
         //System.out.println(RobotContainer.deadband(-cont.getRawAxis(0) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND *.5, .05));
         //System.out.println(RobotContainer.deadband(cont.getRightX() * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND *.5, .05));
@@ -65,10 +65,13 @@ public class DefaultDriveCommand extends CommandBase {
                 new ChassisSpeeds(-vx, vy, omega)
             );
         } else {
+            vx = filterX.calculate(vx);
+            vy = filterY.calculate(vy);
+            //System.out.println("th: " + omega);
             m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                    filterX.calculate(vx),
-                    filterY.calculate(vy),
+                    vx,
+                    vy,
                     omega,
                     m_drivetrainSubsystem.getGyroscopeRotation()
                 )

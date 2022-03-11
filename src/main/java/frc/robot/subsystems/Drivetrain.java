@@ -71,6 +71,7 @@ public class Drivetrain extends SubsystemBase {
   public boolean isCreepin = false;
 
   public boolean isAuton = false;
+  public boolean isUsingVision = false;
 
   public boolean lastPointCommand = false;
   public boolean stopAuton = false;
@@ -145,7 +146,8 @@ public class Drivetrain extends SubsystemBase {
           SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
           // TODO: Test if this doesn't mess auton up
-          if (!isAuton){
+          if (!isAuton && !isUsingVision){
+                //System.out.println("Freeze");
                 states = freezeLogic(states);
           }
 

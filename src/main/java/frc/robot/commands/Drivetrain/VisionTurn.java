@@ -48,6 +48,7 @@ public class VisionTurn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_drivetrainSubsystem.isUsingVision = true;
     m_drivetrainSubsystem.visionTurn_pid.reset();
     m_drivetrainSubsystem.visionTurn_pidQuickTurn.reset();
   }
@@ -70,48 +71,51 @@ public class VisionTurn extends CommandBase {
 
     double[] goalRelVel = m_drivetrainSubsystem.getGoalRelVelocity(getQuickTurnValue());
 
-    boolean isMoving = Math.abs(goalRelVel[0]) + Math.abs(goalRelVel[1]) < 0.3;
+    boolean isNotMoving = Math.abs(goalRelVel[0]) + Math.abs(goalRelVel[1]) < 0.1;
     double radius = shooterVision.calculateActualDistance();
 
-    // Vision resetting of robot pose
-    if (Math.abs(visionRot) < visionResetTolerance && radius > 0){
-      double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians();
-      double x = radius * Math.cos(degree % (Math.PI * 2));
-      double y = radius * Math.sin(degree % (Math.PI * 2));
-
-      System.out.println("reseting robot pose: " + radius);
-      m_drivetrainSubsystem.visionCorrectPose(targetPose[0] - x, targetPose[1] - y);
-    }
-
     // If doing normal vision targeting
-    if((Math.abs(wantedDeltaAngle) < quickTurnTolerance) && (Math.abs(visionRot) < 500) && isMoving){
+    if((Math.abs(wantedDeltaAngle) < quickTurnTolerance) && (Math.abs(visionRot) < 500) && isNotMoving){
       System.out.println("Vision targeting error = " + visionRot);
 
-      double shootToSideAngle = 0;
-      double lowDist = (78/39.37);
-      double highDist = (252/39.37);
+      // Vision resetting of robot pose
+      if (Math.abs(visionRot) < visionResetTolerance && radius > 0){
+        double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians();
+        double x = radius * Math.cos(degree % (Math.PI * 2));
+        double y = radius * Math.sin(degree % (Math.PI * 2));
 
-      double distanceBetween = highDist - lowDist;
-      if (radius < lowDist + distanceBetween/3){
-        shootToSideAngle = 7;
-      } else if (radius < lowDist + (2 * distanceBetween)/3){
-        shootToSideAngle = 3;
+        System.out.println("reseting robot pose: " + radius);
+        m_drivetrainSubsystem.visionCorrectPose(targetPose[0] - x, targetPose[1] - y);
       }
-      else{
-        shootToSideAngle = 1;
-      }
+      
+      // double shootToSideAngle = 0;
+      // double lowDist = (78/39.37);
+      // double highDist = (252/39.37);
 
-      visionRot += shootToSideAngle;
+      // double distanceBetween = highDist - lowDist;
+      // if (radius < lowDist + distanceBetween/3){
+      //   shootToSideAngle = -4;
+      // } else if (radius < lowDist + (2 * distanceBetween)/3){
+      //   shootToSideAngle = -2;
+      // }
+      // else{
+      //   shootToSideAngle = -1;
+      // }
+
+      //System.out.println("Shoot to side angle: " + shootToSideAngle);
+
+      //visionRot += shootToSideAngle;
 
       thVelocity = getRotationPID(visionRot);
      
-      double lim = 1;
+      double lim = 1.0;
       if (thVelocity > lim){
         thVelocity = lim;
       }
       if (thVelocity < -lim){
         thVelocity = -lim;
       }
+      //System.out.println("thVelocity " + thVelocity);
       
     } else{
       // Quick turn
@@ -125,10 +129,12 @@ public class VisionTurn extends CommandBase {
       vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
       vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
     }
+    vx = filterX.calculate(vx);
+    vy = filterY.calculate(vy);
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
-        filterX.calculate(vx),
-        filterY.calculate(vy),
+        vx,
+        vy,
         thVelocity,
         m_drivetrainSubsystem.getGyroscopeRotation()
       )
@@ -168,6 +174,7 @@ public class VisionTurn extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_drivetrainSubsystem.isUsingVision = false;
     m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
   }
 

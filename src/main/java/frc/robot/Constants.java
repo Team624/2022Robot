@@ -99,7 +99,7 @@ public final class Constants {
         public static final double intakePower = 1;
 
         public static final double agitateTime = .3;
-        public static final double agitateSpeed = -.1;
+        public static final double agitateSpeed = -.3;
 
         public static final double P = 0.00003; 
         public static final double I = 0;

@@ -229,4 +229,8 @@ public class RobotContainer {
     m_climb.resetMode();
   }
 
+  public void setAlliance(){
+    m_tower.updateAlliance();
+  }
+
 }

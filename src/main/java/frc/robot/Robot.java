@@ -107,6 +107,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    m_robotContainer.setAlliance();
     compressor.enableDigital();
     auton.setState(true);
     m_robotContainer.setBlankDrivetrainCommand();
@@ -120,6 +121,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_robotContainer.setAlliance();
     auton.setState(false);
     compressor.enableDigital();
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {

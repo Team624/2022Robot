@@ -11,22 +11,12 @@ import frc.robot.subsystems.Tower;
 
 public class IdleTower extends CommandBase {
   private final Tower tower;
-  private int alliance;
   /** Creates a new IdleTower. */
   public IdleTower(Tower tower) {
     this.tower = tower;
-    setAlliance();
     addRequirements(this.tower);
     // Use addRequirements() here to declare subsystem dependencies.
   }
-
-  public void setAlliance(){
-    if(DriverStation.getAlliance() == Alliance.Blue){
-      alliance = 1;
-    }else{
-      alliance = 2;
-    }
-  };
 
   // Called when the command is initially scheduled.
   @Override
@@ -37,7 +27,8 @@ public class IdleTower extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    if(tower.checkAlliance() == 0 || alliance == tower.checkAlliance()){
+    //System.out.println("Current alliance is: " + tower.getAlliance());
+    if(tower.checkAlliance() == 0 || tower.getAlliance() == tower.checkAlliance()){
       if(!tower.checkTowerIR()){
         tower.powerTower(false);
         tower.powerFeeder(false);

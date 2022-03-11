@@ -61,10 +61,10 @@ public class Tower extends SubsystemBase {
   private NetworkTableEntry IzTerm_tower = tab_tower.add("Iz Term", 0.0).withPosition(1, 3).getEntry();
   private NetworkTableEntry FFterm_tower = tab_tower.add("FF Term", 0.0).withPosition(1, 4).getEntry();
 
+  private NetworkTableEntry colorDetected = tab_tower.add("Color", 0.0).withPosition(3, 0).getEntry();
+
   private double towerPower = Constants.Tower.towerPower;
   private double autoLoadPower = Constants.Tower.autoLoadPower;
-
-
 
   // FEEDER STUFF
   private CANSparkMax feederMotor;
@@ -107,8 +107,11 @@ public class Tower extends SubsystemBase {
 
   private final ColorMatch colorMatcher = new ColorMatch();
 
-  private final Color kBlueTarget = new Color(0.143, 0.427, 0.429);
-  private final Color kRedTarget = new Color(0.561, 0.232, 0.114);
+  private final Color kDefault = new Color(.273, .482, .244);
+  private final Color kBlueTarget = new Color(.235, .47, .294);
+  private final Color kRedTarget = new Color(.356, .434, .209);
+
+  private int alliance;
 
   /** Creates a new Tower. */
   public Tower() {
@@ -163,6 +166,9 @@ public class Tower extends SubsystemBase {
 
     colorMatcher.addColorMatch(kBlueTarget);
     colorMatcher.addColorMatch(kRedTarget);
+    colorMatcher.addColorMatch(kDefault);
+
+    
   }
 
   @Override
@@ -260,14 +266,32 @@ public class Tower extends SubsystemBase {
   }
 
   public int checkAlliance(){
+    
     Color detectedColor = cSense.getColor();
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
+    int number = 0;
     if(match.color == kBlueTarget){
-      return 1;
+      number = 1;
     }else if(match.color == kRedTarget){
-      return 2;
+      number = 2;
+    }else if(match.color == kDefault){
+      number = 0;
+    }
+    colorDetected.setNumber(number);
+    System.out.println("Red: " + detectedColor.red + "Green: " + detectedColor.green + "Blue: " + detectedColor.blue);
+    return number;
+  }
+
+  public void updateAlliance(){
+    if(DriverStation.getAlliance() == Alliance.Blue){
+      alliance = 1;
     }else{
-      return 0;
+      alliance = 2;
     }
   }
+
+  public int getAlliance(){
+    return alliance;
+  }
+
 }

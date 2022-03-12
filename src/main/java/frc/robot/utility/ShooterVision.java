@@ -40,6 +40,7 @@ public class ShooterVision {
   }
 
   public double calculateRPMShootOnRun(double distance) {
+    System.out.println("Distance: " + distance);
     int upperDataPoint = getUpperExperimentPoint(distance, 2);
     double[][] experimentData = getCurrentExperimentMatrix();
 

@@ -35,12 +35,14 @@ public class PrimeShoot extends CommandBase {
   @Override
   public void execute() {
     double[] goalRelVel = drivetrain.getGoalRelVelocity(getQuickTurnValue());
-    boolean isMoving = Math.abs(goalRelVel[0]) + Math.abs(goalRelVel[1]) < 0.3;
-    if (isMoving){
+    boolean isNotMoving = Math.abs(goalRelVel[0]) + Math.abs(goalRelVel[1]) < 0.3;
+    if (!isNotMoving){
+      //System.out.println("Shoot on run shooting");
       double targetDistance = getTargetDistance();
       shooter.setRPM(vision.calculateRPMShootOnRun(targetDistance) - (goalRelVel[0]) * Constants.Drivetrain.shootOnRunShooterMult);
       shooter.setHood(vision.calculateHoodShootOnRun(targetDistance));
     } else{
+      //System.out.println("Normal Shooting");
       shooter.setRPM(vision.calculateRPM());
       shooter.setHood(vision.calculateHood());
     }

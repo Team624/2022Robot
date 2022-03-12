@@ -162,7 +162,8 @@ public class Drivetrain extends SubsystemBase {
           } else{
                 m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
           }
-          updateLeoPose();          
+          updateLeoPose(); 
+          //System.out.println("DRIVE VELOCITY: " + states[0].speedMetersPerSecond);         
   }
 
   private SwerveModuleState getState(SwerveModule module) {

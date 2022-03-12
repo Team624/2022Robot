@@ -132,8 +132,6 @@ public class Drivetrain extends SubsystemBase {
                   Constants.Drivetrain.BACK_RIGHT_MODULE_STEER_MOTOR,
                   Constants.Drivetrain.BACK_RIGHT_MODULE_STEER_ENCODER,
                   Constants.Drivetrain.BACK_RIGHT_MODULE_STEER_OFFSET);
-
-
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -144,7 +142,6 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
           SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
-          // TODO: Test if this doesn't mess auton up
           if (!isAuton){
                 states = freezeLogic(states);
           }
@@ -160,7 +157,10 @@ public class Drivetrain extends SubsystemBase {
           } else{
                 m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
           }
-          updateLeoPose();          
+          updateLeoPose(); 
+
+          
+          System.out.println("Motor Output: " + states[0].speedMetersPerSecond);
   }
 
   private SwerveModuleState getState(SwerveModule module) {

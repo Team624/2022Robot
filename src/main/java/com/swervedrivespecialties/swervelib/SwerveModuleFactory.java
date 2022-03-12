@@ -2,27 +2,65 @@ package com.swervedrivespecialties.swervelib;
 
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
-public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
+public class SwerveModuleFactory<DC, SC> {
     private final ModuleConfiguration moduleConfiguration;
-    private final DriveControllerFactory<?, DriveConfiguration> driveControllerFactory;
-    private final SteerControllerFactory<?, SteerConfiguration> steerControllerFactory;
+    private final DriveControllerFactory<?, DC> driveControllerFactory;
+    private final SteerControllerFactory<?, SC> steerControllerFactory;
 
     public SwerveModuleFactory(ModuleConfiguration moduleConfiguration,
-                               DriveControllerFactory<?, DriveConfiguration> driveControllerFactory,
-                               SteerControllerFactory<?, SteerConfiguration> steerControllerFactory) {
+                               DriveControllerFactory<?, DC> driveControllerFactory,
+                               SteerControllerFactory<?, SC> steerControllerFactory) {
         this.moduleConfiguration = moduleConfiguration;
         this.driveControllerFactory = driveControllerFactory;
         this.steerControllerFactory = steerControllerFactory;
     }
 
-    public SwerveModule create(DriveConfiguration driveConfiguration, SteerConfiguration steerConfiguration) {
-        var driveController = driveControllerFactory.create(driveConfiguration, moduleConfiguration);
-        var steerController = steerControllerFactory.create(steerConfiguration, moduleConfiguration);
+    public SwerveModule create(DC driveConfiguration, String driveCanbus, SC steerConfiguration, String steerCanbus) {
+        var driveController = driveControllerFactory.create(
+                driveConfiguration, 
+                driveCanbus,
+                moduleConfiguration
+        );
+        var steerController = steerControllerFactory.create(
+                steerConfiguration, 
+                steerCanbus,
+                moduleConfiguration
+        );
 
         return new ModuleImplementation(driveController, steerController);
     }
 
-    public SwerveModule create(ShuffleboardLayout container, DriveConfiguration driveConfiguration, SteerConfiguration steerConfiguration) {
+    public SwerveModule create(DC driveConfiguration, SC steerConfiguration) {
+        var driveController = driveControllerFactory.create(
+                driveConfiguration, 
+                moduleConfiguration
+        );
+        var steerController = steerControllerFactory.create(
+                steerConfiguration, 
+                moduleConfiguration
+        );
+
+        return new ModuleImplementation(driveController, steerController);
+    }
+
+    public SwerveModule create(ShuffleboardLayout container, DC driveConfiguration, String driveCanbus, SC steerConfiguration, String steerCanbus) {
+        var driveController = driveControllerFactory.create(
+                container,
+                driveConfiguration,
+                driveCanbus,
+                moduleConfiguration
+        );
+        var steerContainer = steerControllerFactory.create(
+                container,
+                steerConfiguration,
+                steerCanbus,
+                moduleConfiguration
+        );
+
+        return new ModuleImplementation(driveController, steerContainer);
+    }
+
+    public SwerveModule create(ShuffleboardLayout container, DC driveConfiguration, SC steerConfiguration) {
         var driveController = driveControllerFactory.create(
                 container,
                 driveConfiguration,
@@ -44,6 +82,21 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration> {
         private ModuleImplementation(DriveController driveController, SteerController steerController) {
             this.driveController = driveController;
             this.steerController = steerController;
+        }
+
+        @Override
+        public Object getDriveMotor() {
+            return driveController.getDriveMotor();
+        }
+
+        @Override
+        public Object getSteerMotor() {
+            return steerController.getSteerMotor();
+        }
+
+        @Override
+        public AbsoluteEncoder getSteerEncoder() {
+            return steerController.getSteerEncoder();
         }
 
         @Override

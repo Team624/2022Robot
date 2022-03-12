@@ -73,6 +73,7 @@ public class DefaultDriveCommand extends CommandBase {
                 )
         );
         }
+        System.out.println("CONTROLLER: " + omega);
         m_drivetrainSubsystem.updateFieldRelVelocity(new ChassisSpeeds(vx, vy, omega));
     }
 

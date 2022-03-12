@@ -14,6 +14,18 @@ public interface DriveControllerFactory<Controller extends DriveController, Driv
     default Controller create(
             ShuffleboardContainer container,
             DriveConfiguration driveConfiguration,
+            String canbus,
+            ModuleConfiguration moduleConfiguration
+    ) {
+        var controller = create(driveConfiguration, canbus, moduleConfiguration);
+        addDashboardEntries(container, controller);
+
+        return controller;
+    }
+
+    default Controller create(
+            ShuffleboardContainer container,
+            DriveConfiguration driveConfiguration,
             ModuleConfiguration moduleConfiguration
     ) {
         var controller = create(driveConfiguration, moduleConfiguration);
@@ -22,5 +34,12 @@ public interface DriveControllerFactory<Controller extends DriveController, Driv
         return controller;
     }
 
-    Controller create(DriveConfiguration driveConfiguration, ModuleConfiguration moduleConfiguration);
+    default Controller create(
+        DriveConfiguration driveConfiguration,
+        ModuleConfiguration moduleConfiguration
+    ) {
+        return create(driveConfiguration, "", moduleConfiguration);
+    }
+
+    Controller create(DriveConfiguration driveConfiguration, String canbus, ModuleConfiguration moduleConfiguration);
 }

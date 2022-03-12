@@ -278,7 +278,6 @@ public class Tower extends SubsystemBase {
       number = 0;
     }
     colorDetected.setNumber(number);
-    System.out.println("Red: " + detectedColor.red + "Green: " + detectedColor.green + "Blue: " + detectedColor.blue);
     return number;
   }
 

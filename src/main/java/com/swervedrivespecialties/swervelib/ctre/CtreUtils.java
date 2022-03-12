@@ -1,4 +1,3 @@
-
 package com.swervedrivespecialties.swervelib.ctre;
 
 import com.ctre.phoenix.ErrorCode;

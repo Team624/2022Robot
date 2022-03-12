@@ -43,7 +43,7 @@ public final class Falcon500DriveControllerFactoryBuilder {
 
     private class FactoryImplementation implements DriveControllerFactory<ControllerImplementation, Integer> {
         @Override
-        public ControllerImplementation create(Integer driveConfiguration, ModuleConfiguration moduleConfiguration) {
+        public ControllerImplementation create(Integer id, String canbus, ModuleConfiguration moduleConfiguration) {
             TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
 
             double sensorPositionCoefficient = Math.PI * moduleConfiguration.getWheelDiameter() * moduleConfiguration.getDriveReduction() / TICKS_PER_ROTATION;
@@ -58,8 +58,8 @@ public final class Falcon500DriveControllerFactoryBuilder {
                 motorConfiguration.supplyCurrLimit.enable = true;
             }
 
-            TalonFX motor = new TalonFX(driveConfiguration);
-            motor.configAllSettings(motorConfiguration);
+            TalonFX motor = new TalonFX(id, canbus);
+            CtreUtils.checkCtreError(motor.configAllSettings(motorConfiguration), "Failed to configure Falcon 500");
 
             if (hasVoltageCompensation()) {
                 // Enable voltage compensation
@@ -71,11 +71,16 @@ public final class Falcon500DriveControllerFactoryBuilder {
             motor.setInverted(moduleConfiguration.isDriveInverted() ? TalonFXInvertType.Clockwise : TalonFXInvertType.CounterClockwise);
             motor.setSensorPhase(true);
 
+            motor.configNeutralDeadband(.02);
+
             // Reduce CAN status frame rates
-            motor.setStatusFramePeriod(
-                    StatusFrameEnhanced.Status_1_General,
-                    STATUS_FRAME_GENERAL_PERIOD_MS,
-                    CAN_TIMEOUT_MS
+            CtreUtils.checkCtreError(
+                    motor.setStatusFramePeriod(
+                            StatusFrameEnhanced.Status_1_General,
+                            STATUS_FRAME_GENERAL_PERIOD_MS,
+                            CAN_TIMEOUT_MS
+                    ),
+                    "Failed to configure Falcon status frame period"
             );
 
             return new ControllerImplementation(motor, sensorVelocityCoefficient);
@@ -90,6 +95,11 @@ public final class Falcon500DriveControllerFactoryBuilder {
         private ControllerImplementation(TalonFX motor, double sensorVelocityCoefficient) {
             this.motor = motor;
             this.sensorVelocityCoefficient = sensorVelocityCoefficient;
+        }
+
+        @Override
+        public Object getDriveMotor() {
+            return this.motor;
         }
 
         @Override

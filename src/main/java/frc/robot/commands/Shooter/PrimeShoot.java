@@ -39,8 +39,15 @@ public class PrimeShoot extends CommandBase {
     if (!isNotMoving){
       //System.out.println("Shoot on run shooting");
       double targetDistance = getTargetDistance();
-      shooter.setRPM(vision.calculateRPMShootOnRun(targetDistance) - (goalRelVel[0]) * Constants.Drivetrain.shootOnRunShooterMult);
-      shooter.setHood(vision.calculateHoodShootOnRun(targetDistance));
+      double offset = goalRelVel[0] * Constants.Drivetrain.shootOnRunShooterMultX;
+      double angleOffset = Math.abs((getShootOnRunAngle(goalRelVel) * Constants.Drivetrain.shootOnRunAngleMult));
+
+      // TODO: Drive robot in straight line away and towards goal "offset" should be only variable effecting this
+      // TODO: Drive robot in arc around the goal and test if the balls hit the center of the target: tune the vision turn angle multiplyer
+      // TODO: Drive robot in arc around the goal and test if the balls are going far enough tune the "shootOnRunShooterMultY" to get the right rpm for the shot
+      // See if drift in odom effects accuarcy, try doing vision correction continously
+      shooter.setRPM(vision.calculateRPMShootOnRun(targetDistance - offset) + angleOffset * Constants.Drivetrain.shootOnRunShooterMultY);
+      shooter.setHood(vision.calculateHoodShootOnRun(targetDistance - offset));
     } else{
       //System.out.println("Normal Shooting");
       shooter.setRPM(vision.calculateRPM());
@@ -57,6 +64,16 @@ public class PrimeShoot extends CommandBase {
       angle += Math.PI * 2;
     }
     return angle;
+  }
+
+  private double getShootOnRunAngle(double[] goalRelVel){
+    double x = targetPose[0] - drivetrain.getSwervePose()[0];
+    double y = targetPose[1] - drivetrain.getSwervePose()[1];
+
+    double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    //System.out.println("Distance: " + goalRelVel[1]/distance);
+
+    return Math.atan(goalRelVel[1]/distance) * (180/Math.PI);
   }
 
   private double getTargetDistance(){

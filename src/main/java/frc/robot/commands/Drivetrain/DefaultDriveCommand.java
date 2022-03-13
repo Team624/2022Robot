@@ -46,6 +46,9 @@ public class DefaultDriveCommand extends CommandBase {
         double vy = m_translationYSupplier.getAsDouble();
         double omega = m_rotationSupplier.getAsDouble();
 
+        //System.out.println("Vx: " + vx + " Vy: " + vy);
+        //System.out.println("Vector = " + Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2)));
+
         // the speed mode
         if (!(Math.abs(m_rightTriggerSupplier.getAsDouble()) > 0.5)){
             vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER;

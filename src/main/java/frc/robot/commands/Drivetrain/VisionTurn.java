@@ -123,7 +123,7 @@ public class VisionTurn extends CommandBase {
       double angle = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + (wantedDeltaAngle * (180/Math.PI));
 
       double offset = (getShootOnRunAngle(goalRelVel) * Constants.Drivetrain.shootOnRunAngleMult);
-      System.out.println(offset);
+      //System.out.println(offset);
 
       thVelocity = getQuickTurnPID(angle - offset);
     }

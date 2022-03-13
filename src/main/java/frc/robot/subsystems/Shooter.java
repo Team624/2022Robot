@@ -84,12 +84,16 @@ public class Shooter extends SubsystemBase {
     updatePID();
   }
 
-  private double getRPM() {
+  public double getRPM() {
     return leftFlywheel.getSelectedSensorVelocity();
   }
 
-  public void setRPM(double goalRPM) {
-    
+  public double getGoalRPM() {
+    return goalRPM;
+  }
+
+  public void setRPM(double RPM) {
+    goalRPM = RPM;
     leftFlywheel.set(TalonFXControlMode.Velocity, goalRPM);
     rightFlywheel.set(TalonFXControlMode.Velocity, goalRPM);
     dashSetRPM.setNumber(goalRPM);

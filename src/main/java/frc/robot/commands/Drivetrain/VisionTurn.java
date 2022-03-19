@@ -88,23 +88,23 @@ public class VisionTurn extends CommandBase {
         m_drivetrainSubsystem.visionCorrectPose(targetPose[0] - x, targetPose[1] - y);
       }
       
-      // double shootToSideAngle = 0;
-      // double lowDist = (78/39.37);
-      // double highDist = (252/39.37);
+      double shootToSideAngle = 0;
+      double lowDist = (78/39.37);
+      double highDist = (252/39.37);
 
-      // double distanceBetween = highDist - lowDist;
-      // if (radius < lowDist + distanceBetween/3){
-      //   shootToSideAngle = -4;
-      // } else if (radius < lowDist + (2 * distanceBetween)/3){
-      //   shootToSideAngle = -2;
-      // }
-      // else{
-      //   shootToSideAngle = -1;
-      // }
+      double distanceBetween = highDist - lowDist;
+      if (radius < lowDist + distanceBetween/3){
+        shootToSideAngle = -4;
+      } else if (radius < lowDist + (2 * distanceBetween)/3){
+        shootToSideAngle = -2;
+      }
+      else{
+        shootToSideAngle = -1;
+      }
 
       //System.out.println("Shoot to side angle: " + shootToSideAngle);
 
-      //visionRot += shootToSideAngle;
+      visionRot += shootToSideAngle;
 
       thVelocity = getRotationPID(visionRot);
      

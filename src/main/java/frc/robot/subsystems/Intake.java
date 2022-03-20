@@ -58,6 +58,8 @@ public class Intake extends SubsystemBase {
 
   private double intakePower = Constants.Intake.intakePower;
 
+  private boolean allowReverse;
+
   /** Creates a new Intake. */
   public Intake() {
     intakeSolenoid = new Solenoid(30, PneumaticsModuleType.CTREPCM, Constants.Intake.intakeSolenoidID);

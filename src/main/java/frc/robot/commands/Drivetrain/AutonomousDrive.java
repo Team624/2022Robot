@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Drivetrain;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.Drivetrain.auton.*;
 import frc.robot.subsystems.Drivetrain;
@@ -26,6 +27,7 @@ public class AutonomousDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SmartDashboard.getEntry("/pathTable/status/finishedPath").setString("false " + "-1");
     m_drivetrainSubsystem.setAuton(true);
     m_drivetrainSubsystem.stopAuton = false;
     m_drivetrainSubsystem.setPose();

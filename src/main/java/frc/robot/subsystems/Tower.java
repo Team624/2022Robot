@@ -114,6 +114,8 @@ public class Tower extends SubsystemBase {
 
   private int alliance;
 
+  private boolean allowReverse;
+
   /** Creates a new Tower. */
   public Tower() {
     // TOWER STUFF

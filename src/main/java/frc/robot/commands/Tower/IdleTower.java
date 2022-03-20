@@ -28,7 +28,7 @@ public class IdleTower extends CommandBase {
   @Override
   public void execute() { 
     //System.out.println("Current alliance is: " + tower.getAlliance());
-    if(tower.checkAlliance() == 0 || tower.getAlliance() == tower.checkAlliance()){
+    //if(tower.checkAlliance() == 0 || tower.getAlliance() == tower.checkAlliance()){
       if(!tower.checkTowerIR()){
         tower.powerTower(false);
         tower.powerFeeder(false);
@@ -40,14 +40,14 @@ public class IdleTower extends CommandBase {
           tower.stopFeeder();
         }
       }
-    }else{
-      tower.powerFeeder(true);
-      if(!tower.checkTowerIR()){
-        tower.powerTower(false);
-      }else{
-        tower.stopTower();
-      }
-    }
+    // }else{
+    //   tower.powerFeeder(true);
+    //   if(!tower.checkTowerIR()){
+    //     tower.powerTower(false);
+    //   }else{
+    //     tower.stopTower();
+    //   }
+    // }
   }
 
   // Called once the command ends or is interrupted.

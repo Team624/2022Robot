@@ -5,8 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -28,10 +26,6 @@ public class Robot extends TimedRobot {
 
   private Compressor compressor;
 
-  private AddressableLED m_led;
-
-  private AddressableLEDBuffer m_ledBuffer;
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -44,8 +38,6 @@ public class Robot extends TimedRobot {
 
     compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);
 
-    setLED();
-
     m_robotContainer = new RobotContainer();
 
     auton = new Auton(
@@ -57,19 +49,6 @@ public class Robot extends TimedRobot {
     );
 
     auton.setState(false);
-  }
-
-  public void setLED(){
-    m_led = new AddressableLED(Constants.LED.LedID);
-    m_ledBuffer = new AddressableLEDBuffer(Constants.LED.LedLength);
-    m_led.setLength(m_ledBuffer.getLength());
-
-    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      m_ledBuffer.setRGB(i, 0, 233, 16);
-    }
-    
-    m_led.setData(m_ledBuffer);
-    m_led.start();
   }
 
   /**

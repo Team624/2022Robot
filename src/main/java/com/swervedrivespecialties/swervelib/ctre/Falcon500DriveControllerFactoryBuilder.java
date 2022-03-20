@@ -71,7 +71,7 @@ public final class Falcon500DriveControllerFactoryBuilder {
             motor.setInverted(moduleConfiguration.isDriveInverted() ? TalonFXInvertType.Clockwise : TalonFXInvertType.CounterClockwise);
             motor.setSensorPhase(true);
 
-            motor.configNeutralDeadband(.02);
+            motor.configNeutralDeadband(.01);
 
             // Reduce CAN status frame rates
             CtreUtils.checkCtreError(

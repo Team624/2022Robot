@@ -161,7 +161,7 @@ public class Drivetrain extends SubsystemBase {
                 m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
           }
           updateLeoPose(); 
-          //System.out.println("DRIVE VELOCITY: " + states[0].speedMetersPerSecond);         
+          System.out.println("DRIVE VELOCITY: " + states[0].speedMetersPerSecond);         
   }
 
   private SwerveModuleState getState(SwerveModule module) {
@@ -207,7 +207,7 @@ public class Drivetrain extends SubsystemBase {
   }
   private PIDController getRotationPID(){
         //return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
-        return new PIDController(0.1, 0, 0);  
+        return new PIDController(0.1, 0.0, 0.0);  
   }
 
   private PIDController getAutonRotationPID(){

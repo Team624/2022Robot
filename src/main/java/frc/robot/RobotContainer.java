@@ -113,7 +113,7 @@ public class RobotContainer {
 
     new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));
 
-    new Button(m_controller::getRightBumper).whenHeld(new Shoot(m_tower));
+    new Button(m_controller::getRightBumper).whenHeld(new Shoot(m_tower, m_shooter));
 
     new Button(m_controller::getLeftBumper).whenPressed(new WallShoot(m_shooter));
 
@@ -177,8 +177,8 @@ public class RobotContainer {
     // Deadband
     value = deadband(value, Constants.Drivetrain.DRIVETRAIN_INPUT_DEADBAND);
 
-    // Square the axis
-    value = Math.copySign(value * value, value);
+    // // Square the axis
+    // value = Math.copySign(value * value, value);
 
     return value;
   }

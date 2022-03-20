@@ -71,6 +71,7 @@ public class Drivetrain extends SubsystemBase {
   public boolean isCreepin = false;
 
   public boolean isAuton = false;
+  public boolean isUsingVision = false;
 
   public boolean lastPointCommand = false;
   public boolean stopAuton = false;
@@ -142,7 +143,9 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
           SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
-          if (!isAuton){
+          // TODO: Test if this doesn't mess auton up
+          if (!isAuton && !isUsingVision){
+                //System.out.println("Freeze");
                 states = freezeLogic(states);
           }
 
@@ -158,9 +161,7 @@ public class Drivetrain extends SubsystemBase {
                 m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
           }
           updateLeoPose(); 
-
-          
-          System.out.println("Motor Output: " + states[0].speedMetersPerSecond);
+          //System.out.println("DRIVE VELOCITY: " + states[0].speedMetersPerSecond);         
   }
 
   private SwerveModuleState getState(SwerveModule module) {

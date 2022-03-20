@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -174,6 +175,13 @@ public class Tower extends SubsystemBase {
   @Override
   public void periodic() {
     checkNT();
+    if (!checkTowerIR()){
+      SmartDashboard.getEntry("/auto/numBall").setNumber(0);
+    } else if (!checkFeederIR()){
+      SmartDashboard.getEntry("/auto/numBall").setNumber(1);
+    } else{
+      SmartDashboard.getEntry("/auto/numBall").setNumber(2);
+    }
   }
 
   private void checkNT(){

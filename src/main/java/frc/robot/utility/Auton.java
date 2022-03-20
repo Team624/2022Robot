@@ -117,7 +117,7 @@ public class Auton {
         //System.out.println("STATE: " + state);
         if(state.equals("shoot") && !shooterState.equals("shoot")){
             shooterState = state;
-            new Shoot(tower).schedule();
+            new Shoot(tower, shooter).schedule();
             new PrimeShoot(shooter, vision, drivetrain).schedule();
         }else if(state.equals("prime") && !shooterState.equals("prime")){
             shooterState = state;

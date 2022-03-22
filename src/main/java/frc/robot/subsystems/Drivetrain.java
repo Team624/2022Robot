@@ -145,7 +145,6 @@ public class Drivetrain extends SubsystemBase {
 
           // TODO: Test if this doesn't mess auton up
           if (!isAuton && !isUsingVision){
-                //System.out.println("Freeze");
                 states = freezeLogic(states);
           }
 
@@ -160,8 +159,7 @@ public class Drivetrain extends SubsystemBase {
           } else{
                 m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
           }
-          updateLeoPose(); 
-          System.out.println("DRIVE VELOCITY: " + states[0].speedMetersPerSecond);         
+          updateLeoPose();        
   }
 
   private SwerveModuleState getState(SwerveModule module) {

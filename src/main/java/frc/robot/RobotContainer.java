@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Climb.ActiveClimb;
 import frc.robot.commands.Climb.IdleClimb;
 import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.BlankDrive;
@@ -33,12 +34,12 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tower;
 import frc.robot.utility.Auton;
 import frc.robot.utility.ShooterVision;
-import frc.robot.Triggers.Joysticks.mLeftCenter;
-import frc.robot.Triggers.Joysticks.mLeftDown;
-import frc.robot.Triggers.Joysticks.mLeftUp;
-import frc.robot.Triggers.Joysticks.mRightCenter;
-import frc.robot.Triggers.Joysticks.mRightDown;
-import frc.robot.Triggers.Joysticks.mRightUp;
+// import frc.robot.Triggers.Joysticks.mLeftCenter;
+// import frc.robot.Triggers.Joysticks.mLeftDown;
+// import frc.robot.Triggers.Joysticks.mLeftUp;
+// import frc.robot.Triggers.Joysticks.mRightCenter;
+// import frc.robot.Triggers.Joysticks.mRightDown;
+// import frc.robot.Triggers.Joysticks.mRightUp;
 // import frc.robot.Triggers.Triggers.mLeftTriggerDown;
 // import frc.robot.Triggers.Triggers.mLeftTriggerUp;
 // import frc.robot.Triggers.Triggers.mRightTriggerDown;
@@ -55,12 +56,12 @@ public class RobotContainer {
   public final XboxController d_controller = new XboxController(0);
   private final XboxController m_controller = new XboxController(1);
 
-  private Trigger mLeftDown = new mLeftDown(m_controller);
-  private Trigger mLeftUp = new mLeftUp(m_controller);
-  private Trigger mLeftCenter = new mLeftCenter(m_controller);
-  private Trigger mRightDown = new mRightUp(m_controller);
-  private Trigger mRightUp = new mRightDown(m_controller);
-  private Trigger mRightCenter = new mRightCenter(m_controller);
+  // private Trigger mLeftDown = new mLeftDown(m_controller);
+  // private Trigger mLeftUp = new mLeftUp(m_controller);
+  // private Trigger mLeftCenter = new mLeftCenter(m_controller);
+  // private Trigger mRightDown = new mRightUp(m_controller);
+  // private Trigger mRightUp = new mRightDown(m_controller);
+  // private Trigger mRightCenter = new mRightCenter(m_controller);
   // private Trigger mRightTriggerDown = new mRightTriggerDown(m_controller);
   // private Trigger mRightTriggerUp = new mRightTriggerUp(m_controller);
   // private Trigger mLeftTriggerDown = new mLeftTriggerDown(m_controller);
@@ -125,35 +126,19 @@ public class RobotContainer {
 
     new Button(m_controller::getBButton).whenHeld(new LowShoot(m_shooter));
 
-    new Button(m_controller::getLeftStickButton).whenHeld(new Reverse(m_tower));
+    //new Button(m_controller::getLeftStickButton).whenHeld(new Reverse(m_tower));
 
 //================================================================================================
 
-    new Button(m_controller::getStartButton).whenPressed(m_climb::setMode);
+    new Button(m_controller::getStartButton).toggleWhenPressed(new ActiveClimb(m_climb, m_controller));
 
-    new Button(m_controller::getStartButton).toggleWhenPressed(new ClimbIntake(m_intake));
+    // new Button(m_controller::getStartButton).toggleWhenPressed(new ClimbIntake(m_intake));
 
     new Button(m_controller::getStartButton).toggleWhenPressed(new ClimbTower(m_tower));
 
-    mLeftDown.whenActive(m_climb::retractCenterWinch);
+    new Button(m_controller::getLeftStickButton).whenPressed(m_climb::setFrontHold);
 
-    mLeftUp.whenActive(m_climb::extendCenterWinch);
-
-    mLeftCenter.whenActive(m_climb::stopCenterWinch);
-
-    mRightUp.whenActive(m_climb::extendArmWinch);
-
-    mRightDown.whenActive(m_climb::retractArmWinch);
-
-    mRightCenter.whenActive(m_climb::stopArmWinch);
-
-    new POVButton(m_controller, 0).whenPressed(m_climb::actuateUpperPistons);
-
-    new POVButton(m_controller, 180).whenPressed(m_climb::retractUpperPistons);
-
-    new POVButton(m_controller, 270).whenPressed(m_climb::actuateLowerPistons);
-
-    new POVButton(m_controller, 90).whenPressed(m_climb::retractLowerPistons);
+    new Button(m_controller::getRightStickButton).whenPressed(m_climb::setBackHold);
 
   }
 

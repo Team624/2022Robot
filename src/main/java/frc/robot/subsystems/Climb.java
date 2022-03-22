@@ -18,35 +18,25 @@ import frc.robot.Constants;
 
 public class Climb extends SubsystemBase {
   private ShuffleboardTab tab = Shuffleboard.getTab("Climb");
-  private NetworkTableEntry centerSpeed = tab.add("Center Speed", Constants.Climb.centerWinchSpeed).withPosition(0, 0).getEntry();
-  private NetworkTableEntry armSpeed = tab.add("Arm Speed", Constants.Climb.armWinchSpeed).withPosition(0, 1).getEntry();
-  private NetworkTableEntry upDelay = tab.add("Up Delay", Constants.Climb.upperLowerdelay).withPosition(0, 2).getEntry();
+  private NetworkTableEntry armSpeed = tab.add("Arm Speed", Constants.Climb.armWinchSpeed).withPosition(0, 0).getEntry();
+  private NetworkTableEntry holdSpeed = tab.add("Hold Speed", Constants.Climb.armWinchSpeed).withPosition(0, 0).getEntry();
 
-  private CANSparkMax centerWinchSpark = new CANSparkMax(Constants.Climb.centerWinchMotorID, MotorType.kBrushless);
-  private CANSparkMax armWinchSpark = new CANSparkMax(Constants.Climb.armWinchMotorID, MotorType.kBrushless);
-
-  private Solenoid bottomSolenoid;
-  private Solenoid topSolenoid;
-
-  private Timer timer;
+  private CANSparkMax frontWinch = new CANSparkMax(Constants.Climb.frontWinchID, MotorType.kBrushless);
+  private CANSparkMax backWinch = new CANSparkMax(Constants.Climb.backWinchID, MotorType.kBrushless);
 
   private boolean climbStatus = false;
-  private boolean timerStatus = false;
-  private boolean isTimerRunning = false;
+  public boolean frontHoldStatus = false;
+  public boolean backHoldStatus = false;
 
   /** Creates a new Climb. */
   public Climb() {
-    timer = new Timer();
-    centerWinchSpark.setIdleMode(IdleMode.kBrake);
-    armWinchSpark.setIdleMode(IdleMode.kBrake);
-    bottomSolenoid = new Solenoid(30, PneumaticsModuleType.CTREPCM, Constants.Climb.bottomPistonID);
-    topSolenoid = new Solenoid(30, PneumaticsModuleType.CTREPCM, Constants.Climb.topPistonID);
+    frontWinch.setIdleMode(IdleMode.kBrake);
+    backWinch.setIdleMode(IdleMode.kBrake);
   }
 
   @Override
   public void periodic() {
-    setTimer();
-    checkTimer();
+
   }
 
   public void setMode(){
@@ -57,97 +47,55 @@ public class Climb extends SubsystemBase {
     }
   }
 
+  public void setFrontHold(){
+    if(frontHoldStatus){
+      frontHoldStatus = false;
+    }else{
+      frontHoldStatus = true;
+    }
+  }
+
+  public void setBackHold(){
+    if(backHoldStatus){
+      backHoldStatus = false;
+    }else{
+      backHoldStatus = true;
+    }
+  }
+
   public void resetMode(){
     climbStatus = false;
   }
 
-  public void actuateSet(){
-    if(climbStatus){
-      timerStatus = true;
-      topSolenoid.set(true);
-    }
-  }
-
-  private void setTimer(){
-    if(timerStatus){
-      if(!isTimerRunning){
-        timer.reset();
-        timer.start();
-        isTimerRunning = true;
-      }
+  public void powerFrontArm(double speed){
+    if(frontHoldStatus){
+      speed = getHoldSpeed();
     }else{
-      isTimerRunning = false;
+      frontHoldStatus = false;
     }
+    frontWinch.set(speed);
   }
 
-  private void checkTimer(){
-    if(timer.get() > upDelay.getDouble(Constants.Climb.upperLowerdelay) && !bottomSolenoid.get()){
-      bottomSolenoid.set(true);
-      timer.stop();
-      timer.reset();
-      timerStatus = false;
+  public void powerBackArm(double speed){
+    if(backHoldStatus){
+      speed = getHoldSpeed();
+    }else{
+      backHoldStatus = false;
     }
+    backWinch.set(-speed);
   }
 
-  public void actuateLowerPistons(){
-    if(climbStatus){
-      bottomSolenoid.set(true);
-    }
+  public void stopFrontArm(){
+    frontWinch.stopMotor();
   }
 
-  public void retractLowerPistons(){
-    if(climbStatus){
-      bottomSolenoid.set(false);
-    }
+  public void stopBackArm(){
+    backWinch.stopMotor();
   }
 
-  public void actuateUpperPistons(){
-    if(climbStatus){
-      topSolenoid.set(true);
-    }
+  public double getHoldSpeed(){
+
+      return Constants.Climb.holdSpeed;
   }
 
-  public void retractUpperPistons(){
-    if(climbStatus){
-      topSolenoid.set(false);
-    }
-  }
-
-  public void extendCenterWinch(){
-    if(climbStatus){
-      centerWinchSpark.set(centerSpeed.getDouble(0.0));
-    }
-  }
-
-
-
-  public void retractCenterWinch(){
-    if(climbStatus){
-      centerWinchSpark.set(-centerSpeed.getDouble(0.0));
-    }
-  }
-
-  public void stopCenterWinch(){
-    if(climbStatus){
-      centerWinchSpark.stopMotor(); 
-    }
-  }
-
-  public void extendArmWinch(){
-    if(climbStatus){
-      armWinchSpark.set(armSpeed.getDouble(0.0)); 
-    }
-  }
-
-  public void retractArmWinch(){
-    if(climbStatus){
-      armWinchSpark.set(-armSpeed.getDouble(0.0));
-    }
-  }
-
-  public void stopArmWinch(){
-    if(climbStatus){
-      armWinchSpark.stopMotor();
-    }
-  }
 }

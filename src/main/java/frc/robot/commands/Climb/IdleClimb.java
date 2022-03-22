@@ -4,11 +4,13 @@
 
 package frc.robot.commands.Climb;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Climb;
 
 public class IdleClimb extends CommandBase {
   private final Climb climb;
+
   /** Creates a new IdleClimb. */
   public IdleClimb(Climb climb) {
     this.climb = climb;
@@ -19,7 +21,7 @@ public class IdleClimb extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climb.stopCenterWinch();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -29,7 +31,7 @@ public class IdleClimb extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climb.retractUpperPistons();
+
   }
 
   // Returns true when the command should end.

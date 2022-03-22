@@ -19,17 +19,12 @@ public final class Constants {
     }
 
     public static final class Climb{
-        public static final int centerWinchMotorID = 12;
+        public static final int frontWinchID = 12;
 
-        public static final int armWinchMotorID = 5;
+        public static final int backWinchID = 5;
 
-        public static final double centerWinchSpeed = 1;
+        public static final double holdSpeed = .05;
         public static final double armWinchSpeed = .7;
-
-        public static final int bottomPistonID = 2;
-        public static final int topPistonID = 3;
-
-        public static final double upperLowerdelay = .1;
     }
 
     public static final class Shooter{

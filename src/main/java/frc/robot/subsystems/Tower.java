@@ -108,9 +108,8 @@ public class Tower extends SubsystemBase {
 
   private final ColorMatch colorMatcher = new ColorMatch();
 
-  private final Color kDefault = new Color(.273, .482, .244);
-  private final Color kBlueTarget = new Color(.235, .47, .294);
-  private final Color kRedTarget = new Color(.356, .434, .209);
+  private final Color kBlueTarget = new Color(0.2055, 0.45141, 0.34326); //(.235, .47, .294)
+  private final Color kRedTarget = new Color(0.33715, 0.4353, 0.22875); //(.356, .434, .209)
 
   private int alliance;
 
@@ -169,13 +168,11 @@ public class Tower extends SubsystemBase {
 
     colorMatcher.addColorMatch(kBlueTarget);
     colorMatcher.addColorMatch(kRedTarget);
-    colorMatcher.addColorMatch(kDefault);
-
-    
   }
 
   @Override
   public void periodic() {
+    //checkAlliance(); //TODO: testing only
     checkNT();
     if (!checkTowerIR()){
       SmartDashboard.getEntry("/auto/numBall").setNumber(0);
@@ -276,17 +273,23 @@ public class Tower extends SubsystemBase {
   }
 
   public int checkAlliance(){
-    
+    // nukber 1 is blue, 2 is red
     Color detectedColor = cSense.getColor();
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
     int number = 0;
-    if(match.color == kBlueTarget){
-      number = 1;
-    }else if(match.color == kRedTarget){
-      number = 2;
-    }else if(match.color == kDefault){
+    if (cSense.getProximity() > 100){
+      if(match.color == kBlueTarget){
+        number = 1;
+      }else if(match.color == kRedTarget){
+        number = 2;
+      }
+    }
+    else{
       number = 0;
     }
+
+    //System.out.println(number);
+
     colorDetected.setNumber(number);
     return number;
   }

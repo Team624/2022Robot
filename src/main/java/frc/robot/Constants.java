@@ -128,7 +128,7 @@ public final class Constants {
     public static final class Tower{
         public static final int towerMotorID = 2;
 
-        public static final double towerPower = 1;
+        public static final double towerPower = 0.5;
 
         public static final double autoLoadPower = 0;
 

@@ -2,29 +2,33 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Intake;
+package frc.robot.commands.Climb.Front;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.FrontClimb;
 
-public class ClimbIntake extends CommandBase {
-  private final Intake intake;
-  /** Creates a new ClimbIntake. */
-  public ClimbIntake(Intake intake) {
-    this.intake = intake;
-    addRequirements(this.intake);
-    // Use addRequirements() here to declare subsystem dependencies.
+public class ControlFront extends CommandBase {
+  private final FrontClimb fClimb;
+  private XboxController controller;
+
+  /** Creates a new BottomFront. */
+  public ControlFront(FrontClimb fClimb, XboxController controller) {
+    this.fClimb = fClimb;
+    this.controller = controller;
+    addRequirements(this.fClimb);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    intake.actuateSolenoids();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    System.out.println("Front Encoder: " + fClimb.readEncoder());
+    fClimb.powerArm(controller.getLeftY());
+  }
 
   // Called once the command ends or is interrupted.
   @Override

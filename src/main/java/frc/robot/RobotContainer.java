@@ -9,14 +9,23 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Climb.ActiveClimb;
-import frc.robot.commands.Climb.IdleClimb;
+import frc.robot.Triggers.Joysticks.mLeftActive;
+import frc.robot.Triggers.Joysticks.mLeftInactive;
+import frc.robot.Triggers.Joysticks.mRightActive;
+import frc.robot.Triggers.Joysticks.mRightInactive;
+import frc.robot.commands.Climb.Back.BottomBack;
+import frc.robot.commands.Climb.Back.ControlBack;
+import frc.robot.commands.Climb.Back.IdleBack;
+import frc.robot.commands.Climb.Back.TopBack;
+import frc.robot.commands.Climb.Front.BottomFront;
+import frc.robot.commands.Climb.Front.ControlFront;
+import frc.robot.commands.Climb.Front.IdleFront;
+import frc.robot.commands.Climb.Front.TopFront;
 import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.BlankDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Intake.IdleIntake;
-import frc.robot.commands.Intake.ClimbIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.LowShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
@@ -27,8 +36,9 @@ import frc.robot.commands.Tower.IdleTower;
 import frc.robot.commands.Tower.Reverse;
 import frc.robot.commands.Tower.Shoot;
 import frc.robot.commands.Intake.DeployIntake;
-import frc.robot.subsystems.Climb;
+import frc.robot.subsystems.BackClimb;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.FrontClimb;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tower;
@@ -46,7 +56,8 @@ import frc.robot.utility.ShooterVision;
 // import frc.robot.Triggers.Triggers.mRightTriggerUp;
 
 public class RobotContainer {
-  private final Climb m_climb;
+  private final FrontClimb m_fClimb;
+  private final BackClimb m_bClimb;
   private final Drivetrain m_drivetrainSubsystem;
   private final Intake m_intake;
   private final Tower m_tower;
@@ -56,26 +67,26 @@ public class RobotContainer {
   public final XboxController d_controller = new XboxController(0);
   private final XboxController m_controller = new XboxController(1);
 
-  // private Trigger mLeftDown = new mLeftDown(m_controller);
-  // private Trigger mLeftUp = new mLeftUp(m_controller);
-  // private Trigger mLeftCenter = new mLeftCenter(m_controller);
-  // private Trigger mRightDown = new mRightUp(m_controller);
-  // private Trigger mRightUp = new mRightDown(m_controller);
-  // private Trigger mRightCenter = new mRightCenter(m_controller);
+  private Trigger mLeftActive = new mLeftActive(m_controller);
+  private Trigger mLeftInactive = new mLeftInactive(m_controller);
+  private Trigger mRightActive = new mRightActive(m_controller);
+  private Trigger mRightInactive = new mRightInactive(m_controller);
   // private Trigger mRightTriggerDown = new mRightTriggerDown(m_controller);
   // private Trigger mRightTriggerUp = new mRightTriggerUp(m_controller);
   // private Trigger mLeftTriggerDown = new mLeftTriggerDown(m_controller);
   // private Trigger mLeftTriggerUp = new mLeftTriggerUp(m_controller);
 
   public RobotContainer() {
-    m_climb = new Climb();
+    m_fClimb = new FrontClimb();
+    m_bClimb = new BackClimb();
     m_drivetrainSubsystem = new Drivetrain();
     m_intake = new Intake();
     m_tower = new Tower();
     m_shooter = new Shooter(m_controller);
     m_shooterVision = new ShooterVision(m_shooter);
 
-    m_climb.setDefaultCommand(new IdleClimb(m_climb));
+    m_fClimb.setDefaultCommand(new IdleFront(m_fClimb));
+    m_bClimb.setDefaultCommand(new IdleBack(m_bClimb));
     m_intake.setDefaultCommand(new IdleIntake(m_intake));
     m_tower.setDefaultCommand(new IdleTower(m_tower));
     m_shooter.setDefaultCommand(new IdleShoot(m_shooter));
@@ -130,15 +141,31 @@ public class RobotContainer {
 
 //================================================================================================
 
-    new Button(m_controller::getStartButton).toggleWhenPressed(new ActiveClimb(m_climb, m_controller));
+    new Button(m_controller::getStartButton).whenPressed(m_fClimb::setClimbStatus);
 
-    // new Button(m_controller::getStartButton).toggleWhenPressed(new ClimbIntake(m_intake));
+    new Button(m_controller::getStartButton).whenPressed(m_bClimb::setClimbStatus);
 
     new Button(m_controller::getStartButton).toggleWhenPressed(new ClimbTower(m_tower));
 
-    new Button(m_controller::getLeftStickButton).whenPressed(m_climb::setFrontHold);
+    mLeftActive.whenActive(new ControlFront(m_fClimb, m_controller));
 
-    new Button(m_controller::getRightStickButton).whenPressed(m_climb::setBackHold);
+    mRightActive.whenActive(new ControlBack(m_bClimb, m_controller));
+
+    mLeftInactive.whenActive(new IdleFront(m_fClimb));
+
+    mRightInactive.whenActive(new IdleBack(m_bClimb));
+
+    new POVButton(m_controller, 0).whenPressed(new TopBack(m_bClimb));
+
+    new POVButton(m_controller, 90).whenPressed(new TopFront(m_fClimb));
+
+    new POVButton(m_controller, 180).whenPressed(new BottomBack(m_bClimb));
+
+    new POVButton(m_controller, 270).whenPressed(new BottomFront(m_fClimb));
+
+    new Button(m_controller::getLeftStickButton).whenPressed(m_fClimb::resetEncoder);
+
+    new Button(m_controller::getLeftStickButton).whenPressed(m_bClimb::resetEncoder);
 
   }
 
@@ -212,12 +239,13 @@ public class RobotContainer {
     return new AutonomousDrive(m_drivetrainSubsystem, auton);
   }
 
-  public void resetClimbMode(){
-    m_climb.resetMode();
-  }
-
   public void setAlliance(){
     m_tower.updateAlliance();
+  }
+
+  public void resetClimbMode(){
+    m_fClimb.resetClimbStatus(false);
+    m_bClimb.resetClimbStatus(false);
   }
 
 }

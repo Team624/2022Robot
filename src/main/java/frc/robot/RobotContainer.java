@@ -136,11 +136,11 @@ public class RobotContainer {
 
     new Button(m_controller::getAButton).whenHeld(new EjectBottom(m_tower));
 
-    // new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
+    new Button(m_controller::getBButton).whenHeld(new LowShoot(m_shooter));
 
     // new Button(m_controller::getBButton).whenReleased(m_shooter::testHoodOff);
 
-    //new Button(m_controller::getLeftStickButton).whenHeld(new Reverse(m_tower));
+    new Button(m_controller::getLeftStickButton).whenHeld(new Reverse(m_tower));
 
 //================================================================================================
 

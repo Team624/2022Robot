@@ -58,6 +58,15 @@ public final class Constants {
         public static final double hoodDeadBandSizeDis = 0.35;
         public static final double[][] shooterExperimentDataHigh = {
         //  {cam-distance, rpm, actualDistance}
+
+        // For shooting on run (approx)
+            {81, 7400, 78/39.37},
+            {101, 7500, 84/39.37},
+            {117, 7650, 90/39.37},
+            {133, 7750, 96/39.37},
+            {147, 7900, 102/39.37},
+
+        // Actual data
             {159, 7400, 108/39.37},
             {172, 7500, 114/39.37},
             {182, 7650, 120/39.37},
@@ -82,10 +91,26 @@ public final class Constants {
             {308, 10900, 234/39.37},
             {310, 11150, 240/39.37},
             {313, 11500, 246/39.37},
-            {316, 11750, 252/39.37}
+            {316, 11750, 252/39.37},
+
+        // For shooting on the run (approx)
+            {319, 12000, 258/39.37},
+            {322, 12250, 264/39.37},
+            {325, 12500, 270/39.37},
+            {327, 12750, 276/39.37},
+            {329, 13000, 284/39.37}
         };
         public static final double[][] shooterExperimentDataLow = {
         //  {cam-distance, rpm, actualDistance (meters)}
+
+        // For shooting on the run (approx)
+            {1, 5300, 42/39.37},
+            {10, 5500, 48/39.37},
+            {20, 5700, 54/39.37},
+            {30, 5900, 60/39.37},
+            {50, 6100, 66/39.37},
+
+        // Actual data
             {68, 6300, 72/39.37},
             {81, 6500, 78/39.37},
             {101, 6800, 84/39.37},
@@ -97,7 +122,14 @@ public final class Constants {
             {182, 8100, 120/39.37},
             {192, 8250, 126/39.37},
             {202, 8500, 132/39.37},
-            {211.5, 8750, 138/39.37}
+            {211.5, 8750, 138/39.37},
+
+        // For shooting on the run (approx)
+            {220, 9000, 144/39.37},
+            {229, 9250, 150/39.37},
+            {238, 9550, 156/39.37},
+            {244, 9850, 162/39.37},
+            {251, 10100, 168/39.37}
         };
     }
 

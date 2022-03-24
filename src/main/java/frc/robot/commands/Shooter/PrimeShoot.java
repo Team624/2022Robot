@@ -47,7 +47,7 @@ public class PrimeShoot extends CommandBase {
       // TODO: Drive robot in arc around the goal and test if the balls are going far enough tune the "shootOnRunShooterMultY" to get the right rpm for the shot
       // See if drift in odom effects accuarcy, try doing vision correction continously
       shooter.setRPM(vision.calculateRPMShootOnRun(targetDistance - offset) + angleOffset * Constants.Drivetrain.shootOnRunShooterMultY);
-      shooter.setHood(vision.calculateHoodShootOnRun(targetDistance - offset));
+      shooter.setHood(vision.calculateHoodShootOnRun(targetDistance));
     } else{
       //System.out.println("Normal Shooting");
       shooter.setRPM(vision.calculateRPM());

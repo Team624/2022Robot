@@ -50,7 +50,7 @@ public final class Constants {
 
         public static final double idlePercent = .2;
         public static final double lowShootRPM = 2300;
-        public static final double wallShootRPM = 13000;
+        public static final double wallShootRPM = 8350;
 
         public static final double hoodSwitchCam = 153;
         public static final double hoodDeadBandSizeCam = 1;

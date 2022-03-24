@@ -168,6 +168,8 @@ public class Tower extends SubsystemBase {
 
     colorMatcher.addColorMatch(kBlueTarget);
     colorMatcher.addColorMatch(kRedTarget);
+
+    allowReverse = true;
   }
 
   @Override
@@ -304,6 +306,18 @@ public class Tower extends SubsystemBase {
 
   public int getAlliance(){
     return alliance;
+  }
+
+  public void setReverse(){
+    if(allowReverse){
+      allowReverse = false;
+    }else{
+      allowReverse = true;
+    }
+  }
+
+  public boolean getReverse(){
+    return allowReverse;
   }
 
 }

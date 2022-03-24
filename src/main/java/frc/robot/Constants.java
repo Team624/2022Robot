@@ -49,13 +49,13 @@ public final class Constants {
         public static final double kIzone = 200.0;
 
         public static final double idlePercent = .2;
-        public static final double lowShootRPM = 4000;
+        public static final double lowShootRPM = 2300;
         public static final double wallShootRPM = 13000;
 
-        public static final double hoodSwitchCam = 187;
-        public static final double hoodDeadBandSizeCam = 26;
-        public static final double hoodSwitchDis = 123/39.37;
-        public static final double hoodDeadBandSizeDis = 0.35;
+        public static final double hoodSwitchCam = 153;
+        public static final double hoodDeadBandSizeCam = 1;
+        public static final double hoodSwitchDis = 105.5/39.37;
+        public static final double hoodDeadBandSizeDis = 0.05;
         public static final double[][] shooterExperimentDataHigh = {
         //  {cam-distance, rpm, actualDistance}
 
@@ -111,18 +111,12 @@ public final class Constants {
             {50, 6100, 66/39.37},
 
         // Actual data
-            {68, 6300, 72/39.37},
-            {81, 6500, 78/39.37},
-            {101, 6800, 84/39.37},
-            {117, 7150, 90/39.37},
-            {133, 7300, 96/39.37},
-            {147, 7450, 102/39.37},
-            {159, 7550, 108/39.37},
-            {172, 8000, 114/39.37},
-            {182, 8100, 120/39.37},
-            {192, 8250, 126/39.37},
-            {202, 8500, 132/39.37},
-            {211.5, 8750, 138/39.37},
+            {68, 7575, 72/39.37},
+            {81, 7925, 78/39.37},
+            {101, 8325, 84/39.37},
+            {117, 8440, 90/39.37},
+            {133, 8475, 96/39.37},
+            {147, 8500, 102/39.37},
 
         // For shooting on the run (approx)
             {220, 9000, 144/39.37},

@@ -28,6 +28,7 @@ import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.LowShoot;
+import frc.robot.commands.Shooter.ManualShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Shooter.WallShoot;
 import frc.robot.commands.Tower.ClimbTower;
@@ -131,11 +132,13 @@ public class RobotContainer {
 
     new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
 
-    // new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
+    //new Button(m_controller::getYButton).whenHeld(new ManualShoot(m_shooter));
 
     new Button(m_controller::getAButton).whenHeld(new EjectBottom(m_tower));
 
-    new Button(m_controller::getBButton).whenHeld(new LowShoot(m_shooter));
+    // new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
+
+    // new Button(m_controller::getBButton).whenReleased(m_shooter::testHoodOff);
 
     //new Button(m_controller::getLeftStickButton).whenHeld(new Reverse(m_tower));
 

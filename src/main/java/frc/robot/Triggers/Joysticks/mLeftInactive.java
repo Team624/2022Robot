@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /** Add your docs here. */
-public class mLeftCenter extends Trigger {
+public class mLeftInactive extends Trigger {
   XboxController cont;
 
-  public mLeftCenter(XboxController controller){
+  public mLeftInactive(XboxController controller){
     cont = controller;
   }
 

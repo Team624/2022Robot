@@ -8,15 +8,15 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /** Add your docs here. */
-public class mLeftDown extends Trigger {
+public class mRightInactive extends Trigger {
   XboxController cont;
 
-  public mLeftDown(XboxController controller){
+  public mRightInactive(XboxController controller){
     cont = controller;
   }
 
   @Override
   public boolean get() {
-    return cont.getLeftY() > .5;
+    return cont.getRightY() < .1 && cont.getRightY() > -.1;
   }
 }

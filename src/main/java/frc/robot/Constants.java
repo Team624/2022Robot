@@ -72,12 +72,12 @@ public final class Constants {
             {182, 7700, 120/39.37},
             {192, 7800, 126/39.37},
             {202, 7950, 132/39.37},
-            {211.5, 8050, 138/39.37},
-            {220, 8350, 144/39.37},
-            {229, 8450, 150/39.37},
-            {238, 8575, 156/39.37},
-            {244, 8600, 162/39.37},
-            {251, 8900, 168/39.37},
+            {211.5, 8150, 138/39.37},
+            {220, 8450, 144/39.37},
+            {229, 8650, 150/39.37},
+            {238, 8800, 156/39.37},
+            {244, 9000, 162/39.37},
+            {251, 9175, 168/39.37},
             {257, 9300, 174/39.37},
             {265, 9500, 180/39.37},
             {270, 9650, 186/39.37},
@@ -188,9 +188,9 @@ public final class Constants {
         public static final double visionI = .0;
         public static final double visionD = .0035;
 
-        public static final double shootOnRunAngleMult = 1.15;
-        public static final double shootOnRunShooterMultX = 1;
-        public static final double shootOnRunShooterMultY = 4;
+        public static final double shootOnRunAngleMult = 0;
+        public static final double shootOnRunShooterMultX = 0;
+        public static final double shootOnRunShooterMultY = 0;
         
 
         /**

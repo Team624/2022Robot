@@ -20,7 +20,7 @@ public class WallShoot extends CommandBase {
   @Override
   public void initialize() {
     shooter.setRPM(Constants.Shooter.wallShootRPM);
-    shooter.setHood(false);
+    shooter.setHood(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

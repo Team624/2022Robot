@@ -108,7 +108,7 @@ public class VisionTurn extends CommandBase {
 
       thVelocity = getRotationPID(visionRot);
      
-      double lim = 1.0;
+      double lim = 1;
 
       // TODO: Test if this helps get a more accurate angle
       double min = 0.3;

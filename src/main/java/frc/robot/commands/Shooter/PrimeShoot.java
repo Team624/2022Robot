@@ -50,7 +50,7 @@ public class PrimeShoot extends CommandBase {
       shooter.setHood(vision.calculateHoodShootOnRun(targetDistance));
     } else{
       //System.out.println("Normal Shooting");
-      shooter.setRPM(vision.calculateRPM());
+      shooter.setRPM(vision.calculateRPM() + shooter.jankShit);
       shooter.setHood(vision.calculateHood());
     }
   }

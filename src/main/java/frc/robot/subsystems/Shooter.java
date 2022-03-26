@@ -29,6 +29,8 @@ public class Shooter extends SubsystemBase {
 
   private double goalRPM;
 
+  public double jankShit = 0;
+
   // Set up the dashboard
   private ShuffleboardTab shootTab = Shuffleboard.getTab("Shooter");
   private NetworkTableEntry dashSetRPM = shootTab.add("Goal RPM:", 0).withPosition(0, 1).getEntry();
@@ -162,5 +164,13 @@ public class Shooter extends SubsystemBase {
 
   public void testHoodOff(){
     setHood(false);
+  }
+
+  public void increaseJankness(){
+    jankShit += 100;
+  }
+
+  public void decreaseJankness(){
+    jankShit -= 100;
   }
 }

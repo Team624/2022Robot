@@ -121,6 +121,10 @@ public class RobotContainer {
        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER
     ));
 
+    new POVButton(d_controller, 0).whenPressed(m_shooter::increaseJankness);
+
+    new POVButton(d_controller, 180).whenPressed(m_shooter::decreaseJankness);
+
 //=====================================================================================
 
     new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));

@@ -2,40 +2,45 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Climb.Back;
+package frc.robot.commands.Climb.Front;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.BackClimb;
+import frc.robot.subsystems.FrontClimb;
 
-public class TopBack extends CommandBase {
-  private final BackClimb bClimb;
+public class SwingHighFront extends CommandBase {
+  private final FrontClimb fClimb;
+  private Timer swingTimer;
 
-  /** Creates a new BottomFront. */
-  public TopBack(BackClimb bClimb) {
-    this.bClimb = bClimb;
-    addRequirements(this.bClimb);
+  /** Creates a new IdleFront. */
+  public SwingHighFront(FrontClimb fClimb) {
+    this.fClimb = fClimb;
+    swingTimer = new Timer();
+    addRequirements(this.fClimb);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    swingTimer.start();
+    fClimb.stopMotor();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    bClimb.moveArm(-198);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    bClimb.stopMotor();
+    swingTimer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return bClimb.readEncoder() < -200;
+    return swingTimer.get() > 2;
   }
-
 }

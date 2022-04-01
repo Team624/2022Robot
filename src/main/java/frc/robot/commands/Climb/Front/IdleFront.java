@@ -25,8 +25,7 @@ public class IdleFront extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("Front Encoder: " + fClimb.readEncoder());
-    //System.out.println("Front Encoder: " + fClimb.readEncoder());
+
   }
 
   // Called once the command ends or is interrupted.

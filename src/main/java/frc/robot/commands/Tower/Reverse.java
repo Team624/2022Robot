@@ -23,8 +23,8 @@ public class Reverse extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    tower.powerTower(true);
-    tower.powerFeeder(true);
+    tower.reverseTower();
+    tower.reverseFeeder();
   }
 
   // Called once the command ends or is interrupted.

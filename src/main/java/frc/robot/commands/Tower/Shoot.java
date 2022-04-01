@@ -44,10 +44,10 @@ public class Shoot extends CommandBase {
       timer.reset();
       timer.start();
     }
-    double error = Math.abs(shooter.getRPM() - shooter.getGoalRPM());
+    //double error = Math.abs(shooter.getRPM() - shooter.getGoalRPM());
     if (time > 1.0){
-      tower.powerTower(false);
-      tower.powerFeeder(false);
+      tower.powerTower();
+      tower.powerFeeder();
     } else{
       tower.stopTower();
       tower.stopFeeder();

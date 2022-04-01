@@ -25,18 +25,18 @@ public class BottomBack extends CommandBase {
   public void execute() { 
     if(bClimb.readEncoder() < 4){
       bClimb.moveArm(5);
-    }else{
-      bClimb.powerArm(.05);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    bClimb.stopMotor();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return bClimb.readEncoder() > 4;
   }
 }

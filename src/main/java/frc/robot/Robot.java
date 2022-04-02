@@ -28,11 +28,6 @@ public class Robot extends TimedRobot {
 
   private Compressor compressor;
 
-  private AddressableLED m_led_right;
-  private AddressableLED m_led_left;
-  private AddressableLEDBuffer m_ledBuffer_right;
-  private AddressableLEDBuffer m_ledBuffer_left;
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -42,20 +37,6 @@ public class Robot extends TimedRobot {
     ShuffleboardTab tab_cam = Shuffleboard.getTab("Camera");
     //tab_cam.addCamera("USB Camera 0", "USB Camera 0", "USB Camera 0").withPosition(0, 0);
     tab_cam.add(CameraServer.startAutomaticCapture()).withPosition(0, 0).withSize(4, 4);
-
-    m_led_right = new AddressableLED(9);
-    // m_led_left = new AddressableLED(7);
-    m_ledBuffer_right = new AddressableLEDBuffer(60);
-    // m_ledBuffer_left = new AddressableLEDBuffer(60);
-    m_led_right.setLength(m_ledBuffer_right.getLength());
-
-    m_led_right.setData(m_ledBuffer_right);
-    m_led_right.start();
-
-    // m_led_left.setLength(m_ledBuffer_left.getLength());
-
-    // m_led_left.setData(m_ledBuffer_left);
-    // m_led_left.start();
 
     compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);
 
@@ -81,20 +62,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    for (var i = 0; i < m_ledBuffer_right.getLength(); i++) {
-      // Sets the specified LED to the RGB values for red
-
-      if (i == m_ledBuffer_right.getLength() -1){
-        m_ledBuffer_right.setRGB(i, 255, 0, 0);
-        // m_ledBuffer_left.setRGB(i - m_ledBuffer_left.getLength(), 255, 0, 0);
-      } else{
-        m_ledBuffer_right.setRGB(i, 255, 0, 255);
-        // m_ledBuffer_left.setRGB(i, 255, 0, 255);
-      }
-      m_led_right.setData(m_ledBuffer_right);
-      // m_led_left.setData(m_ledBuffer_left);
-   }
-
     auton.sendAutoChoice();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,

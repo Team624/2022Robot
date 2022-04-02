@@ -25,6 +25,7 @@ import frc.robot.commands.Climb.Front.TopFront;
 import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.BlankDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
+import frc.robot.commands.Drivetrain.ShootOnRun;
 import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
@@ -75,6 +76,10 @@ public class RobotContainer {
   private Trigger mLeftInactive = new mLeftInactive(m_controller);
   private Trigger mRightActive = new mRightActive(m_controller);
   private Trigger mRightInactive = new mRightInactive(m_controller);
+
+  private Trigger dLeftTriggerDown = new mLeftTriggerDown(d_controller);
+  private Trigger dLeftTriggerUp = new mLeftTriggerUp(d_controller);
+
   private Trigger mRightTriggerDown = new mRightTriggerDown(m_controller);
   private Trigger mRightTriggerUp = new mRightTriggerUp(m_controller);
   private Trigger mLeftTriggerDown = new mLeftTriggerDown(m_controller);
@@ -83,7 +88,7 @@ public class RobotContainer {
   public RobotContainer(TrobotAddressableLED m_led) {
     m_fClimb = new FrontClimb();
     m_bClimb = new BackClimb();
-    m_drivetrainSubsystem = new Drivetrain();
+    m_drivetrainSubsystem = new Drivetrain(m_led);
     m_intake = new Intake();
     m_tower = new Tower(m_led);
     m_shooter = new Shooter(m_controller);
@@ -95,8 +100,7 @@ public class RobotContainer {
     m_tower.setDefaultCommand(new IdleTower(m_tower));
     m_shooter.setDefaultCommand(new IdleShoot(m_shooter));
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-        m_drivetrainSubsystem,
-        () -> -modifyAxis(d_controller.getLeftTriggerAxis()), 
+        m_drivetrainSubsystem,      
         () -> -modifyAxis(d_controller.getRightTriggerAxis()), 
         () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
@@ -124,6 +128,21 @@ public class RobotContainer {
        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER
     ));
+    
+    dLeftTriggerDown.whenActive(new ShootOnRun(
+      m_drivetrainSubsystem,
+      m_shooterVision,
+      () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+      () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER
+   ));
+
+    dLeftTriggerUp.whenActive(new DefaultDriveCommand(
+      m_drivetrainSubsystem,
+      () -> -modifyAxis(d_controller.getRightTriggerAxis()), 
+      () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+      () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+      () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+  ));
 
     new POVButton(d_controller, 0).whenPressed(m_shooter::increaseJankness);
 
@@ -137,9 +156,13 @@ public class RobotContainer {
 
     mRightTriggerUp.whenActive(new IdleShoot(m_shooter));
 
+    mRightTriggerUp.whenActive(new IdleTower(m_tower));
+
     mLeftTriggerDown.whenActive(new WallShoot(m_shooter));
 
     mLeftTriggerUp.whenActive(new IdleShoot(m_shooter));
+
+    mLeftTriggerUp.whenActive(new IdleTower(m_tower));
 
     new Button(m_controller::getRightBumper).whenHeld(new Reverse(m_tower));
 
@@ -218,7 +241,6 @@ public class RobotContainer {
   public void setDrivetrainDefaultCommand(){
     Command c = new DefaultDriveCommand(
       m_drivetrainSubsystem,
-      () -> -modifyAxis(d_controller.getLeftTriggerAxis()), 
       () -> -modifyAxis(d_controller.getRightTriggerAxis()),
       () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
       () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
@@ -259,6 +281,10 @@ public class RobotContainer {
 
   public void setAlliance(){
     m_tower.updateAlliance();
+  }
+
+  public void setDisabledShooting(){
+    m_tower.setDisabledShooting();
   }
 
   public void resetClimbMode(){

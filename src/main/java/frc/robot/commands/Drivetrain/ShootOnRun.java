@@ -25,7 +25,7 @@ public class ShootOnRun extends CommandBase {
   private final ShooterVision shooterVision;
 
   private double quickTurnTolerance = 15;
-  private double visionResetTolerance = 4;
+  private double visionResetTolerance = 1;
 
   private SlewRateLimiter filterX = new SlewRateLimiter(9);
   private SlewRateLimiter filterY = new SlewRateLimiter(9);
@@ -80,19 +80,19 @@ public class ShootOnRun extends CommandBase {
       quickTurnDone = true;
     }
 
+    // Vision resetting of robot pose
+    if (Math.abs(visionRot) < visionResetTolerance && radius > 0){
+      double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians();
+      double x = radius * Math.cos(degree % (Math.PI * 2));
+      double y = radius * Math.sin(degree % (Math.PI * 2));
+
+      //System.out.println("reseting robot pose: " + radius);
+      m_drivetrainSubsystem.visionCorrectPose(targetPose[0] - x, targetPose[1] - y);
+    }
+
     // If doing normal vision targeting
     if((Math.abs(visionRot) < 500) && isNotMoving && quickTurnDone){
-      System.out.println("Vision targeting error = " + visionRot);
-
-      // Vision resetting of robot pose
-      if (Math.abs(visionRot) < visionResetTolerance && radius > 0){
-        double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians();
-        double x = radius * Math.cos(degree % (Math.PI * 2));
-        double y = radius * Math.sin(degree % (Math.PI * 2));
-
-        //System.out.println("reseting robot pose: " + radius);
-        m_drivetrainSubsystem.visionCorrectPose(targetPose[0] - x, targetPose[1] - y);
-      }
+      //System.out.println("Vision targeting error = " + visionRot);
       
       // double shootToSideAngle = 0;
       // double lowDist = (78/39.37);
@@ -155,10 +155,8 @@ public class ShootOnRun extends CommandBase {
 
     double vx = m_translationXSupplier.getAsDouble();
     double vy = m_translationYSupplier.getAsDouble();
-    if (m_drivetrainSubsystem.isCreepin){
-      vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
-      vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
-    }
+    vx *= 0.45;
+    vy *= 0.45;
     vx = filterX.calculate(vx);
     vy = filterY.calculate(vy);
     //System.out.println("vx: " + vx + " vy: " + vy + " th: " + thVelocity + " isNotMoving: " + isNotMoving);

@@ -190,8 +190,8 @@ public final class Constants {
         public static final double visionI = .0;
         public static final double visionD = .0035;
 
-        public static final double shootOnRunAngleMult = 1.15;
-        public static final double shootOnRunShooterMultX = 1;
+        public static final double shootOnRunAngleMult = 1;
+        public static final double shootOnRunShooterMultX = 1.2;
         public static final double shootOnRunShooterMultY = 4;
         
 

@@ -129,7 +129,9 @@ public class Tower extends SubsystemBase {
   private TrobotAddressableLEDPattern m_greenPattern = new SolidColorPattern(Color.kGreen);
   private TrobotAddressableLEDPattern m_redPattern = new SolidColorPattern(Color.kRed);
   private TrobotAddressableLEDPattern m_bluePattern = new SolidColorPattern(Color.kBlue);
-  private TrobotAddressableLEDPattern m_shooting = new BlinkingPattern(Color.kGreen, 0.05);
+  //private TrobotAddressableLEDPattern m_shooting = new BlinkingPattern(Color.kGreen, 0.05);
+  private Color[] greenWhiteArray = {Color.kGreen, Color.kSeaGreen};
+  private TrobotAddressableLEDPattern m_shooting = new ChasePattern(greenWhiteArray, 3);
   private TrobotAddressableLED m_led;
   private double shooting = 0;
 
@@ -302,6 +304,10 @@ public class Tower extends SubsystemBase {
 
   public void setNotShooting(){
     shooting = 1;
+  }
+
+  public void setDisabledShooting(){
+    shooting = 0;
   }
 
   // FEEDER STUFF

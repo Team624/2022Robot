@@ -20,8 +20,12 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.trobot5013lib.led.ChasePattern;
+import frc.robot.trobot5013lib.led.TrobotAddressableLED;
+import frc.robot.trobot5013lib.led.TrobotAddressableLEDPattern;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -81,7 +85,12 @@ public class Drivetrain extends SubsystemBase {
   public PIDController autonPoint_pidPathRotation;
   public PIDController autonPath_pidVision;
 
-  public Drivetrain() {
+  public TrobotAddressableLED m_led;
+  private Color[] greenWhiteArray = {Color.kGreen, Color.kSeaGreen};
+  public TrobotAddressableLEDPattern m_shooting = new ChasePattern(greenWhiteArray, 3);
+
+  public Drivetrain(TrobotAddressableLED m_led_strip) {
+        m_led = m_led_strip;
          visionTurn_pid = getRotationPID();
          visionTurn_pidQuickTurn = getRotationQuickTurnPID();
 

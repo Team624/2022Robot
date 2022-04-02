@@ -11,7 +11,6 @@ import frc.robot.Constants;
 public class DefaultDriveCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;
 
-    private final DoubleSupplier m_leftTriggerSupplier;
     private final DoubleSupplier m_rightTriggerSupplier;
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
@@ -20,9 +19,8 @@ public class DefaultDriveCommand extends CommandBase {
     private SlewRateLimiter filterX = new SlewRateLimiter(7);
     private SlewRateLimiter filterY = new SlewRateLimiter(7);
 
-    public DefaultDriveCommand(Drivetrain drivetrainSubsystem, DoubleSupplier triggerSupplierL, DoubleSupplier triggerSupplierR, DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
+    public DefaultDriveCommand(Drivetrain drivetrainSubsystem, DoubleSupplier triggerSupplierR, DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
         this.m_drivetrainSubsystem = drivetrainSubsystem;
-        this.m_leftTriggerSupplier = triggerSupplierL;
         this.m_rightTriggerSupplier = triggerSupplierR;
         this.m_translationXSupplier = translationXSupplier;
         this.m_translationYSupplier = translationYSupplier;
@@ -62,23 +60,18 @@ public class DefaultDriveCommand extends CommandBase {
             omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
         }
 
-        if (Math.abs(m_leftTriggerSupplier.getAsDouble()) > 0.5){
-            m_drivetrainSubsystem.drive(
-                new ChassisSpeeds(-vx, vy, omega)
-            );
-        } else {
-            vx = filterX.calculate(vx);
-            vy = filterY.calculate(vy);
-            //System.out.println("th: " + omega);
-            m_drivetrainSubsystem.drive(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
-                    vx,
-                    vy,
-                    omega,
-                    m_drivetrainSubsystem.getGyroscopeRotation()
-                )
+        vx = filterX.calculate(vx);
+        vy = filterY.calculate(vy);
+        //System.out.println("th: " + omega);
+        m_drivetrainSubsystem.drive(
+            ChassisSpeeds.fromFieldRelativeSpeeds(
+                vx,
+                vy,
+                omega,
+                m_drivetrainSubsystem.getGyroscopeRotation()
+            )
         );
-        }
+        
         //System.out.println("CONTROLLER: " + omega);
         m_drivetrainSubsystem.updateFieldRelVelocity(new ChassisSpeeds(vx, vy, omega));
     }

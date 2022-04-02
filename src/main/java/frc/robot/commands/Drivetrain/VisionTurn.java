@@ -22,7 +22,7 @@ public class VisionTurn extends CommandBase {
   private final ShooterVision shooterVision;
 
   private double quickTurnTolerance = 15;
-  private double visionResetTolerance = 4;
+  private double visionResetTolerance = 1;
 
   private SlewRateLimiter filterX = new SlewRateLimiter(7);
   private SlewRateLimiter filterY = new SlewRateLimiter(7);

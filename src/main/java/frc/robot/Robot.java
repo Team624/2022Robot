@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_led.setPattern(m_greenChasePattern);
+    m_robotContainer.setDisabledShooting();
     compressor.disable();
     auton.setState(false);
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
@@ -101,6 +101,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    m_led.setPattern(m_greenChasePattern);
     auton.updatePaths();
   }
 

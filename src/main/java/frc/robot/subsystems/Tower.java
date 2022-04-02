@@ -116,11 +116,13 @@ public class Tower extends SubsystemBase {
 
   private boolean allowReverse;
 
-  private AddressableLED towerLED1;
+  private AddressableLED towerLEDRight;
 
-  private AddressableLED towerLED2;
+  private AddressableLED towerLEDLeft;
 
-  private AddressableLEDBuffer m_ledBuffer;
+  private AddressableLEDBuffer m_ledBufferRight;
+
+  private AddressableLEDBuffer m_ledBufferLeft;
 
   /** Creates a new Tower. */
   public Tower() {
@@ -178,13 +180,21 @@ public class Tower extends SubsystemBase {
 
     allowReverse = true;
 
-    // towerLED1 = new AddressableLED(8);
-    // towerLED2 = new AddressableLED(9);
+    //9 was right
 
-    // m_ledBuffer = new AddressableLEDBuffer(15);
+    //towerLEDRight = new AddressableLED(9);
+    //towerLED2 = new AddressableLED(9);
 
-    // towerLED1.setLength(m_ledBuffer.getLength());
-    // towerLED2.setLength(m_ledBuffer.getLength());
+    m_ledBufferRight = new AddressableLEDBuffer(15);
+    //m_ledBuffer2 = new AddressableLEDBuffer(60);
+
+    towerLEDRight.setLength(m_ledBufferRight.getLength());
+    //towerLED2.setLength(m_ledBuffer2.getLength());
+
+    towerLEDRight.setData(m_ledBufferRight);
+    //towerLED2.setData(m_ledBuffer2);
+    towerLEDRight.start();
+    //towerLED2.start();
   }
 
   @Override
@@ -345,22 +355,32 @@ public class Tower extends SubsystemBase {
 
   private void setLED(){
     // if(checkTowerIR() && checkFeederIR()){
-    //   for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-    //     m_ledBuffer.setRGB(i, 0, 244, 0);
+    //   for (var i = 0; i < m_ledBuffer1.getLength(); i++) {
+    //     m_ledBuffer1.setRGB(i, 0, 244, 0);
+    //     m_ledBuffer2.setRGB(i, 0, 244, 0);
     //   }
     // }else if(checkTowerIR() == true && checkFeederIR() == false){
-    //   for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-    //     m_ledBuffer.setRGB(i, 148, 255, 141);
+    //   for (var i = 0; i < m_ledBuffer1.getLength(); i++) {
+    //     m_ledBuffer1.setRGB(i, 148, 255, 141);
+    //     m_ledBuffer2.setRGB(i, 148, 255, 141);
     //   }
     // }else{
-    //   for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+    //   for (var i = 0; i < m_ledBuffer1.getLength(); i++) {
     //     if(DriverStation.getAlliance() == Alliance.Red){
-    //       m_ledBuffer.setRGB(i, 255, 0, 0);
+    //       m_ledBuffer1.setRGB(i, 255, 0, 0);
+    //       m_ledBuffer2.setRGB(i, 255, 0, 0);
     //     }else{
-    //       m_ledBuffer.setRGB(i, 0, 0, 255);
+    //       m_ledBuffer1.setRGB(i, 0, 0, 255);
+    //       m_ledBuffer2.setRGB(i, 0, 0, 255);
     //     }
     //   }
-    // }
+    //}
+    // m_ledBufferRight.setRGB(1, 0, 50, 150);
+    // m_ledBufferRight.setRGB(2, 0, 40, 150);
+    // m_ledBufferRight.setRGB(3, 0, 30, 150);
+    // m_ledBufferRight.setRGB(4, 0, 20, 150);
+    // towerLEDRight.setData(m_ledBufferRight);
+    //towerLED2.setData(m_ledBuffer2);
   }
 
 }

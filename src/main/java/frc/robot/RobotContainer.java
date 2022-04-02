@@ -45,6 +45,7 @@ import frc.robot.subsystems.FrontClimb;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tower;
+import frc.robot.trobot5013lib.led.TrobotAddressableLED;
 import frc.robot.utility.Auton;
 import frc.robot.utility.ShooterVision;
 // import frc.robot.Triggers.Joysticks.mLeftCenter;
@@ -79,12 +80,12 @@ public class RobotContainer {
   private Trigger mLeftTriggerDown = new mLeftTriggerDown(m_controller);
   private Trigger mLeftTriggerUp = new mLeftTriggerUp(m_controller);
 
-  public RobotContainer() {
+  public RobotContainer(TrobotAddressableLED m_led) {
     m_fClimb = new FrontClimb();
     m_bClimb = new BackClimb();
     m_drivetrainSubsystem = new Drivetrain();
     m_intake = new Intake();
-    m_tower = new Tower();
+    m_tower = new Tower(m_led);
     m_shooter = new Shooter(m_controller);
     m_shooterVision = new ShooterVision(m_shooter);
 

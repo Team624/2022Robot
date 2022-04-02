@@ -26,6 +26,11 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.trobot5013lib.led.BlinkingPattern;
+import frc.robot.trobot5013lib.led.ChasePattern;
+import frc.robot.trobot5013lib.led.SolidColorPattern;
+import frc.robot.trobot5013lib.led.TrobotAddressableLED;
+import frc.robot.trobot5013lib.led.TrobotAddressableLEDPattern;
 
 public class Tower extends SubsystemBase {
 
@@ -116,17 +121,23 @@ public class Tower extends SubsystemBase {
 
   private boolean allowReverse;
 
-  //private AddressableLED towerLEDRight;
+  private Color[] redWhiteArray = {Color.kRed, Color.kWhiteSmoke};
+  private TrobotAddressableLEDPattern m_redChasePattern = new ChasePattern(redWhiteArray, 3);
+  private Color[] blueWhiteArray = {Color.kBlue, Color.kWhiteSmoke};
+  private TrobotAddressableLEDPattern m_blueChasePattern = new ChasePattern(blueWhiteArray, 3);
 
-  //private AddressableLED towerLEDLeft;
-
-  //private AddressableLEDBuffer m_ledBufferRight;
-
-  //private AddressableLEDBuffer m_ledBufferLeft;
+  private TrobotAddressableLEDPattern m_greenPattern = new SolidColorPattern(Color.kGreen);
+  private TrobotAddressableLEDPattern m_redPattern = new SolidColorPattern(Color.kRed);
+  private TrobotAddressableLEDPattern m_bluePattern = new SolidColorPattern(Color.kBlue);
+  private TrobotAddressableLEDPattern m_shooting = new BlinkingPattern(Color.kGreen, 0.05);
+  private TrobotAddressableLED m_led;
+  private double shooting = 0;
 
   /** Creates a new Tower. */
-  public Tower() {
+  public Tower(TrobotAddressableLED m_led_strip) {
     // TOWER STUFF
+    m_led = m_led_strip;
+
     towerMotor = new CANSparkMax(Constants.Tower.towerMotorID, MotorType.kBrushless);
     towerMotor.restoreFactoryDefaults();
     towerMotor.setIdleMode(IdleMode.kBrake);
@@ -179,34 +190,36 @@ public class Tower extends SubsystemBase {
     colorMatcher.addColorMatch(kRedTarget);
 
     allowReverse = true;
-
-    //9 was right
-
-    //towerLEDRight = new AddressableLED(9);
-    //towerLED2 = new AddressableLED(9);
-
-    //m_ledBufferRight = new AddressableLEDBuffer(15);
-    //m_ledBuffer2 = new AddressableLEDBuffer(60);
-
-    //towerLEDRight.setLength(m_ledBufferRight.getLength());
-    //towerLED2.setLength(m_ledBuffer2.getLength());
-
-    //towerLEDRight.setData(m_ledBufferRight);
-    //towerLED2.setData(m_ledBuffer2);
-    //towerLEDRight.start();
-    //towerLED2.start();
   }
 
   @Override
   public void periodic() {
     checkNT();
-    setLED();
     if (!checkTowerIR()){
       SmartDashboard.getEntry("/auto/numBall").setNumber(0);
+      if (alliance == 1 && shooting == 1){
+        m_led.setPattern(m_bluePattern);
+      } else if (shooting == 1){
+        m_led.setPattern(m_redPattern);
+      } else if (shooting == 2){
+        m_led.setPattern(m_shooting);
+      }
     } else if (!checkFeederIR()){
       SmartDashboard.getEntry("/auto/numBall").setNumber(1);
+      if (alliance == 1 && shooting == 1){
+        m_led.setPattern(m_blueChasePattern);
+      } else if (shooting == 1){
+        m_led.setPattern(m_redChasePattern);
+      } else if (shooting == 2){
+        m_led.setPattern(m_shooting);
+      }
     } else{
       SmartDashboard.getEntry("/auto/numBall").setNumber(2);
+      if (shooting == 1){
+        m_led.setPattern(m_greenPattern);
+      } else if (shooting == 2){
+        m_led.setPattern(m_shooting);
+      }
     }
   }
 
@@ -283,6 +296,14 @@ public class Tower extends SubsystemBase {
     towerMotor.stopMotor();
   }
 
+  public void setShooting(){
+    shooting = 2;
+  }
+
+  public void setNotShooting(){
+    shooting = 1;
+  }
+
   // FEEDER STUFF
   public void powerFeeder() {
     feederPID.setReference(feederPower * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
@@ -351,36 +372,6 @@ public class Tower extends SubsystemBase {
 
   public boolean getReverse(){
     return allowReverse;
-  }
-
-  private void setLED(){
-    // if(checkTowerIR() && checkFeederIR()){
-    //   for (var i = 0; i < m_ledBuffer1.getLength(); i++) {
-    //     m_ledBuffer1.setRGB(i, 0, 244, 0);
-    //     m_ledBuffer2.setRGB(i, 0, 244, 0);
-    //   }
-    // }else if(checkTowerIR() == true && checkFeederIR() == false){
-    //   for (var i = 0; i < m_ledBuffer1.getLength(); i++) {
-    //     m_ledBuffer1.setRGB(i, 148, 255, 141);
-    //     m_ledBuffer2.setRGB(i, 148, 255, 141);
-    //   }
-    // }else{
-    //   for (var i = 0; i < m_ledBuffer1.getLength(); i++) {
-    //     if(DriverStation.getAlliance() == Alliance.Red){
-    //       m_ledBuffer1.setRGB(i, 255, 0, 0);
-    //       m_ledBuffer2.setRGB(i, 255, 0, 0);
-    //     }else{
-    //       m_ledBuffer1.setRGB(i, 0, 0, 255);
-    //       m_ledBuffer2.setRGB(i, 0, 0, 255);
-    //     }
-    //   }
-    //}
-    // m_ledBufferRight.setRGB(1, 0, 50, 150);
-    // m_ledBufferRight.setRGB(2, 0, 40, 150);
-    // m_ledBufferRight.setRGB(3, 0, 30, 150);
-    // m_ledBufferRight.setRGB(4, 0, 20, 150);
-    // towerLEDRight.setData(m_ledBufferRight);
-    //towerLED2.setData(m_ledBuffer2);
   }
 
 }

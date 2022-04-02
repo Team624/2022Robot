@@ -12,7 +12,15 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.trobot5013lib.led.BlinkingPattern;
+import frc.robot.trobot5013lib.led.ChasePattern;
+import frc.robot.trobot5013lib.led.IntensityPattern;
+import frc.robot.trobot5013lib.led.ScannerPattern;
+import frc.robot.trobot5013lib.led.SolidColorPattern;
+import frc.robot.trobot5013lib.led.TrobotAddressableLED;
+import frc.robot.trobot5013lib.led.TrobotAddressableLEDPattern;
 import frc.robot.utility.Auton;
 
 /**
@@ -28,19 +36,29 @@ public class Robot extends TimedRobot {
 
   private Compressor compressor;
 
+  private TrobotAddressableLED m_led = new TrobotAddressableLED(9, 15);
+  private TrobotAddressableLEDPattern m_greenPattern = new SolidColorPattern(Color.kGreen);
+  private TrobotAddressableLEDPattern m_blinkingGreen = new BlinkingPattern(Color.kGreen, 0.25);
+  private Color[] greenWhiteArray = {Color.kGreen, Color.kSeaGreen};
+  private TrobotAddressableLEDPattern m_greenChasePattern = new ChasePattern(greenWhiteArray, 3);
+  private IntensityPattern m_greenIntensityPattern = new IntensityPattern(Color.kGreen, 0);
+  private ScannerPattern m_greenScannerPattern = new ScannerPattern(Color.kGreen, 4);
+
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
+    m_led.setPattern(m_greenChasePattern);
     ShuffleboardTab tab_cam = Shuffleboard.getTab("Camera");
     //tab_cam.addCamera("USB Camera 0", "USB Camera 0", "USB Camera 0").withPosition(0, 0);
     tab_cam.add(CameraServer.startAutomaticCapture()).withPosition(0, 0).withSize(4, 4);
 
     compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);
 
-    m_robotContainer = new RobotContainer();
+    m_robotContainer = new RobotContainer(m_led);
 
     auton = new Auton(
       m_robotContainer.getDrivetrain(),
@@ -73,6 +91,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    m_led.setPattern(m_greenChasePattern);
     compressor.disable();
     auton.setState(false);
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {

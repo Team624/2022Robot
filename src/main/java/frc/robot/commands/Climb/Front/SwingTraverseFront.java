@@ -22,6 +22,7 @@ public class SwingTraverseFront extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    swingTimer.reset();
     swingTimer.start();
     fClimb.stopMotor();
   }

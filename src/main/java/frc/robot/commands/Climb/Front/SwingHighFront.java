@@ -22,6 +22,7 @@ public class SwingHighFront extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    swingTimer.reset();
     swingTimer.start();
     fClimb.stopMotor();
   }
@@ -41,6 +42,6 @@ public class SwingHighFront extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return swingTimer.get() > 2;
+    return swingTimer.get() > .6;
   }
 }

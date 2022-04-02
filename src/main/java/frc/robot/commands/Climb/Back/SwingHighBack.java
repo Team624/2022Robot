@@ -22,6 +22,7 @@ public class SwingHighBack extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    swingTimer.reset();
     swingTimer.start();
     bClimb.stopMotor();
   }
@@ -29,7 +30,7 @@ public class SwingHighBack extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    System.out.println("READING: " + swingTimer.get());
   }
 
   // Called once the command ends or is interrupted.
@@ -41,6 +42,6 @@ public class SwingHighBack extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return swingTimer.get() > 2;
+    return swingTimer.get() > .6;
   }
 }

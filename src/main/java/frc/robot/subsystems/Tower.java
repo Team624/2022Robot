@@ -116,13 +116,13 @@ public class Tower extends SubsystemBase {
 
   private boolean allowReverse;
 
-  private AddressableLED towerLEDRight;
+  //private AddressableLED towerLEDRight;
 
-  private AddressableLED towerLEDLeft;
+  //private AddressableLED towerLEDLeft;
 
-  private AddressableLEDBuffer m_ledBufferRight;
+  //private AddressableLEDBuffer m_ledBufferRight;
 
-  private AddressableLEDBuffer m_ledBufferLeft;
+  //private AddressableLEDBuffer m_ledBufferLeft;
 
   /** Creates a new Tower. */
   public Tower() {
@@ -185,15 +185,15 @@ public class Tower extends SubsystemBase {
     //towerLEDRight = new AddressableLED(9);
     //towerLED2 = new AddressableLED(9);
 
-    m_ledBufferRight = new AddressableLEDBuffer(15);
+    //m_ledBufferRight = new AddressableLEDBuffer(15);
     //m_ledBuffer2 = new AddressableLEDBuffer(60);
 
-    towerLEDRight.setLength(m_ledBufferRight.getLength());
+    //towerLEDRight.setLength(m_ledBufferRight.getLength());
     //towerLED2.setLength(m_ledBuffer2.getLength());
 
-    towerLEDRight.setData(m_ledBufferRight);
+    //towerLEDRight.setData(m_ledBufferRight);
     //towerLED2.setData(m_ledBuffer2);
-    towerLEDRight.start();
+    //towerLEDRight.start();
     //towerLED2.start();
   }
 

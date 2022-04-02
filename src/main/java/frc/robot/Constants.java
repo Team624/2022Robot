@@ -52,10 +52,10 @@ public final class Constants {
         public static final double lowShootRPM = 2300;
         public static final double wallShootRPM = 8350;
 
-        public static final double hoodSwitchCam = 187;
-        public static final double hoodDeadBandSizeCam = 20;
-        public static final double hoodSwitchDis = 123/39.37;
-        public static final double hoodDeadBandSizeDis = 0.25;
+        public static final double hoodSwitchCam = 163;
+        public static final double hoodDeadBandSizeCam = 7;
+        public static final double hoodSwitchDis = 120/39.37;
+        public static final double hoodDeadBandSizeDis = 0.15;
         public static final double[][] shooterExperimentDataHigh = {
         //  {cam-distance, rpm, actualDistance}
 
@@ -67,31 +67,30 @@ public final class Constants {
             {147, 7900, 102/39.37},
 
         // Actual data
-            {159, 7600, 108/39.37},
-            {172, 7750, 114/39.37},
-            {182, 7950, 120/39.37},
-            {192, 8050, 126/39.37},
-            {202, 8100, 132/39.37},
-            {211.5, 8375, 138/39.37},
-            {220, 8475, 144/39.37},
-            {229, 8575, 150/39.37},
-            {238, 8675, 156/39.37},
-            {244, 8750, 162/39.37},
-            {251, 8900, 168/39.37},
-            {257, 9150, 174/39.37},
-            {265, 9400, 180/39.37},
-            {270, 9575, 186/39.37},
-            {276, 9750, 192/39.37},
-            {281, 9975, 198/39.37},
-            {287, 10275, 204/39.37},
-            {291, 10450, 210/39.37},
-            {296, 10700, 216/39.37},
-            {300, 10900, 222/39.37},
-            {304, 11000, 228/39.37},
-            {308, 11100, 234/39.37},
-            {310, 11350, 240/39.37},
-            {313, 11700, 246/39.37},
-            {316, 11950, 252/39.37},
+            {155, 7600, 114/39.37},
+            {163, 7725, 120/39.37},
+            {174, 7800, 126/39.37},
+            {184, 7850, 132/39.37},
+            {193, 7950, 138/39.37},
+            {201, 8100, 144/39.37},
+            {210, 8250, 150/39.37},
+            {218, 8350, 156/39.37},
+            {225, 8450, 162/39.37},
+            {233, 8600, 168/39.37},
+            {239, 8750, 174/39.37},
+            {246, 8900, 180/39.37},
+            {252, 9100, 186/39.37},
+            {258, 9400, 192/39.37},
+            {261, 9550, 198/39.37},
+            {266, 9600, 204/39.37},
+            {271, 9700, 210/39.37},
+            {276, 9800, 216/39.37},
+            {280, 10000, 222/39.37},
+            {284, 10200, 228/39.37},
+            {287, 10400, 234/39.37},
+            {290, 10550, 240/39.37},
+            {293, 10700, 246/39.37},
+            {296, 10900, 252/39.37},
 
         // For shooting on the run (approx)
             {319, 12000, 258/39.37},
@@ -111,18 +110,15 @@ public final class Constants {
             {50, 6100, 66/39.37},
 
         // Actual data
-            {68, 6400, 72/39.37},
-            {81, 6600, 78/39.37},
-            {101, 6900, 84/39.37},
-            {117, 7250, 90/39.37},
-            {133, 7400, 96/39.37},
-            {147, 7550, 102/39.37},
-            {159, 7850, 108/39.37},
-            {172, 8100, 114/39.37},
-            {182, 8200, 120/39.37},
-            {192, 8350, 126/39.37},
-            {202, 8600, 132/39.37},
-            {211.5, 8850, 138/39.37},
+            {61, 7300, 78/39.37},
+            {81, 7600, 84/39.37},
+            {97, 7800, 90/39.37},
+            {114, 8150, 96/39.37},
+            {128, 8350, 102/39.37},
+            {143, 8550, 108/39.37},
+            {155, 8700, 114/39.37},
+            {163, 8900, 120/39.37},
+            {174, 9100, 126/39.37},
 
         // For shooting on the run (approx)
             {220, 9000, 144/39.37},
@@ -194,9 +190,9 @@ public final class Constants {
         public static final double visionI = .0;
         public static final double visionD = .0035;
 
-        public static final double shootOnRunAngleMult = 0;
-        public static final double shootOnRunShooterMultX = 0;
-        public static final double shootOnRunShooterMultY = 0;
+        public static final double shootOnRunAngleMult = 1.15;
+        public static final double shootOnRunShooterMultX = 1;
+        public static final double shootOnRunShooterMultY = 4;
         
 
         /**

@@ -16,7 +16,7 @@ import javax.lang.model.util.ElementScanner6;
 
 import frc.robot.Constants;
 
-public class VisionTurn extends CommandBase {
+public class ShootOnRun extends CommandBase {
   private final Drivetrain m_drivetrainSubsystem;
 
   private final DoubleSupplier m_translationXSupplier;
@@ -35,7 +35,7 @@ public class VisionTurn extends CommandBase {
   private double[] targetPose = {8.2423, -4.0513};
 
   /** Creates a new PositionTurn. */
-  public VisionTurn(Drivetrain drivetrainSubsystem,
+  public ShootOnRun(Drivetrain drivetrainSubsystem,
                       ShooterVision shooterVision,
                       DoubleSupplier translationXSupplier,
                       DoubleSupplier translationYSupplier) {
@@ -143,7 +143,10 @@ public class VisionTurn extends CommandBase {
       //System.out.println("Doing shooting on run");
       double angle = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + (wantedDeltaAngle * (180/Math.PI));
 
-      thVelocity = getQuickTurnPID(angle);
+      double offset = (getShootOnRunAngle(goalRelVel) * Constants.Drivetrain.shootOnRunAngleMult);
+      //System.out.println(offset);
+
+      thVelocity = getQuickTurnPID(angle - offset);
 
       if ((wantedDeltaAngle * (180/Math.PI)) < 1){
         quickTurnDone = true;

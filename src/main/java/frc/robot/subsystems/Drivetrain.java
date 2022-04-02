@@ -88,7 +88,7 @@ public class Drivetrain extends SubsystemBase {
          moduleConfig = configModule();
 
          visionTurn_pid = getRotationPID();
-         visionTurn_pidQuickTurn = getRotationPathPID();
+         visionTurn_pidQuickTurn = getRotationQuickTurnPID();
 
          autonPoint_pidPathRotation = getRotationPathPID();
          autonPath_pidVision = getAutonRotationPID();
@@ -216,6 +216,11 @@ public class Drivetrain extends SubsystemBase {
   private PIDController getRotationPathPID(){
         return new PIDController(.06, 0, 0);
   }
+
+  private PIDController getRotationQuickTurnPID(){
+        return new PIDController(.05, 0, 0);
+  }
+
 
   public double normalizeAngle(double angle){
         //   Normalizes angle between (-pi and pi)

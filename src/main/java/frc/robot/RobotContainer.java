@@ -28,6 +28,7 @@ import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.LowShoot;
+import frc.robot.commands.Shooter.ManualShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Shooter.WallShoot;
 import frc.robot.commands.Tower.ClimbTower;
@@ -50,8 +51,8 @@ import frc.robot.utility.ShooterVision;
 // import frc.robot.Triggers.Joysticks.mRightCenter;
 // import frc.robot.Triggers.Joysticks.mRightDown;
 // import frc.robot.Triggers.Joysticks.mRightUp;
-// import frc.robot.Triggers.Triggers.mLeftTriggerDown;
-// import frc.robot.Triggers.Triggers.mLeftTriggerUp;
+import frc.robot.Triggers.Triggers.mLeftTriggerDown;
+import frc.robot.Triggers.Triggers.mLeftTriggerUp;
 // import frc.robot.Triggers.Triggers.mRightTriggerDown;
 // import frc.robot.Triggers.Triggers.mRightTriggerUp;
 
@@ -73,8 +74,8 @@ public class RobotContainer {
   private Trigger mRightInactive = new mRightInactive(m_controller);
   // private Trigger mRightTriggerDown = new mRightTriggerDown(m_controller);
   // private Trigger mRightTriggerUp = new mRightTriggerUp(m_controller);
-  // private Trigger mLeftTriggerDown = new mLeftTriggerDown(m_controller);
-  // private Trigger mLeftTriggerUp = new mLeftTriggerUp(m_controller);
+  private Trigger dLeftTriggerDown = new mLeftTriggerDown(d_controller);
+  private Trigger dLeftTriggerUp = new mLeftTriggerUp(d_controller);
 
   public RobotContainer() {
     m_fClimb = new FrontClimb();
@@ -135,8 +136,10 @@ public class RobotContainer {
 
     new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
 
-    // new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
+    //new Button(m_controller::getYButton).whenHeld(new ManualShoot(m_shooter));
 
+    // new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
+    // new Button(m_controller::getBButton).whenReleased(m_shooter::testHoodOff);
     new Button(m_controller::getAButton).whenPressed(m_tower::setReverse);
 
     new Button(m_controller::getBButton).whenHeld(new LowShoot(m_shooter));

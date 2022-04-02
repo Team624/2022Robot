@@ -13,6 +13,7 @@ import frc.robot.Triggers.Joysticks.mLeftActive;
 import frc.robot.Triggers.Joysticks.mLeftInactive;
 import frc.robot.Triggers.Joysticks.mRightActive;
 import frc.robot.Triggers.Joysticks.mRightInactive;
+import frc.robot.commands.Climb.AutoClimb;
 import frc.robot.commands.Climb.Back.BottomBack;
 import frc.robot.commands.Climb.Back.ControlBack;
 import frc.robot.commands.Climb.Back.IdleBack;
@@ -36,6 +37,7 @@ import frc.robot.commands.Tower.EjectBottom;
 import frc.robot.commands.Tower.IdleTower;
 import frc.robot.commands.Tower.Reverse;
 import frc.robot.commands.Tower.Shoot;
+import frc.robot.commands.Tower.SlowReverse;
 import frc.robot.commands.Intake.DeployIntake;
 import frc.robot.subsystems.BackClimb;
 import frc.robot.subsystems.Drivetrain;
@@ -53,8 +55,8 @@ import frc.robot.utility.ShooterVision;
 // import frc.robot.Triggers.Joysticks.mRightUp;
 import frc.robot.Triggers.Triggers.mLeftTriggerDown;
 import frc.robot.Triggers.Triggers.mLeftTriggerUp;
-// import frc.robot.Triggers.Triggers.mRightTriggerDown;
-// import frc.robot.Triggers.Triggers.mRightTriggerUp;
+import frc.robot.Triggers.Triggers.mRightTriggerDown;
+import frc.robot.Triggers.Triggers.mRightTriggerUp;
 
 public class RobotContainer {
   private final FrontClimb m_fClimb;
@@ -72,10 +74,10 @@ public class RobotContainer {
   private Trigger mLeftInactive = new mLeftInactive(m_controller);
   private Trigger mRightActive = new mRightActive(m_controller);
   private Trigger mRightInactive = new mRightInactive(m_controller);
-  // private Trigger mRightTriggerDown = new mRightTriggerDown(m_controller);
-  // private Trigger mRightTriggerUp = new mRightTriggerUp(m_controller);
-  private Trigger dLeftTriggerDown = new mLeftTriggerDown(d_controller);
-  private Trigger dLeftTriggerUp = new mLeftTriggerUp(d_controller);
+  private Trigger mRightTriggerDown = new mRightTriggerDown(m_controller);
+  private Trigger mRightTriggerUp = new mRightTriggerUp(m_controller);
+  private Trigger mLeftTriggerDown = new mLeftTriggerDown(m_controller);
+  private Trigger mLeftTriggerUp = new mLeftTriggerUp(m_controller);
 
   public RobotContainer() {
     m_fClimb = new FrontClimb();
@@ -130,13 +132,19 @@ public class RobotContainer {
 
     new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));
 
-    new Button(m_controller::getRightBumper).whenHeld(new Shoot(m_tower, m_shooter));
+    mRightTriggerDown.whenActive(new Shoot(m_tower, m_shooter));
 
-    new Button(m_controller::getLeftBumper).whenHeld(new WallShoot(m_shooter));
+    mRightTriggerUp.whenActive(new IdleShoot(m_shooter));
+
+    mLeftTriggerDown.whenActive(new WallShoot(m_shooter));
+
+    mLeftTriggerUp.whenActive(new IdleShoot(m_shooter));
+
+    new Button(m_controller::getRightBumper).whenHeld(new Reverse(m_tower));
+
+    new Button(m_controller::getLeftBumper).whenHeld(new EjectBottom(m_tower));
 
     new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
-
-    //new Button(m_controller::getYButton).whenHeld(new ManualShoot(m_shooter));
 
     // new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
     // new Button(m_controller::getBButton).whenReleased(m_shooter::testHoodOff);
@@ -144,7 +152,7 @@ public class RobotContainer {
 
     new Button(m_controller::getBButton).whenHeld(new LowShoot(m_shooter));
 
-    new Button(m_controller::getRightStickButton).whenHeld(new Reverse(m_tower));
+    new Button(m_controller::getRightStickButton).whenHeld(new SlowReverse(m_tower));
 
 //================================================================================================
 
@@ -162,7 +170,9 @@ public class RobotContainer {
 
     mRightInactive.whenActive(new IdleBack(m_bClimb));
 
-    new POVButton(m_controller, 0).whenPressed(new TopBack(m_bClimb));
+    new POVButton(m_controller, 0).whenPressed(new AutoClimb(m_fClimb, m_bClimb));
+
+    //new POVButton(m_controller, 0).whenPressed(new TopBack(m_bClimb));
 
     new POVButton(m_controller, 90).whenPressed(new TopFront(m_fClimb));
 

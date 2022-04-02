@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.swervedrivespecialties.swervelib.Mk4ModuleConfiguration;
 import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
@@ -16,7 +15,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.NetworkTableEntry;
+//import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -64,9 +63,9 @@ public class Drivetrain extends SubsystemBase {
   private SwerveModuleState[] lstates = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
   private ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
-  private NetworkTableEntry rotationP = tab.add("Tracking P", 0.0).withPosition(8, 1).getEntry();
-  private NetworkTableEntry rotationI = tab.add("Tracking I", 0.0).withPosition(8, 2).getEntry();
-  private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();
+//   private NetworkTableEntry rotationP = tab.add("Tracking P", 0.0).withPosition(8, 1).getEntry();
+//   private NetworkTableEntry rotationI = tab.add("Tracking I", 0.0).withPosition(8, 2).getEntry();
+//   private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();
 
   public boolean isCreepin = false;
 
@@ -76,8 +75,6 @@ public class Drivetrain extends SubsystemBase {
   public boolean lastPointCommand = false;
   public boolean stopAuton = false;
 
-  private Mk4ModuleConfiguration moduleConfig;
-
   public PIDController visionTurn_pid;
   public PIDController visionTurn_pidQuickTurn;
 
@@ -85,8 +82,6 @@ public class Drivetrain extends SubsystemBase {
   public PIDController autonPath_pidVision;
 
   public Drivetrain() {
-         moduleConfig = configModule();
-
          visionTurn_pid = getRotationPID();
          visionTurn_pidQuickTurn = getRotationQuickTurnPID();
 
@@ -97,7 +92,6 @@ public class Drivetrain extends SubsystemBase {
                   tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                   .withSize(2, 4)
                   .withPosition(0, 0),
-                  //moduleConfig,
                   Mk4SwerveModuleHelper.GearRatio.L2,
                   Constants.Drivetrain.FRONT_LEFT_MODULE_DRIVE_MOTOR, 
                   Constants.Drivetrain.FRONT_LEFT_MODULE_STEER_MOTOR, 
@@ -178,14 +172,6 @@ public class Drivetrain extends SubsystemBase {
                         lstates = current;
          }
           return current; 
-  }
-
-  private Mk4ModuleConfiguration configModule(){
-        Mk4ModuleConfiguration send = new Mk4ModuleConfiguration();
-        send.setNominalVoltage(13);
-        send.setDriveCurrentLimit(80);
-        send.setSteerCurrentLimit(20);
-        return send;
   }
 
   public Rotation2d getGyroscopeRotation() {

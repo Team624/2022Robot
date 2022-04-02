@@ -4,37 +4,44 @@
 
 package frc.robot.commands.Climb.Front;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.FrontClimb;
 
-public class TopFront extends CommandBase {
+public class SwingHighFront extends CommandBase {
   private final FrontClimb fClimb;
+  private Timer swingTimer;
 
-  /** Creates a new BottomFront. */
-  public TopFront(FrontClimb fClimb) {
+  /** Creates a new IdleFront. */
+  public SwingHighFront(FrontClimb fClimb) {
     this.fClimb = fClimb;
+    swingTimer = new Timer();
     addRequirements(this.fClimb);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    swingTimer.reset();
+    swingTimer.start();
+    fClimb.stopMotor();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    fClimb.moveArm(-159);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    fClimb.stopMotor();
+    swingTimer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return fClimb.readEncoder() < -158;
+    return swingTimer.get() > .6;
   }
 }

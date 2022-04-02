@@ -4,8 +4,6 @@
 
 package frc.robot.commands.Tower;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Tower;
 
@@ -31,32 +29,32 @@ public class IdleTower extends CommandBase {
 
     if(tower.checkAlliance() == 0 || tower.getAlliance() == tower.checkAlliance()){
       if(!tower.checkTowerIR()){
-        tower.powerTower(false);
-        tower.powerFeeder(false);
+        tower.powerTower();
+        tower.powerFeeder();
       }else{
         tower.stopTower();
         if(!tower.checkFeederIR()){
-          tower.powerFeeder(false);
+          tower.powerFeeder();
         }else{
           tower.stopFeeder();
         }
       }
     }else{
       if(tower.getReverse()){
-        tower.powerFeeder(true);
+        tower.reverseFeeder();
         if(!tower.checkTowerIR()){
-          tower.powerTower(false);
+          tower.powerTower();
         }else{
           tower.stopTower();
         }
       }else{
         if(!tower.checkTowerIR()){
-          tower.powerTower(false);
-          tower.powerFeeder(false);
+          tower.powerTower();
+          tower.powerFeeder();
         }else{
           tower.stopTower();
           if(!tower.checkFeederIR()){
-            tower.powerFeeder(false);
+            tower.powerFeeder();
           }else{
             tower.stopFeeder();
           }

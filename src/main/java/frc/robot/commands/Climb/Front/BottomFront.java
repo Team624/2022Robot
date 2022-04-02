@@ -22,22 +22,19 @@ public class BottomFront extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    System.out.println("Front Encoder: " + fClimb.readEncoder());  
-    if(fClimb.readEncoder() < 2){
-      fClimb.moveArm(3);
-    }else{
-      fClimb.powerArm(.05);
-    }
+  public void execute() { 
+    fClimb.moveArm(2);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    fClimb.stopMotor();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return fClimb.readEncoder() > 0;
   }
 }

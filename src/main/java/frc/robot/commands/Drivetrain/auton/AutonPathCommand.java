@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utility.Auton;
 import frc.robot.utility.Path;
-import edu.wpi.first.math.controller.PIDController;
 
 public class AutonPathCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;

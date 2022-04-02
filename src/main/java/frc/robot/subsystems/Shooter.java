@@ -37,7 +37,6 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry dashCurrentRPM = shootTab.add("Current RPM:", 0).withPosition(1, 1).getEntry();
   private NetworkTableEntry dashPrime = shootTab.add("Priming?", false).withPosition(2, 1).getEntry();
   private NetworkTableEntry manualRPM = shootTab.add("Manual RPM: ", 0).withPosition(0, 3).withWidget(BuiltInWidgets.kTextView).getEntry();
-  private NetworkTableEntry manualPercent = shootTab.add("Manual Percent: ", 0).withPosition(0, 3).withWidget(BuiltInWidgets.kTextView).getEntry();
 
   private NetworkTableEntry PID_P = shootTab.add("PID P",Constants.Shooter.kP).withPosition(0,2).withWidget(BuiltInWidgets.kTextView).getEntry();
   private NetworkTableEntry PID_I = shootTab.add("PID I",Constants.Shooter.kI).withPosition(1,2).withWidget(BuiltInWidgets.kTextView).getEntry();

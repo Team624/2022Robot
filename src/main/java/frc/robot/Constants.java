@@ -23,7 +23,7 @@ public final class Constants {
 
         public static final int backWinchID = 5;
 
-        public static final double holdSpeed = .05;
+        public static final double holdSpeed = .115;
         public static final double armWinchSpeed = .7;
 
         public static final double P = 0.08

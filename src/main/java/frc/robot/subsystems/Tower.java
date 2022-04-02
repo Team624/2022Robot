@@ -14,6 +14,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -65,7 +67,6 @@ public class Tower extends SubsystemBase {
   private NetworkTableEntry colorDetected = tab_tower.add("Color", 0.0).withPosition(3, 0).getEntry();
 
   private double towerPower = Constants.Tower.towerPower;
-  private double autoLoadPower = Constants.Tower.autoLoadPower;
 
   // FEEDER STUFF
   private CANSparkMax feederMotor;
@@ -114,6 +115,14 @@ public class Tower extends SubsystemBase {
   private int alliance;
 
   private boolean allowReverse;
+
+  //private AddressableLED towerLEDRight;
+
+  //private AddressableLED towerLEDLeft;
+
+  //private AddressableLEDBuffer m_ledBufferRight;
+
+  //private AddressableLEDBuffer m_ledBufferLeft;
 
   /** Creates a new Tower. */
   public Tower() {
@@ -170,12 +179,28 @@ public class Tower extends SubsystemBase {
     colorMatcher.addColorMatch(kRedTarget);
 
     allowReverse = true;
+
+    //9 was right
+
+    //towerLEDRight = new AddressableLED(9);
+    //towerLED2 = new AddressableLED(9);
+
+    //m_ledBufferRight = new AddressableLEDBuffer(15);
+    //m_ledBuffer2 = new AddressableLEDBuffer(60);
+
+    //towerLEDRight.setLength(m_ledBufferRight.getLength());
+    //towerLED2.setLength(m_ledBuffer2.getLength());
+
+    //towerLEDRight.setData(m_ledBufferRight);
+    //towerLED2.setData(m_ledBuffer2);
+    //towerLEDRight.start();
+    //towerLED2.start();
   }
 
   @Override
   public void periodic() {
-    //checkAlliance(); //TODO: testing only
     checkNT();
+    setLED();
     if (!checkTowerIR()){
       SmartDashboard.getEntry("/auto/numBall").setNumber(0);
     } else if (!checkFeederIR()){
@@ -239,26 +264,39 @@ public class Tower extends SubsystemBase {
     return IrSensor_tower.get();
   }
 
-  public void powerTower(boolean reverse){
-    double power = towerPower;
-    if(reverse){power = power *-1;}
-    towerPID.setReference(power * Constants.Tower.maxRPM, CANSparkMax.ControlType.kVelocity);
-    setPoint_tower.setDouble(power);
+  public void powerTower(){
+    towerPID.setReference(towerPower * Constants.Tower.maxRPM, CANSparkMax.ControlType.kVelocity);
+    setPoint_tower.setDouble(towerPower);
+  }
+
+  public void reverseTower(){
+    towerPID.setReference(-towerPower * Constants.Tower.maxRPM, CANSparkMax.ControlType.kVelocity);
+    setPoint_tower.setDouble(-towerPower);
+  }
+
+  public void manualTower(double speed){
+    towerPID.setReference(speed * Constants.Tower.maxRPM, CANSparkMax.ControlType.kVelocity);
+    setPoint_tower.setDouble(speed);
   }
 
   public void stopTower(){
     towerMotor.stopMotor();
   }
 
-
   // FEEDER STUFF
-  public void powerFeeder(boolean reverse) {
-    double power = feederPower;
-    if (reverse)
-      power *= -1;
+  public void powerFeeder() {
+    feederPID.setReference(feederPower * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
+    setPoint_feeder.setDouble(feederPower);
+  }
 
-    feederPID.setReference(power * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
-    setPoint_feeder.setDouble(power);
+  public void reverseFeeder() {
+    feederPID.setReference(-feederPower * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
+    setPoint_feeder.setDouble(-feederPower);
+  }
+
+  public void manualFeeder(double speed){
+    feederPID.setReference(speed * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
+    setPoint_feeder.setDouble(speed);
   }
 
   public void stopFeeder() {
@@ -267,11 +305,6 @@ public class Tower extends SubsystemBase {
 
   public boolean checkFeederIR(){
     return IrSensor_feeder.get();
-  }
-
-  public void shootBalls(){
-    powerTower(false);
-    powerFeeder(false);
   }
 
   public int checkAlliance(){
@@ -318,6 +351,36 @@ public class Tower extends SubsystemBase {
 
   public boolean getReverse(){
     return allowReverse;
+  }
+
+  private void setLED(){
+    // if(checkTowerIR() && checkFeederIR()){
+    //   for (var i = 0; i < m_ledBuffer1.getLength(); i++) {
+    //     m_ledBuffer1.setRGB(i, 0, 244, 0);
+    //     m_ledBuffer2.setRGB(i, 0, 244, 0);
+    //   }
+    // }else if(checkTowerIR() == true && checkFeederIR() == false){
+    //   for (var i = 0; i < m_ledBuffer1.getLength(); i++) {
+    //     m_ledBuffer1.setRGB(i, 148, 255, 141);
+    //     m_ledBuffer2.setRGB(i, 148, 255, 141);
+    //   }
+    // }else{
+    //   for (var i = 0; i < m_ledBuffer1.getLength(); i++) {
+    //     if(DriverStation.getAlliance() == Alliance.Red){
+    //       m_ledBuffer1.setRGB(i, 255, 0, 0);
+    //       m_ledBuffer2.setRGB(i, 255, 0, 0);
+    //     }else{
+    //       m_ledBuffer1.setRGB(i, 0, 0, 255);
+    //       m_ledBuffer2.setRGB(i, 0, 0, 255);
+    //     }
+    //   }
+    //}
+    // m_ledBufferRight.setRGB(1, 0, 50, 150);
+    // m_ledBufferRight.setRGB(2, 0, 40, 150);
+    // m_ledBufferRight.setRGB(3, 0, 30, 150);
+    // m_ledBufferRight.setRGB(4, 0, 20, 150);
+    // towerLEDRight.setData(m_ledBufferRight);
+    //towerLED2.setData(m_ledBuffer2);
   }
 
 }

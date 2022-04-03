@@ -144,6 +144,10 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+        // double ratio = (1.00832)/(1 + (0.00744* Math.pow(Math.E, 0.08467 * Math.abs(getVisionRotationAngle()))));
+        // System.out.println("Ratio:" + ratio);
+        // System.out.println("Estimated distance: " + getDistanceAngle()/ratio);
+
           SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
           // TODO: Test if this doesn't mess auton up
@@ -269,6 +273,10 @@ public class Drivetrain extends SubsystemBase {
 
   public double getVisionRotationAngle(){
         return -SmartDashboard.getEntry("/vision/rotationAngle").getDouble(0.0);
+  }
+
+  public double getDistanceAngle(){
+        return SmartDashboard.getEntry("/vision/distanceAngle").getDouble(0.0);
   }
 
   public double[] getSwervePose(){

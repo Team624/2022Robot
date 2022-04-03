@@ -70,6 +70,7 @@ public class ShootOnRun extends CommandBase {
     wantedDeltaAngle = Math.abs(wantedDeltaAngle) < Math.abs(errorA) ? wantedDeltaAngle : errorA;
 
     double visionRot = m_drivetrainSubsystem.getVisionRotationAngle();
+    double distanceAngle = m_drivetrainSubsystem.getDistanceAngle();
 
     double[] goalRelVel = m_drivetrainSubsystem.getGoalRelVelocity(getQuickTurnValue());
 
@@ -94,6 +95,7 @@ public class ShootOnRun extends CommandBase {
     if((Math.abs(visionRot) < 500) && isNotMoving && quickTurnDone){
       //System.out.println("Vision targeting error = " + visionRot);
       
+
       // double shootToSideAngle = 0;
       // double lowDist = (78/39.37);
       // double highDist = (252/39.37);
@@ -146,10 +148,7 @@ public class ShootOnRun extends CommandBase {
       double offset = (getShootOnRunAngle(goalRelVel) * Constants.Drivetrain.shootOnRunAngleMult);
       //System.out.println(offset);
 
-      double error = offset - visionRot;
-
       thVelocity = getQuickTurnPID(angle - offset);
-      System.out.println("Error: " + error);
 
       if ((wantedDeltaAngle * (180/Math.PI)) < 1){
         quickTurnDone = true;

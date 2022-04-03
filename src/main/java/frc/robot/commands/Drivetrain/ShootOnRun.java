@@ -146,7 +146,10 @@ public class ShootOnRun extends CommandBase {
       double offset = (getShootOnRunAngle(goalRelVel) * Constants.Drivetrain.shootOnRunAngleMult);
       //System.out.println(offset);
 
+      double error = offset - visionRot;
+
       thVelocity = getQuickTurnPID(angle - offset);
+      System.out.println("Error: " + error);
 
       if ((wantedDeltaAngle * (180/Math.PI)) < 1){
         quickTurnDone = true;

@@ -8,20 +8,23 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Tower;
 import frc.robot.utility.ShooterVision;
 
 public class PrimeShoot extends CommandBase {
   private final Shooter shooter;
   private final ShooterVision vision;
   private Drivetrain drivetrain;
+  private Tower tower;
 
   private double[] targetPose = {8.2423, -4.0513};
 
   /** Creates a new PrimeShoot. */
-  public PrimeShoot(Shooter shooter, ShooterVision vision, Drivetrain drivetrain) {
+  public PrimeShoot(Shooter shooter, ShooterVision vision, Drivetrain drivetrain, Tower tower) {
     this.shooter = shooter;
     this.vision = vision;
     this.drivetrain = drivetrain;
+    this.tower = tower;
     addRequirements(this.shooter);
   }
 
@@ -52,6 +55,14 @@ public class PrimeShoot extends CommandBase {
       //System.out.println("Normal Shooting");
       shooter.setRPM(vision.calculateRPM() + shooter.jankShit);
       shooter.setHood(vision.calculateHood());
+    }
+
+    // For leds
+    if (Math.abs(shooter.getGoalRPM() - shooter.getRPM()) < 20){
+      tower.setRpmOnTarget(true);
+    }
+    else{
+      tower.setRpmOnTarget(false);
     }
   }
 

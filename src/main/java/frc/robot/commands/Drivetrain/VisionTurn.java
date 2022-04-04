@@ -8,6 +8,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Tower;
 import frc.robot.utility.ShooterVision;
 import java.util.function.DoubleSupplier;
 
@@ -15,6 +16,7 @@ import frc.robot.Constants;
 
 public class VisionTurn extends CommandBase {
   private final Drivetrain m_drivetrainSubsystem;
+  private Tower tower;
 
   private final DoubleSupplier m_translationXSupplier;
   private final DoubleSupplier m_translationYSupplier;
@@ -35,11 +37,13 @@ public class VisionTurn extends CommandBase {
   public VisionTurn(Drivetrain drivetrainSubsystem,
                       ShooterVision shooterVision,
                       DoubleSupplier translationXSupplier,
-                      DoubleSupplier translationYSupplier) {
+                      DoubleSupplier translationYSupplier,
+                      Tower tower) {
     this.m_drivetrainSubsystem = drivetrainSubsystem;
     this.shooterVision = shooterVision;
     this.m_translationXSupplier = translationXSupplier;
     this.m_translationYSupplier = translationYSupplier;
+    this.tower = tower;
 
     addRequirements(drivetrainSubsystem);
   }
@@ -80,6 +84,13 @@ public class VisionTurn extends CommandBase {
     // If doing normal vision targeting
     if((Math.abs(visionRot) < 500) && isNotMoving && quickTurnDone){
       System.out.println("Vision targeting error = " + visionRot);
+
+      // For leds
+      if ((Math.abs(visionRot) < 2)){
+        tower.setAngleOnTarget(true);
+      } else{
+        tower.setAngleOnTarget(false);
+      }
 
       // Vision resetting of robot pose
       if (Math.abs(visionRot) < visionResetTolerance && radius > 0){

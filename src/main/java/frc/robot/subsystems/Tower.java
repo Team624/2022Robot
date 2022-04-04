@@ -131,9 +131,19 @@ public class Tower extends SubsystemBase {
   private TrobotAddressableLEDPattern m_bluePattern = new SolidColorPattern(Color.kBlue);
   //private TrobotAddressableLEDPattern m_shooting = new BlinkingPattern(Color.kGreen, 0.05);
   private Color[] greenWhiteArray = {Color.kGreen, Color.kSeaGreen};
-  private TrobotAddressableLEDPattern m_shooting = new ChasePattern(greenWhiteArray, 3);
+  private TrobotAddressableLEDPattern m_onTarget = new ChasePattern(greenWhiteArray, 3);
+
+  private Color[] greenRedArray = {Color.kGreen, Color.kRed};
+  private TrobotAddressableLEDPattern m_shootingRed = new ChasePattern(greenRedArray, 3);
+
+  private Color[] greenBlueArray = {Color.kGreen, Color.kBlue};
+  private TrobotAddressableLEDPattern m_shootingBlue = new ChasePattern(greenBlueArray, 3);
+  
   private TrobotAddressableLED m_led;
-  private double shooting = 0;
+  private double ledState = 0;
+  private boolean rpmOnTarget = false;
+  private boolean angleOnTarget = false;
+
 
   /** Creates a new Tower. */
   public Tower(TrobotAddressableLED m_led_strip) {
@@ -199,28 +209,40 @@ public class Tower extends SubsystemBase {
     checkNT();
     if (!checkTowerIR()){
       SmartDashboard.getEntry("/auto/numBall").setNumber(0);
-      if (alliance == 1 && shooting == 1){
+      if (alliance == 1 && ledState == 1){
         m_led.setPattern(m_bluePattern);
-      } else if (shooting == 1){
+      } else if (ledState == 1){
         m_led.setPattern(m_redPattern);
-      } else if (shooting == 2){
-        m_led.setPattern(m_shooting);
+      } else if (ledState == 2){
+        m_led.setPattern(m_onTarget);
+      } else if (ledState == 3 && alliance == 1){
+        m_led.setPattern(m_shootingBlue);
+      } else if (ledState == 3){
+        m_led.setPattern(m_shootingRed);
       }
     } else if (!checkFeederIR()){
       SmartDashboard.getEntry("/auto/numBall").setNumber(1);
-      if (alliance == 1 && shooting == 1){
+      if (alliance == 1 && ledState == 1){
         m_led.setPattern(m_blueChasePattern);
-      } else if (shooting == 1){
+      } else if (ledState == 1){
         m_led.setPattern(m_redChasePattern);
-      } else if (shooting == 2){
-        m_led.setPattern(m_shooting);
+      } else if (ledState == 2){
+        m_led.setPattern(m_onTarget);
+      } else if (ledState == 3 && alliance == 1){
+        m_led.setPattern(m_shootingBlue);
+      } else if (ledState == 3){
+        m_led.setPattern(m_shootingRed);
       }
     } else{
       SmartDashboard.getEntry("/auto/numBall").setNumber(2);
-      if (shooting == 1){
+      if (ledState == 1){
         m_led.setPattern(m_greenPattern);
-      } else if (shooting == 2){
-        m_led.setPattern(m_shooting);
+      } else if (ledState == 2){
+        m_led.setPattern(m_onTarget);
+      } else if (ledState == 3 && alliance == 1){
+        m_led.setPattern(m_shootingBlue);
+      } else if (ledState == 3){
+        m_led.setPattern(m_shootingRed);
       }
     }
   }
@@ -298,16 +320,37 @@ public class Tower extends SubsystemBase {
     towerMotor.stopMotor();
   }
 
-  public void setShooting(){
-    shooting = 2;
+  // 0 is disabled, 1 is idle, 2 is on target, 3 is shooting
+  public void setShootingLED(){
+    ledState = 3;
   }
 
-  public void setNotShooting(){
-    shooting = 1;
+  public void setRpmOnTarget(boolean onTarget){
+    rpmOnTarget = onTarget;
+    if (rpmOnTarget && angleOnTarget){
+      ledState = 2;
+    }
+    else{
+      setIdleLED();
+    }
   }
 
-  public void setDisabledShooting(){
-    shooting = 0;
+  public void setAngleOnTarget(boolean onTarget){
+    angleOnTarget = onTarget;
+    if (rpmOnTarget && angleOnTarget){
+      ledState = 2;
+    }
+    else{
+      setIdleLED();
+    }
+  }
+
+  public void setIdleLED(){
+    ledState = 1;
+  }
+
+  public void setDisabledLED(){
+    ledState = 0;
   }
 
   // FEEDER STUFF

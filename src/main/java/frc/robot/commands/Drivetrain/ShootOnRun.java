@@ -8,6 +8,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Tower;
 import frc.robot.utility.ShooterVision;
 
 import java.util.function.DoubleSupplier;
@@ -24,6 +25,8 @@ public class ShootOnRun extends CommandBase {
 
   private final ShooterVision shooterVision;
 
+  private Tower tower;
+
   private double quickTurnTolerance = 15;
   private double visionResetTolerance = 1;
 
@@ -38,11 +41,13 @@ public class ShootOnRun extends CommandBase {
   public ShootOnRun(Drivetrain drivetrainSubsystem,
                       ShooterVision shooterVision,
                       DoubleSupplier translationXSupplier,
-                      DoubleSupplier translationYSupplier) {
+                      DoubleSupplier translationYSupplier,
+                      Tower tower) {
     this.m_drivetrainSubsystem = drivetrainSubsystem;
     this.shooterVision = shooterVision;
     this.m_translationXSupplier = translationXSupplier;
     this.m_translationYSupplier = translationYSupplier;
+    this.tower = tower;
 
     addRequirements(drivetrainSubsystem);
   }
@@ -114,6 +119,13 @@ public class ShootOnRun extends CommandBase {
 
       // visionRot += shootToSideAngle;
 
+      // For leds
+      if ((Math.abs(visionRot) < 2)){
+        tower.setAngleOnTarget(true);
+      } else{
+        tower.setAngleOnTarget(false);
+      }
+
       thVelocity = getRotationPID(visionRot);
      
       double lim = 0.8;
@@ -148,7 +160,15 @@ public class ShootOnRun extends CommandBase {
       double offset = (getShootOnRunAngle(goalRelVel) * Constants.Drivetrain.shootOnRunAngleMult);
       //System.out.println(offset);
 
-      thVelocity = getQuickTurnPID(angle - offset);
+      double wantedAngle = angle - offset;
+      thVelocity = getQuickTurnPID(wantedAngle);
+
+      // For leds
+      if (Math.abs(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() - wantedAngle) < 2){
+        tower.setAngleOnTarget(true);
+      } else{
+        tower.setAngleOnTarget(false);
+      }
 
       if ((wantedDeltaAngle * (180/Math.PI)) < 1){
         quickTurnDone = true;

@@ -126,14 +126,16 @@ public class RobotContainer {
        m_drivetrainSubsystem,
        m_shooterVision,
        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-       () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER
+       () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+       m_tower
     ));
     
     dLeftTriggerDown.whenActive(new ShootOnRun(
       m_drivetrainSubsystem,
       m_shooterVision,
       () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-      () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER
+      () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+      m_tower
    ));
 
     dLeftTriggerUp.whenActive(new DefaultDriveCommand(
@@ -168,7 +170,7 @@ public class RobotContainer {
 
     new Button(m_controller::getLeftBumper).whenHeld(new EjectBottom(m_tower));
 
-    new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem));
+    new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem, m_tower));
 
     // new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
     // new Button(m_controller::getBButton).whenReleased(m_shooter::testHoodOff);
@@ -283,8 +285,8 @@ public class RobotContainer {
     m_tower.updateAlliance();
   }
 
-  public void setDisabledShooting(){
-    m_tower.setDisabledShooting();
+  public void setDisabledLED(){
+    m_tower.setDisabledLED();
   }
 
   public void resetClimbMode(){

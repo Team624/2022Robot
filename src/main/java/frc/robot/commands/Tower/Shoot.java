@@ -27,7 +27,7 @@ public class Shoot extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    tower.setShooting();
+    tower.setShootingLED();
     currentHoodState = shooter.getHood();
     time = 2.0;
     timer = new Timer();

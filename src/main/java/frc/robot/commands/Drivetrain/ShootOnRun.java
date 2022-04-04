@@ -30,13 +30,15 @@ public class ShootOnRun extends CommandBase {
   private double quickTurnTolerance = 15;
 
   // TODO: Might need to adjust if not very accurate
-  private double visionResetTolerance = 15;
+  private double visionResetTolerance = 1;
 
   private SlewRateLimiter filterX = new SlewRateLimiter(9);
   private SlewRateLimiter filterY = new SlewRateLimiter(9);
 
   private boolean quickTurnDone = false;
   private boolean visionReset = false;
+
+  private double visionResetCount = 0;
 
   private double[] targetPose = {8.2423, -4.0513};
 
@@ -93,7 +95,7 @@ public class ShootOnRun extends CommandBase {
     if (Math.abs(visionRot) < visionResetTolerance && radius > 0){
       visionReset = true;
       // TODO: Might need to subract angle instead of adding, will have to test
-      double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians() + (visionRot * (Math.PI/180));
+      double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians();
       double x = radius * Math.cos(degree % (Math.PI * 2));
       double y = radius * Math.sin(degree % (Math.PI * 2));
 
@@ -191,8 +193,8 @@ public class ShootOnRun extends CommandBase {
     double vx = m_translationXSupplier.getAsDouble();
     double vy = m_translationYSupplier.getAsDouble();
     if (visionReset){
-      vx *= 0.42;
-      vy *= 0.42;
+      vx *= 0.35;
+      vy *= 0.35;
     } else{
       vx *= 0.2;
       vy *= 0.2;

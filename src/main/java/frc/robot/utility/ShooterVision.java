@@ -17,9 +17,9 @@ public class ShooterVision {
 
   public double getDistanceAngle() {
     // double ratio = (1.00504)/(1 + (0.004325* Math.pow(Math.E, 0.140352 * Math.abs(getRotationAngle()))));
-    double ratio = (1.01796)/(1 + (0.014241* Math.pow(Math.E, 0.099751 * Math.abs(getRotationAngle()))));
-    double estimatedDistance = distanceAngleEntry.getDouble(-1)/ratio;
-    return estimatedDistance;
+    // double ratio = (1.01796)/(1 + (0.014241* Math.pow(Math.E, 0.099751 * Math.abs(getRotationAngle()))));
+    // double estimatedDistance = distanceAngleEntry.getDouble(-1)/ratio;
+    return distanceAngleEntry.getDouble(-1);
   }
 
   public double getRotationAngle() {

@@ -419,6 +419,14 @@ public class Tower extends SubsystemBase {
     }
   }
 
+  public void enableColorSensor(){
+    allowReverse = true;
+  }
+
+  public void disableColorSensor(){
+    allowReverse = false;
+  }
+
   public boolean getReverse(){
     return allowReverse;
   }

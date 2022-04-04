@@ -40,6 +40,7 @@ public class Auton {
     // States so that we don't schedule more than once
     private String shooterState = "none";
     private String intakeState = "none";
+    private String colorState = "none";
 
     public Auton(Drivetrain drivetrain, Intake intake, Tower tower, Shooter shooter, ShooterVision vision){
         auton = getAuto();
@@ -141,6 +142,17 @@ public class Auton {
         }else if(state.equals("retract") && !intakeState.equals("retract")){
             intakeState = state;
             new IdleIntake(intake).schedule();
+        }
+    }
+
+    public void getColorState(){
+        String state = SmartDashboard.getEntry("/auto/color/state").getString("enable"); 
+        if(state.equals("enable") && !colorState.equals("enable")){
+            colorState = state;
+            tower.enableColorSensor();
+        }else if(state.equals("disable") && !colorState.equals("disable")){
+            colorState = state;
+            tower.disableColorSensor();
         }
     }
     

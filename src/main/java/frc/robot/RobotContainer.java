@@ -297,4 +297,8 @@ public class RobotContainer {
     }
   }
 
+  public void enableColorSensor(){
+    m_tower.enableColorSensor();
+  }
+
 }

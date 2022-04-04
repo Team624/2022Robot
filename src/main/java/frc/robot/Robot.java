@@ -122,6 +122,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_robotContainer.enableColorSensor();
     m_robotContainer.setAlliance();
     auton.setState(false);
     compressor.enableDigital();

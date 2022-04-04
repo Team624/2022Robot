@@ -10,6 +10,7 @@ import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Shooter.WallShoot;
 import frc.robot.commands.Tower.IdleTower;
+import frc.robot.commands.Tower.Poop;
 import frc.robot.commands.Tower.Reverse;
 import frc.robot.commands.Tower.Shoot;
 import frc.robot.subsystems.Drivetrain;
@@ -127,6 +128,9 @@ public class Auton {
         }else if(state.equals("hide_shoot") && !shooterState.equals("hide_shoot")){
             shooterState = state;
             new Reverse(tower).schedule();
+        }else if(state.equals("hide_poop") && !shooterState.equals("hide_poop")){
+            shooterState = state;
+            new Poop(tower).schedule();
         }else if(state.equals("lob_prime") && !shooterState.equals("lob_prime")){
             shooterState = state;
             new WallShoot(shooter).schedule();

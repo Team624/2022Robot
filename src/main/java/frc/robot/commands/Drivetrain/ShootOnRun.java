@@ -196,8 +196,8 @@ public class ShootOnRun extends CommandBase {
       vx *= 0.35;
       vy *= 0.35;
     } else{
-      vx *= 0.2;
-      vy *= 0.2;
+      vx *= 0.1;
+      vy *= 0.1;
     }
     vx = filterX.calculate(vx);
     vy = filterY.calculate(vy);

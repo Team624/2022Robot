@@ -98,6 +98,7 @@ public class PrimeShoot extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.setPriming(false);
+    tower.setIdleLED();
   }
 
   // Returns true when the command should end.

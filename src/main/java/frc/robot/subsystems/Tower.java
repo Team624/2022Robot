@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.trobot5013lib.led.BlinkingPattern;
+import frc.robot.trobot5013lib.led.ChaosPattern;
 import frc.robot.trobot5013lib.led.ChasePattern;
 import frc.robot.trobot5013lib.led.SolidColorPattern;
 import frc.robot.trobot5013lib.led.TrobotAddressableLED;
@@ -138,6 +139,8 @@ public class Tower extends SubsystemBase {
 
   private Color[] greenBlueArray = {Color.kGreen, Color.kBlue};
   private TrobotAddressableLEDPattern m_shootingBlue = new ChasePattern(greenBlueArray, 3);
+
+  private TrobotAddressableLEDPattern m_climbLED = new ChaosPattern();
   
   private TrobotAddressableLED m_led;
   private double ledState = 0;
@@ -207,6 +210,9 @@ public class Tower extends SubsystemBase {
   @Override
   public void periodic() {
     checkNT();
+    if (ledState == 4){
+      m_led.setPattern(m_climbLED);
+    }
     if (!checkTowerIR()){
       SmartDashboard.getEntry("/auto/numBall").setNumber(0);
       if (alliance == 1 && ledState == 1){
@@ -321,6 +327,10 @@ public class Tower extends SubsystemBase {
   }
 
   // 0 is disabled, 1 is idle, 2 is on target, 3 is shooting
+  public void setClimbLED(){
+    ledState = 4;
+  }
+
   public void setShootingLED(){
     ledState = 3;
   }

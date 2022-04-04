@@ -19,6 +19,7 @@ public class ClimbTower extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    tower.setClimbLED();
     tower.stopFeeder();
     tower.stopTower();
   }
@@ -29,7 +30,9 @@ public class ClimbTower extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    tower.setIdleLED();
+  }
 
   // Returns true when the command should end.
   @Override

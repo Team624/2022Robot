@@ -28,7 +28,9 @@ public class ShootOnRun extends CommandBase {
   private Tower tower;
 
   private double quickTurnTolerance = 15;
-  private double visionResetTolerance = 1;
+
+  // TODO: Might need to adjust if not very accurate
+  private double visionResetTolerance = 15;
 
   private SlewRateLimiter filterX = new SlewRateLimiter(9);
   private SlewRateLimiter filterY = new SlewRateLimiter(9);
@@ -88,7 +90,8 @@ public class ShootOnRun extends CommandBase {
 
     // Vision resetting of robot pose
     if (Math.abs(visionRot) < visionResetTolerance && radius > 0){
-      double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians();
+      // TODO: Might need to subract angle instead of adding, will have to test
+      double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians() + (visionRot * (Math.PI/180));
       double x = radius * Math.cos(degree % (Math.PI * 2));
       double y = radius * Math.sin(degree % (Math.PI * 2));
 

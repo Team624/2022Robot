@@ -36,6 +36,7 @@ public class ShootOnRun extends CommandBase {
   private SlewRateLimiter filterY = new SlewRateLimiter(9);
 
   private boolean quickTurnDone = false;
+  private boolean visionReset = false;
 
   private double[] targetPose = {8.2423, -4.0513};
 
@@ -90,6 +91,7 @@ public class ShootOnRun extends CommandBase {
 
     // Vision resetting of robot pose
     if (Math.abs(visionRot) < visionResetTolerance && radius > 0){
+      visionReset = true;
       // TODO: Might need to subract angle instead of adding, will have to test
       double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians() + (visionRot * (Math.PI/180));
       double x = radius * Math.cos(degree % (Math.PI * 2));
@@ -100,7 +102,7 @@ public class ShootOnRun extends CommandBase {
     }
 
     // If doing normal vision targeting
-    if((Math.abs(visionRot) < 500) && isNotMoving && quickTurnDone){
+    if((Math.abs(visionRot) < 500) && quickTurnDone && (isNotMoving || !visionReset)){
       //System.out.println("Vision targeting error = " + visionRot);
       
 
@@ -123,8 +125,12 @@ public class ShootOnRun extends CommandBase {
       // visionRot += shootToSideAngle;
 
       // For leds
-      if ((Math.abs(visionRot) < 2)){
-        tower.setAngleOnTarget(true);
+      if (isNotMoving) {
+        if ((Math.abs(visionRot) < 2)){
+          tower.setAngleOnTarget(true);
+        } else{
+          tower.setAngleOnTarget(false);
+        }
       } else{
         tower.setAngleOnTarget(false);
       }
@@ -166,9 +172,13 @@ public class ShootOnRun extends CommandBase {
       double wantedAngle = angle - offset;
       thVelocity = getQuickTurnPID(wantedAngle);
 
-      // For leds
-      if (Math.abs(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() - wantedAngle) < 2){
-        tower.setAngleOnTarget(true);
+      if (visionReset){
+        // For leds
+        if (Math.abs(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() - wantedAngle) < 2){
+          tower.setAngleOnTarget(true);
+        } else{
+          tower.setAngleOnTarget(false);
+        }
       } else{
         tower.setAngleOnTarget(false);
       }
@@ -180,8 +190,13 @@ public class ShootOnRun extends CommandBase {
 
     double vx = m_translationXSupplier.getAsDouble();
     double vy = m_translationYSupplier.getAsDouble();
-    vx *= 0.45;
-    vy *= 0.45;
+    if (visionReset){
+      vx *= 0.42;
+      vy *= 0.42;
+    } else{
+      vx *= 0.2;
+      vy *= 0.2;
+    }
     vx = filterX.calculate(vx);
     vy = filterY.calculate(vy);
     //System.out.println("vx: " + vx + " vy: " + vy + " th: " + thVelocity + " isNotMoving: " + isNotMoving);
@@ -229,6 +244,7 @@ public class ShootOnRun extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    tower.setIdleLED();
     m_drivetrainSubsystem.isUsingVision = false;
     m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
   }

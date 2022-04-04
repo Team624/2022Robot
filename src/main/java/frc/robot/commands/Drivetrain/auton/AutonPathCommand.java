@@ -49,6 +49,7 @@ public class AutonPathCommand extends CommandBase {
         if (!m_drivetrainSubsystem.stopAuton){
             auton.getIntakeState();
             auton.getShooterState();
+            auton.getColorState();
         }
         else{
             m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, m_drivetrainSubsystem.getGyroscopeRotation()));

@@ -30,7 +30,7 @@ public class ShootOnRun extends CommandBase {
   private double quickTurnTolerance = 15;
 
   // TODO: Might need to adjust if not very accurate
-  private double visionResetTolerance = 1;
+  private double visionResetTolerance = 0.5;
 
   private SlewRateLimiter filterX = new SlewRateLimiter(9);
   private SlewRateLimiter filterY = new SlewRateLimiter(9);

@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Compressor;
@@ -49,12 +50,16 @@ public class Robot extends TimedRobot {
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+
+  private ShuffleboardTab tab_cam = Shuffleboard.getTab("Camera");
+  private NetworkTableEntry spitoutEntry = tab_cam.add("Spitout", false).withPosition(4, 0).getEntry();
+
   @Override
   public void robotInit() {
     m_led.setPattern(m_greenChasePattern);
-    ShuffleboardTab tab_cam = Shuffleboard.getTab("Camera");
     //tab_cam.addCamera("USB Camera 0", "USB Camera 0", "USB Camera 0").withPosition(0, 0);
     tab_cam.add(CameraServer.startAutomaticCapture()).withPosition(0, 0).withSize(4, 4);
+    spitoutEntry.setBoolean(true);
 
     compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);
 
@@ -118,7 +123,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    spitoutEntry.setBoolean(m_robotContainer.getSpitoutSetting());
+  }
 
   @Override
   public void teleopInit() {
@@ -136,6 +143,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    spitoutEntry.setBoolean(m_robotContainer.getSpitoutSetting());
     // m_robotContainer.setDrivetrainDefaultCommand();
   }
 

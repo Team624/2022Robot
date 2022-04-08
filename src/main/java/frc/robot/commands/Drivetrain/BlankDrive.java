@@ -24,9 +24,9 @@ public class BlankDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("In BLANK");
+    //System.out.println("In BLANK");
     if (!m_drivetrainSubsystem.isAuton){
-      System.out.println("Killing its self");
+      //System.out.println("Killing its self");
       this.cancel();
     }
   }

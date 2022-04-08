@@ -70,6 +70,7 @@ public class FrontClimb extends SubsystemBase {
 
   @Override
   public void periodic() {
+    System.out.println(getCurrentCommand());
     checkNT();
     // This method will be called once per scheduler run
   }

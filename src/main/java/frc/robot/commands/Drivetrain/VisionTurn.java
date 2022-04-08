@@ -83,7 +83,7 @@ public class VisionTurn extends CommandBase {
 
     // If doing normal vision targeting
     if((Math.abs(visionRot) < 500) && isNotMoving && quickTurnDone){
-      System.out.println("Vision targeting error = " + visionRot);
+      //System.out.println("Vision targeting error = " + visionRot);
 
       // For leds
       if ((Math.abs(visionRot) < 2)){

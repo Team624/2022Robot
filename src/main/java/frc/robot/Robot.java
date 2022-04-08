@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    m_led.setPattern(m_greenChasePattern);
+    //m_led.setPattern(m_greenChasePattern);
     //tab_cam.addCamera("USB Camera 0", "USB Camera 0", "USB Camera 0").withPosition(0, 0);
     tab_cam.add(CameraServer.startAutomaticCapture()).withPosition(0, 0).withSize(4, 4);
     spitoutEntry.setBoolean(true);
@@ -96,7 +96,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_robotContainer.setDisabledLED();
+    //m_robotContainer.setDisabledLED();
     compressor.disable();
     auton.setState(false);
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
@@ -106,7 +106,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    m_led.setPattern(m_greenChasePattern);
     auton.updatePaths();
   }
 

@@ -154,11 +154,11 @@ public class RobotContainer {
 
     new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));
 
-    mRightTriggerDown.whenActive(new Shoot(m_tower, m_shooter));
+    // mRightTriggerDown.whenActive(new Shoot(m_tower, m_shooter));
 
-    mRightTriggerUp.whenActive(new IdleShoot(m_shooter));
+    // mRightTriggerUp.whenActive(new IdleShoot(m_shooter));
 
-    mRightTriggerUp.whenActive(new IdleTower(m_tower));
+    // mRightTriggerUp.whenActive(new IdleTower(m_tower));
 
     mLeftTriggerDown.whenActive(new WallShoot(m_shooter));
 
@@ -166,7 +166,7 @@ public class RobotContainer {
 
     mLeftTriggerUp.whenActive(new IdleTower(m_tower));
 
-    new Button(m_controller::getRightBumper).whenHeld(new Reverse(m_tower));
+    new Button(m_controller::getRightBumper).whenHeld(new Shoot(m_tower, m_shooter));
 
     new Button(m_controller::getLeftBumper).whenHeld(new EjectBottom(m_tower));
 

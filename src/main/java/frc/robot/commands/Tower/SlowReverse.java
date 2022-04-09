@@ -23,8 +23,8 @@ public class SlowReverse extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    tower.manualTower(-.3);
-    tower.manualFeeder(-.3);
+    tower.manualTower(-.5);
+    tower.manualFeeder(-.5);
   }
 
   // Called once the command ends or is interrupted.

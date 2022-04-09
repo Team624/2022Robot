@@ -30,6 +30,7 @@ public class VisionTurn extends CommandBase {
   private SlewRateLimiter filterY = new SlewRateLimiter(7);
 
   private boolean quickTurnDone = false;
+  private boolean usedQuickTurn = false;
 
   private double[] targetPose = {8.2423, -4.0513};
 
@@ -122,8 +123,6 @@ public class VisionTurn extends CommandBase {
 
       thVelocity = getRotationPID(visionRot);
      
-      double lim = 0.8;
-
       // TODO: Test if this helps get a more accurate angle
       double min = 0.3;
       double tol = 0.5;
@@ -138,6 +137,13 @@ public class VisionTurn extends CommandBase {
         }
       }
 
+      double lim;
+      if (usedQuickTurn){
+        lim = 0.8;
+      } else{
+        lim = 1.2;
+      }
+
       if (thVelocity > lim){
         thVelocity = lim;
       }
@@ -149,6 +155,7 @@ public class VisionTurn extends CommandBase {
     } else{
       // Quick turn
       //System.out.println("Doing shooting on run");
+      usedQuickTurn = true;
       double angle = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + (wantedDeltaAngle * (180/Math.PI));
 
       thVelocity = getQuickTurnPID(angle);

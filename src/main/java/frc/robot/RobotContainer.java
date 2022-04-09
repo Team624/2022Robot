@@ -301,6 +301,10 @@ public class RobotContainer {
     m_tower.enableColorSensor();
   }
 
+  public void disableColorSensor(){
+    m_tower.disableColorSensor();
+  }
+
   public boolean getSpitoutSetting(){
     return m_tower.getReverse();
   }

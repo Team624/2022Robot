@@ -52,9 +52,9 @@ public final class Constants {
         public static final double lowShootRPM = 2300;
         public static final double wallShootRPM = 8350;
 
-        public static final double hoodSwitchCam = 193;
+        public static final double hoodSwitchCam = 163;
         public static final double hoodDeadBandSizeCam = 7;
-        public static final double hoodSwitchDis = 138/39.37;
+        public static final double hoodSwitchDis = 120/39.37;
         public static final double hoodDeadBandSizeDis = 0.15;
         public static final double[][] shooterExperimentDataHigh = {
         //  {cam-distance, rpm, actualDistance}
@@ -110,21 +110,21 @@ public final class Constants {
             {50, 7100, 66/39.37},
 
         // Actual data
-            {61, 6800 + 100, 78/39.37},
-            {81, 7100 + 100, 84/39.37},
-            {97, 7300 + 100, 90/39.37},
-            {114, 7550 + 100, 96/39.37},
-            {128, 7800 + 100, 102/39.37},
-            {143, 8150 + 100, 108/39.37},
-            {155, 8200 + 100, 114/39.37},
-            {163, 8200 + 100, 120/39.37},
-            {174, 8600 + 100, 126/39.37},
-            {184, 8900 + 100, 132/39.37},
-            {193, 9200 + 100, 138/39.37},
-            {201, 9400 + 100, 144/39.37},
-            {210, 9600 + 100, 150/39.37},
-            {218, 9800 + 100, 156/39.37},
-            {225, 10000 + 100, 162/39.37},
+            {61, 6800 + 200, 78/39.37},
+            {81, 7100 + 200, 84/39.37},
+            {97, 7300 + 200, 90/39.37},
+            {114, 7550 + 200, 96/39.37},
+            {128, 7800 + 300, 102/39.37},
+            {143, 8150 + 300, 108/39.37},
+            {155, 8200 + 300, 114/39.37},
+            {163, 8200 + 300, 120/39.37},
+            {174, 8600 + 300, 126/39.37},
+            {184, 8900 + 300, 132/39.37},
+            {193, 9200 + 300, 138/39.37},
+            {201, 9400 + 300, 144/39.37},
+            {210, 9600 + 300, 150/39.37},
+            {218, 9800 + 300, 156/39.37},
+            {225, 10000 +300, 162/39.37},
 
             // For shooting on the run (approx)
             {233, 10600, 168/39.37},

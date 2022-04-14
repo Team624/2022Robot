@@ -97,7 +97,7 @@ public class RobotContainer {
     m_fClimb.setDefaultCommand(new IdleFront(m_fClimb));
     m_bClimb.setDefaultCommand(new IdleBack(m_bClimb));
     m_intake.setDefaultCommand(new IdleIntake(m_intake));
-    m_tower.setDefaultCommand(new IdleTower(m_tower));
+    m_tower.setDefaultCommand(new IdleTower(m_tower, m_intake));
     m_shooter.setDefaultCommand(new IdleShoot(m_shooter));
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem,      
@@ -164,7 +164,7 @@ public class RobotContainer {
 
     mLeftTriggerUp.whenActive(new IdleShoot(m_shooter));
 
-    mLeftTriggerUp.whenActive(new IdleTower(m_tower));
+    mLeftTriggerUp.whenActive(new IdleTower(m_tower, m_intake));
 
     new Button(m_controller::getRightBumper).whenHeld(new Shoot(m_tower, m_shooter));
 
@@ -293,7 +293,7 @@ public class RobotContainer {
     m_fClimb.resetClimbStatus(false);
     m_bClimb.resetClimbStatus(false);
     if(m_tower.getCurrentCommand() != m_tower.getDefaultCommand()){
-      new IdleTower(m_tower).schedule();
+      new IdleTower(m_tower, m_intake).schedule();
     }
   }
 

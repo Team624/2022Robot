@@ -141,7 +141,7 @@ public class Auton {
         }else if (state.equals("idle") && !shooterState.equals("idle")){
             shooterState = state;
             new IdleShoot(shooter).schedule();
-            new IdleTower(tower).schedule();
+            new IdleTower(tower, intake).schedule();
         }
         return state;
     }

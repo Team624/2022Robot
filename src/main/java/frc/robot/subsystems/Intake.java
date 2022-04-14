@@ -57,6 +57,7 @@ public class Intake extends SubsystemBase {
   private NetworkTableEntry AgitateSpeed = tab.add("Agitate Speed", Constants.Intake.agitateSpeed).withPosition(3,1).getEntry();
 
   private double intakePower = Constants.Intake.intakePower;
+  public boolean slow = false;
 
   /** Creates a new Intake. */
   public Intake() {
@@ -92,7 +93,9 @@ public class Intake extends SubsystemBase {
   public void checkNT(){
     if(setSpeed.getBoolean(false)){
       intakePower = intakeSpeed.getDouble(Constants.Intake.intakePower);
-    }else{
+    } else if (slow){
+      intakePower = 0.2;
+    } else{
       intakePower = Constants.Intake.intakePower;
     }
 

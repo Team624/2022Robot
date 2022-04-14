@@ -209,6 +209,7 @@ public class Tower extends SubsystemBase {
 
   @Override
   public void periodic() {
+    System.out.println("prox: " + cSense.getProximity());
     checkNT();
     if (ledState == 4){
       m_led.setPattern(m_climbLED);
@@ -370,7 +371,7 @@ public class Tower extends SubsystemBase {
   }
 
   public void reverseFeeder() {
-    feederPID.setReference(-feederPower * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
+    feederPID.setReference(-(feederPower/2) * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
     setPoint_feeder.setDouble(-feederPower);
   }
 
@@ -392,7 +393,7 @@ public class Tower extends SubsystemBase {
     Color detectedColor = cSense.getColor();
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
     int number = 0;
-    if (cSense.getProximity() > 100){
+    if (cSense.getProximity() > 106){
       if(match.color == kBlueTarget){
         number = 1;
       }else if(match.color == kRedTarget){

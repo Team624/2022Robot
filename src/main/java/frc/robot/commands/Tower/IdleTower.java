@@ -4,14 +4,23 @@
 
 package frc.robot.commands.Tower;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Tower;
 
 public class IdleTower extends CommandBase {
   private final Tower tower;
+  private final Intake intake;
+  private Timer timer;
+  private double time = 0;
   /** Creates a new IdleTower. */
-  public IdleTower(Tower tower) {
+  public IdleTower(Tower tower, Intake intake) {
     this.tower = tower;
+    this.intake = intake;
+    timer = new Timer();
+    timer.reset();
+    timer.start();
     addRequirements(this.tower);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -27,7 +36,9 @@ public class IdleTower extends CommandBase {
   public void execute() { 
     //System.out.println("Current alliance is: " + tower.getAlliance());
 
-    if(tower.checkAlliance() == 0 || tower.getAlliance() == tower.checkAlliance()){
+    System.out.println(timer.get()- time);
+    if((tower.checkAlliance() == 0 || tower.getAlliance() == tower.checkAlliance()) && timer.get() - time > 2){
+      intake.slow = false;
       if(!tower.checkTowerIR()){
         tower.powerTower();
         tower.powerFeeder();
@@ -41,13 +52,18 @@ public class IdleTower extends CommandBase {
       }
     }else{
       if(tower.getReverse()){
+        time = timer.get();
         tower.reverseFeeder();
+        intake.slow = true;
         if(!tower.checkTowerIR()){
           tower.powerTower();
         }else{
           tower.stopTower();
         }
-      }else{
+      } else if(timer.get() - time < 2){
+        tower.reverseFeeder();
+      } else{
+        intake.slow = false;
         if(!tower.checkTowerIR()){
           tower.powerTower();
           tower.powerFeeder();
@@ -65,7 +81,9 @@ public class IdleTower extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    timer.stop();
+  }
 
   // Returns true when the command should end.
   @Override

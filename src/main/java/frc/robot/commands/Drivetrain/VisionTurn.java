@@ -87,7 +87,7 @@ public class VisionTurn extends CommandBase {
       //System.out.println("Vision targeting error = " + visionRot);
 
       // For leds
-      if ((Math.abs(visionRot) < 2)){
+      if ((Math.abs(visionRot) < 1.5)){
         tower.setAngleOnTarget(true);
       } else{
         tower.setAngleOnTarget(false);
@@ -155,6 +155,7 @@ public class VisionTurn extends CommandBase {
     } else{
       // Quick turn
       //System.out.println("Doing shooting on run");
+      tower.setAngleOnTarget(false);
       usedQuickTurn = true;
       double angle = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + (wantedDeltaAngle * (180/Math.PI));
 

@@ -128,7 +128,7 @@ public class ShootOnRun extends CommandBase {
 
       // For leds
       if (isNotMoving) {
-        if ((Math.abs(visionRot) < 2)){
+        if ((Math.abs(visionRot) < 1.5)){
           tower.setAngleOnTarget(true);
         } else{
           tower.setAngleOnTarget(false);
@@ -176,7 +176,7 @@ public class ShootOnRun extends CommandBase {
 
       if (visionReset){
         // For leds
-        if (Math.abs(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() - wantedAngle) < 2){
+        if (Math.abs(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() - wantedAngle) < 1.5){
           tower.setAngleOnTarget(true);
         } else{
           tower.setAngleOnTarget(false);

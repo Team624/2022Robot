@@ -356,6 +356,14 @@ public class Tower extends SubsystemBase {
     }
   }
 
+  public boolean getRpmOnTarget(){
+    return rpmOnTarget;
+  }
+
+  public boolean getAngleOnTarget(){
+    return angleOnTarget;
+  }
+
   public void setIdleLED(){
     ledState = 1;
   }

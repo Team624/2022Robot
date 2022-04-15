@@ -47,8 +47,13 @@ public class Shoot extends CommandBase {
     }
     //double error = Math.abs(shooter.getRPM() - shooter.getGoalRPM());
     if (time > 1.0){
-      tower.powerTower();
-      tower.powerFeeder();
+      if (tower.getRpmOnTarget() && tower.getAngleOnTarget()){
+        tower.powerTower();
+        tower.powerFeeder();
+      } else{
+        tower.stopTower();
+        tower.stopFeeder();
+      }
     } else{
       tower.stopTower();
       tower.stopFeeder();

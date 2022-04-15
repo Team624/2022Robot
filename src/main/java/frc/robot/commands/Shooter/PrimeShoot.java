@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Shooter;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
@@ -18,6 +19,7 @@ public class PrimeShoot extends CommandBase {
   private Tower tower;
 
   private double[] targetPose = {8.2423, -4.0513};
+  private Timer timer;
 
   /** Creates a new PrimeShoot. */
   public PrimeShoot(Shooter shooter, ShooterVision vision, Drivetrain drivetrain, Tower tower) {
@@ -32,6 +34,10 @@ public class PrimeShoot extends CommandBase {
   @Override
   public void initialize() {
     shooter.setPriming(true);
+    tower.setRpmOnTarget(false);
+    timer = new Timer();
+    timer.reset();
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -59,9 +65,11 @@ public class PrimeShoot extends CommandBase {
 
     // For leds
     if (Math.abs(shooter.getGoalRPM() - shooter.getRPM()) < 20){
+      timer.reset();
       tower.setRpmOnTarget(true);
-    }
-    else{
+    } else if (timer.get() < 0.3){
+      tower.setRpmOnTarget(true);
+    } else{
       tower.setRpmOnTarget(false);
     }
   }

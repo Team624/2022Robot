@@ -144,12 +144,12 @@ public class ShootOnRun extends CommandBase {
       // TODO: Test if this helps get a more accurate angle
       double min = 0.3;
       double tol = 0.5;
-      if (visionRot < 2 && visionRot > tol){
+      if (visionRot < 1.5 && visionRot > tol){
         if (thVelocity < min){
           thVelocity = min;
         }
       }
-      if (visionRot > -2 && visionRot < -tol){
+      if (visionRot > -1.5 && visionRot < -tol){
         if (thVelocity > -min){
           thVelocity = -min;
         }

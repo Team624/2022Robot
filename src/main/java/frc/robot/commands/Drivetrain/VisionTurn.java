@@ -126,12 +126,12 @@ public class VisionTurn extends CommandBase {
       // TODO: Test if this helps get a more accurate angle
       double min = 0.3;
       double tol = 0.5;
-      if (visionRot < 2 && visionRot > tol){
+      if (visionRot < 1.5 && visionRot > tol){
         if (thVelocity < min){
           thVelocity = min;
         }
       }
-      if (visionRot > -2 && visionRot < -tol){
+      if (visionRot > -1.5 && visionRot < -tol){
         if (thVelocity > -min){
           thVelocity = -min;
         }
@@ -141,7 +141,7 @@ public class VisionTurn extends CommandBase {
       if (usedQuickTurn){
         lim = 0.8;
       } else{
-        lim = 1.2;
+        lim = 1.6;
       }
 
       if (thVelocity > lim){

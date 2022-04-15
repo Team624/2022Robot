@@ -371,7 +371,7 @@ public class Tower extends SubsystemBase {
   }
 
   public void reverseFeeder() {
-    feederPID.setReference(-(feederPower/2) * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
+    feederPID.setReference(-(feederPower/3) * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
     setPoint_feeder.setDouble(-feederPower);
   }
 

@@ -13,14 +13,10 @@ public class IdleTower extends CommandBase {
   private final Tower tower;
   private final Intake intake;
   private Timer timer;
-  private double time = 0;
   /** Creates a new IdleTower. */
   public IdleTower(Tower tower, Intake intake) {
     this.tower = tower;
     this.intake = intake;
-    timer = new Timer();
-    timer.reset();
-    timer.start();
     addRequirements(this.tower);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -28,6 +24,9 @@ public class IdleTower extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    timer = new Timer();
+    timer.reset();
+    timer.start();
     tower.setIdleLED();
   }
 
@@ -36,10 +35,14 @@ public class IdleTower extends CommandBase {
   public void execute() { 
     //System.out.println("Current alliance is: " + tower.getAlliance());
 
-    System.out.println(timer.get()- time);
-    if((tower.checkAlliance() == 0 || tower.getAlliance() == tower.checkAlliance()) && timer.get() - time > 2){
+    System.out.println("Time: " + timer.get());
+    if((tower.checkAlliance() == 0 || tower.getAlliance() == tower.checkAlliance())){
+      //System.out.println("Not rejecting 1");
       intake.slow = false;
-      if(!tower.checkTowerIR()){
+      if (timer.get() < 0.05){
+        intake.slow = true;
+        tower.reverseFeeder();
+      } else if(!tower.checkTowerIR()){
         tower.powerTower();
         tower.powerFeeder();
       }else{
@@ -52,7 +55,8 @@ public class IdleTower extends CommandBase {
       }
     }else{
       if(tower.getReverse()){
-        time = timer.get();
+        //System.out.println("Color Sensor rejecting");
+        timer.reset();
         tower.reverseFeeder();
         intake.slow = true;
         if(!tower.checkTowerIR()){
@@ -60,9 +64,8 @@ public class IdleTower extends CommandBase {
         }else{
           tower.stopTower();
         }
-      } else if(timer.get() - time < 2){
-        tower.reverseFeeder();
       } else{
+        //System.out.println("Not rejecting 2");
         intake.slow = false;
         if(!tower.checkTowerIR()){
           tower.powerTower();

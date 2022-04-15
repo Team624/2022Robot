@@ -35,7 +35,7 @@ public class IdleTower extends CommandBase {
   public void execute() { 
     //System.out.println("Current alliance is: " + tower.getAlliance());
 
-    System.out.println("Time: " + timer.get());
+    //System.out.println("Time: " + timer.get());
     if((tower.checkAlliance() == 0 || tower.getAlliance() == tower.checkAlliance())){
       //System.out.println("Not rejecting 1");
       intake.slow = false;

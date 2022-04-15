@@ -64,6 +64,7 @@ public class Shoot extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     tower.stopTower();
+    tower.stopFeeder();
   }
 
   // Returns true when the command should end.

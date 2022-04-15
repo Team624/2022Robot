@@ -7,12 +7,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Intake.DeployIntake;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
+import frc.robot.commands.Shooter.LowShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Shooter.WallShoot;
 import frc.robot.commands.Tower.IdleTower;
 import frc.robot.commands.Tower.Poop;
 import frc.robot.commands.Tower.Reverse;
 import frc.robot.commands.Tower.Shoot;
+import frc.robot.commands.Tower.ShootTop;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -133,11 +135,11 @@ public class Auton {
             new Poop(tower).schedule();
         }else if(state.equals("lob_prime") && !shooterState.equals("lob_prime")){
             shooterState = state;
-            new WallShoot(shooter).schedule();
+            new LowShoot(shooter).schedule();
         }else if(state.equals("lob_shoot") && !shooterState.equals("lob_shoot")){
             shooterState = state;
-            new Shoot(tower, shooter).schedule();
-            new WallShoot(shooter).schedule();
+            new ShootTop(tower).schedule();
+            new LowShoot(shooter).schedule();
         }else if (state.equals("idle") && !shooterState.equals("idle")){
             shooterState = state;
             new IdleShoot(shooter).schedule();

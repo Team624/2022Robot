@@ -26,8 +26,8 @@ public class VisionTurn extends CommandBase {
   private double quickTurnTolerance = 15;
   private double visionResetTolerance = 1;
 
-  private SlewRateLimiter filterX = new SlewRateLimiter(7);
-  private SlewRateLimiter filterY = new SlewRateLimiter(7);
+  private SlewRateLimiter filterX = new SlewRateLimiter(4.5);
+  private SlewRateLimiter filterY = new SlewRateLimiter(4.5);
 
   private boolean quickTurnDone = false;
   private boolean usedQuickTurn = false;
@@ -52,7 +52,9 @@ public class VisionTurn extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    usedQuickTurn = false;
     m_drivetrainSubsystem.isUsingVision = true;
+    m_drivetrainSubsystem.visionTurn2_pid.reset();
     m_drivetrainSubsystem.visionTurn_pid.reset();
     m_drivetrainSubsystem.visionTurn_pidQuickTurn.reset();
   }
@@ -87,7 +89,7 @@ public class VisionTurn extends CommandBase {
       //System.out.println("Vision targeting error = " + visionRot);
 
       // For leds
-      if ((Math.abs(visionRot) < 1.5)){
+      if ((Math.abs(visionRot) < 3.5)){
         tower.setAngleOnTarget(true);
       } else{
         tower.setAngleOnTarget(false);
@@ -121,35 +123,39 @@ public class VisionTurn extends CommandBase {
 
       // visionRot += shootToSideAngle;
 
-      thVelocity = getRotationPID(visionRot);
+      if (usedQuickTurn){
+        thVelocity = getRotationPID(visionRot);
+
+        double lim;
+        if (usedQuickTurn){
+          lim = 0.8;
+        } else{
+          lim = 1.3;
+        }
+
+        if (thVelocity > lim){
+          thVelocity = lim;
+        }
+        if (thVelocity < -lim){
+          thVelocity = -lim;
+        }
+      } else{
+        thVelocity = getVisionPID(visionRot);
+      }
      
       // TODO: Test if this helps get a more accurate angle
-      double min = 0.3;
-      double tol = 0.5;
-      if (visionRot < 1.5 && visionRot > tol){
-        if (thVelocity < min){
-          thVelocity = min;
-        }
-      }
-      if (visionRot > -1.5 && visionRot < -tol){
-        if (thVelocity > -min){
-          thVelocity = -min;
-        }
-      }
-
-      double lim;
-      if (usedQuickTurn){
-        lim = 0.8;
-      } else{
-        lim = 1.6;
-      }
-
-      if (thVelocity > lim){
-        thVelocity = lim;
-      }
-      if (thVelocity < -lim){
-        thVelocity = -lim;
-      }
+      // double min = 0.3;
+      // double tol = 0.5;
+      // if (visionRot < 3 && visionRot > tol){
+      //   if (thVelocity < min){
+      //     thVelocity = min;
+      //   }
+      // }
+      // if (visionRot > -3 && visionRot < -tol){
+      //   if (thVelocity > -min){
+      //     thVelocity = -min;
+      //   }
+      // }
       //System.out.println("thVelocity " + thVelocity);
       
     } else{
@@ -212,6 +218,11 @@ public class VisionTurn extends CommandBase {
     return m_drivetrainSubsystem.visionTurn_pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
   }
 
+  private double getVisionPID(double wantedDeltaAngle){
+    //System.out.println(pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle));
+    return m_drivetrainSubsystem.visionTurn2_pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
+  }
+
   private double getQuickTurnPID(double wantedAngle){
     return m_drivetrainSubsystem.visionTurn_pidQuickTurn.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), wantedAngle);
   }
@@ -219,6 +230,7 @@ public class VisionTurn extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    tower.setAngleOnTarget(false);
     m_drivetrainSubsystem.isUsingVision = false;
     tower.setIdleLED();
     m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));

@@ -24,7 +24,7 @@ public class ShootTop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    tower.manualTower(0.4);
+    tower.manualTower(1.0);
   }
 
   // Called once the command ends or is interrupted.

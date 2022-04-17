@@ -52,13 +52,13 @@ public class Robot extends TimedRobot {
    */
 
   private ShuffleboardTab tab_cam = Shuffleboard.getTab("Camera");
-  private NetworkTableEntry spitoutEntry = tab_cam.add("Spitout", false).withPosition(4, 0).getEntry();
+  private NetworkTableEntry spitoutEntry = tab_cam.add("Spitout", false).withPosition(9, 0).getEntry();
 
   @Override
   public void robotInit() {
     //m_led.setPattern(m_greenChasePattern);
     //tab_cam.addCamera("USB Camera 0", "USB Camera 0", "USB Camera 0").withPosition(0, 0);
-    tab_cam.add(CameraServer.startAutomaticCapture()).withPosition(0, 0).withSize(4, 4);
+    tab_cam.add(CameraServer.startAutomaticCapture()).withPosition(0, 0).withSize(8, 4);
     spitoutEntry.setBoolean(true);
 
     compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);
@@ -112,6 +112,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    m_robotContainer.enableColorSensor();
+    auton.resetStates();
     m_robotContainer.setAlliance();
     compressor.enableDigital();
     auton.setState(true);

@@ -160,7 +160,7 @@ public class RobotContainer {
 
     // mRightTriggerUp.whenActive(new IdleTower(m_tower));
 
-    mLeftTriggerDown.whenActive(new WallShoot(m_shooter));
+    mLeftTriggerDown.whenActive(new WallShoot(m_shooter, m_tower));
 
     mLeftTriggerUp.whenActive(new IdleShoot(m_shooter));
 
@@ -176,7 +176,7 @@ public class RobotContainer {
     // new Button(m_controller::getBButton).whenReleased(m_shooter::testHoodOff);
     new Button(m_controller::getAButton).whenPressed(m_tower::setReverse);
 
-    new Button(m_controller::getBButton).whenHeld(new LowShoot(m_shooter));
+    new Button(m_controller::getBButton).whenHeld(new LowShoot(m_shooter, m_tower));
 
     new Button(m_controller::getRightStickButton).whenHeld(new SlowReverse(m_tower));
 

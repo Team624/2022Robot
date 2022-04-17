@@ -32,8 +32,8 @@ public class ShootOnRun extends CommandBase {
   // TODO: Might need to adjust if not very accurate
   private double visionResetTolerance = 0.5;
 
-  private SlewRateLimiter filterX = new SlewRateLimiter(9);
-  private SlewRateLimiter filterY = new SlewRateLimiter(9);
+  private SlewRateLimiter filterX = new SlewRateLimiter(5);
+  private SlewRateLimiter filterY = new SlewRateLimiter(5);
 
   private boolean quickTurnDone = false;
   private boolean visionReset = false;
@@ -60,6 +60,8 @@ public class ShootOnRun extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    visionResetCount = 0;
+    visionReset = false;
     m_drivetrainSubsystem.isUsingVision = true;
     m_drivetrainSubsystem.visionTurn_pid.reset();
     m_drivetrainSubsystem.visionTurn_pidQuickTurn.reset();
@@ -68,6 +70,7 @@ public class ShootOnRun extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //System.out.println("Vision reset count: " + visionResetCount);
     double thVelocity = 0;
 
     double errorA = getQuickTurnValue() - m_drivetrainSubsystem.normalizeAngle(m_drivetrainSubsystem.getGyroscopeRotation().getRadians());
@@ -93,7 +96,10 @@ public class ShootOnRun extends CommandBase {
 
     // Vision resetting of robot pose
     if (Math.abs(visionRot) < visionResetTolerance && radius > 0){
-      visionReset = true;
+      visionResetCount ++;
+      if (visionResetCount >= 1){
+        visionReset = true;
+      }
       // TODO: Might need to subract angle instead of adding, will have to test
       double degree = m_drivetrainSubsystem.getGyroscopeRotation().getRadians();
       double x = radius * Math.cos(degree % (Math.PI * 2));
@@ -128,7 +134,7 @@ public class ShootOnRun extends CommandBase {
 
       // For leds
       if (isNotMoving) {
-        if ((Math.abs(visionRot) < 1.5)){
+        if ((Math.abs(visionRot) < 2)){
           tower.setAngleOnTarget(true);
         } else{
           tower.setAngleOnTarget(false);
@@ -176,11 +182,7 @@ public class ShootOnRun extends CommandBase {
 
       if (visionReset){
         // For leds
-        if (Math.abs(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() - wantedAngle) < 1.5){
-          tower.setAngleOnTarget(true);
-        } else{
-          tower.setAngleOnTarget(false);
-        }
+        tower.setAngleOnTarget(true);
       } else{
         tower.setAngleOnTarget(false);
       }
@@ -247,6 +249,7 @@ public class ShootOnRun extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     tower.setIdleLED();
+    tower.setAngleOnTarget(false);
     m_drivetrainSubsystem.isUsingVision = false;
     m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
   }

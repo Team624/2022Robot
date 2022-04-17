@@ -21,6 +21,8 @@ public class PrimeShoot extends CommandBase {
   private double[] targetPose = {8.2423, -4.0513};
   private Timer timer;
 
+  private boolean shotDelay = false;
+
   /** Creates a new PrimeShoot. */
   public PrimeShoot(Shooter shooter, ShooterVision vision, Drivetrain drivetrain, Tower tower) {
     this.shooter = shooter;
@@ -66,11 +68,16 @@ public class PrimeShoot extends CommandBase {
     // For leds
     if (Math.abs(shooter.getGoalRPM() - shooter.getRPM()) < 20){
       timer.reset();
+      shotDelay = true;
       tower.setRpmOnTarget(true);
-    } else if (timer.get() < 0.3){
+    } else if (shotDelay){
       tower.setRpmOnTarget(true);
     } else{
       tower.setRpmOnTarget(false);
+    }
+
+    if (timer.get() > 0.8){
+      shotDelay = false;
     }
   }
 
@@ -106,6 +113,7 @@ public class PrimeShoot extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.setPriming(false);
+    tower.setRpmOnTarget(false);
     tower.setIdleLED();
   }
 

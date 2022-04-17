@@ -113,12 +113,20 @@ public class Auton {
         SmartDashboard.putBoolean("/auto/state", state);
     }
 
+    public void resetStates(){
+        shooterState = "none";
+        intakeState = "none";
+        colorState = "none";
+    }
+
     public int getStartPathIndex(){
         return SmartDashboard.getEntry("/pathTable/startPathIndex").getNumber(-1).intValue();
     }
 
     public String getShooterState(){
         String state = SmartDashboard.getEntry("/auto/shooter/state").getString("idle");
+        tower.setAngleOnTarget(true);
+        tower.setRpmOnTarget(true);
         //System.out.println("STATE: " + state);
         if(state.equals("shoot") && !shooterState.equals("shoot")){
             shooterState = state;
@@ -135,11 +143,11 @@ public class Auton {
             new Poop(tower).schedule();
         }else if(state.equals("lob_prime") && !shooterState.equals("lob_prime")){
             shooterState = state;
-            new LowShoot(shooter).schedule();
+            new LowShoot(shooter, tower).schedule();
         }else if(state.equals("lob_shoot") && !shooterState.equals("lob_shoot")){
             shooterState = state;
             new ShootTop(tower).schedule();
-            new LowShoot(shooter).schedule();
+            new LowShoot(shooter, tower).schedule();
         }else if (state.equals("idle") && !shooterState.equals("idle")){
             shooterState = state;
             new IdleShoot(shooter).schedule();

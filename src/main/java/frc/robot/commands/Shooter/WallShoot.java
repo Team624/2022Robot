@@ -7,18 +7,23 @@ package frc.robot.commands.Shooter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Tower;
 
 public class WallShoot extends CommandBase {
   private final Shooter shooter;
+  private final Tower tower;
   /** Creates a new ManualShoot. */
-  public WallShoot(Shooter shooter) {
+  public WallShoot(Shooter shooter, Tower tower) {
     this.shooter = shooter;
+    this.tower = tower;
     addRequirements(this.shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    tower.setRpmOnTarget(true);
+    tower.setAngleOnTarget(true);
     shooter.setRPM(Constants.Shooter.wallShootRPM);
     shooter.setHood(true);
   }
@@ -31,7 +36,10 @@ public class WallShoot extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    tower.setRpmOnTarget(false);
+    tower.setAngleOnTarget(false);
+  }
 
   // Returns true when the command should end.
   @Override

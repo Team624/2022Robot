@@ -41,6 +41,7 @@ public class AutonPathCommand extends CommandBase {
     
     @Override
     public void execute() {
+        auton.getColorState();
         if (!auton.isAuton){
             m_drivetrainSubsystem.drive(new ChassisSpeeds(0,0,0));
             System.out.println("CANCELED PATH COMMAND");

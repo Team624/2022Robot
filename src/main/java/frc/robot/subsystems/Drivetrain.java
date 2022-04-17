@@ -81,6 +81,7 @@ public class Drivetrain extends SubsystemBase {
 
   public PIDController visionTurn_pid;
   public PIDController visionTurn_pidQuickTurn;
+  public PIDController visionTurn2_pid;
 
   public PIDController autonPoint_pidPathRotation;
   public PIDController autonPath_pidVision;
@@ -93,6 +94,7 @@ public class Drivetrain extends SubsystemBase {
         m_led = m_led_strip;
          visionTurn_pid = getRotationPID();
          visionTurn_pidQuickTurn = getRotationQuickTurnPID();
+         visionTurn2_pid = getVisionPID();
 
          autonPoint_pidPathRotation = getRotationPathPID();
          autonPath_pidVision = getAutonRotationPID();
@@ -205,6 +207,11 @@ public class Drivetrain extends SubsystemBase {
   private PIDController getRotationPID(){
         //return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
         return new PIDController(0.1, 0.0, 0.0);  
+  }
+
+  private PIDController getVisionPID(){
+        //return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
+        return new PIDController(0.055, 0.0, 0.0);  
   }
 
   private PIDController getAutonRotationPID(){

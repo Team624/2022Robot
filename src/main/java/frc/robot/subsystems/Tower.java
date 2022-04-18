@@ -209,7 +209,7 @@ public class Tower extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println("prox: " + cSense.getProximity());
+    //System.out.println("prox: " + cSense.getProximity());
     checkNT();
     if (ledState == 4){
       m_led.setPattern(m_climbLED);

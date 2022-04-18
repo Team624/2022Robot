@@ -46,12 +46,9 @@ public class DefaultDriveCommand extends CommandBase {
         //System.out.println("Vx: " + vx + " Vy: " + vy);
         //System.out.println("Vector = " + Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2)));
 
-        // the speed mode
-        if (!(Math.abs(m_rightTriggerSupplier.getAsDouble()) > 0.5)){
-            vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER;
-            vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER;
-            omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER;
-        }
+        vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER;
+        vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER;
+        omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER;
 
         // the creep mode
         if (m_drivetrainSubsystem.isCreepin){
@@ -60,20 +57,27 @@ public class DefaultDriveCommand extends CommandBase {
             omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
         }
 
-        vx = filterX.calculate(vx);
-        vy = filterY.calculate(vy);
-        //System.out.println("th: " + omega);
-        m_drivetrainSubsystem.drive(
-            ChassisSpeeds.fromFieldRelativeSpeeds(
-                vx,
-                vy,
-                omega,
-                m_drivetrainSubsystem.getGyroscopeRotation()
-            )
-        );
-        
-        //System.out.println("CONTROLLER: " + omega);
-        m_drivetrainSubsystem.updateFieldRelVelocity(new ChassisSpeeds(vx, vy, omega));
+        if (Math.abs(m_rightTriggerSupplier.getAsDouble()) > 0.5){
+            m_drivetrainSubsystem.drive(
+                new ChassisSpeeds(-vx*Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER, vy*Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER, omega*Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER)
+            );
+        } else {
+
+            vx = filterX.calculate(vx);
+            vy = filterY.calculate(vy);
+            //System.out.println("th: " + omega);
+            m_drivetrainSubsystem.drive(
+                ChassisSpeeds.fromFieldRelativeSpeeds(
+                    vx,
+                    vy,
+                    omega,
+                    m_drivetrainSubsystem.getGyroscopeRotation()
+                )
+            );
+            
+            //System.out.println("CONTROLLER: " + omega);
+            m_drivetrainSubsystem.updateFieldRelVelocity(new ChassisSpeeds(vx, vy, omega));
+        }
     }
 
     @Override

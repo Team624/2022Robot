@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -53,12 +54,15 @@ public class Robot extends TimedRobot {
 
   private ShuffleboardTab tab_cam = Shuffleboard.getTab("Camera");
   private NetworkTableEntry spitoutEntry = tab_cam.add("Spitout", false).withPosition(9, 0).getEntry();
+  private UsbCamera camera; 
+  private double camNum = 0;
 
   @Override
   public void robotInit() {
-    //m_led.setPattern(m_greenChasePattern);
-    //tab_cam.addCamera("USB Camera 0", "USB Camera 0", "USB Camera 0").withPosition(0, 0);
-    tab_cam.add(CameraServer.startAutomaticCapture()).withPosition(0, 0).withSize(8, 4);
+    m_led.setPattern(m_greenChasePattern);
+    camera = CameraServer.startAutomaticCapture();
+    camera.setResolution(640/8, 480/8);
+    tab_cam.add(camera).withPosition(0, 0).withSize(8, 4);
     spitoutEntry.setBoolean(true);
 
     compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);
@@ -130,6 +134,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    try{
+      tab_cam.add("Cam " + camNum, camera).withPosition(0, 0).withSize(8, 4);
+      camNum++;
+    } catch(Exception e){
+      System.out.println("CAMERA TAB FAILED TO OPEN");
+    }
+
     m_robotContainer.enableColorSensor();
     m_robotContainer.setAlliance();
     auton.setState(false);

@@ -23,7 +23,8 @@ public class TopFront extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    fClimb.moveArm(-188);
+    System.out.println("TOPPING");
+    fClimb.moveArm(-105);
   }
 
   // Called once the command ends or is interrupted.
@@ -35,6 +36,6 @@ public class TopFront extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return fClimb.readEncoder() < -187;
+    return fClimb.readEncoder() < -103;
   }
 }

@@ -17,6 +17,6 @@ public class mLeftActive extends Trigger {
 
   @Override
   public boolean get() {
-    return cont.getLeftY() > .1 || cont.getLeftY() < -.1;
+    return cont.getLeftY() > .05 || cont.getLeftY() < -.05;
   }
 }

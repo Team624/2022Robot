@@ -30,7 +30,7 @@ public class SwingHighFront extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    System.out.println("Swinging");
   }
 
   // Called once the command ends or is interrupted.
@@ -42,6 +42,6 @@ public class SwingHighFront extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return swingTimer.get() > .01;
+    return swingTimer.get() > 1;
   }
 }

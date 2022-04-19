@@ -17,6 +17,6 @@ public class mRightInactive extends Trigger {
 
   @Override
   public boolean get() {
-    return cont.getRightY() < .1 && cont.getRightY() > -.1;
+    return cont.getRightY() < .05 && cont.getRightY() > -.05;
   }
 }

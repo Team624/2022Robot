@@ -23,7 +23,7 @@ public class TopBack extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    bClimb.moveArm(-159);
+    bClimb.moveArm(-103);
   }
 
   // Called once the command ends or is interrupted.
@@ -35,7 +35,7 @@ public class TopBack extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return bClimb.readEncoder() < -158;
+    return bClimb.readEncoder() < -102;
   }
 
 }

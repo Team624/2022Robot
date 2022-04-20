@@ -59,7 +59,7 @@ public class DefaultDriveCommand extends CommandBase {
 
         if (Math.abs(m_rightTriggerSupplier.getAsDouble()) > 0.5){
             m_drivetrainSubsystem.drive(
-                new ChassisSpeeds(-vx*Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER, vy*Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER, omega*Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER)
+                new ChassisSpeeds(-vx*Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER, -vy*Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER, omega*Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER)
             );
         } else {
 

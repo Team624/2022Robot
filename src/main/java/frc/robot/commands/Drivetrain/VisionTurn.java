@@ -89,7 +89,7 @@ public class VisionTurn extends CommandBase {
       //System.out.println("Vision targeting error = " + visionRot);
 
       // For leds
-      if ((Math.abs(visionRot) < 3.5)){
+      if ((Math.abs(visionRot) < 4.0)){
         tower.setAngleOnTarget(true);
       } else{
         tower.setAngleOnTarget(false);

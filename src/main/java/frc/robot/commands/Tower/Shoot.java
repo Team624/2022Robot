@@ -14,6 +14,7 @@ public class Shoot extends CommandBase {
   private final Shooter shooter;
   private Timer timer;
   private double time;
+  private boolean shooting = false;
 
   private boolean currentHoodState = false;
   /** Creates a new Shoot. */
@@ -33,6 +34,7 @@ public class Shoot extends CommandBase {
     timer = new Timer();
     timer.reset();
     timer.start();
+    shooting = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -47,14 +49,18 @@ public class Shoot extends CommandBase {
     }
     //double error = Math.abs(shooter.getRPM() - shooter.getGoalRPM());
     if (time > 1.0){
-      if (tower.getRpmOnTarget() && tower.getAngleOnTarget()){
+      if ((tower.getRpmOnTarget() && tower.getAngleOnTarget()) || shooting){
         tower.powerTower();
         tower.powerFeeder();
+        shooting = true;
+        System.out.println("Shooting: " + shooting);
       } else{
+        System.out.println("Stop Shooting cause tol");
         tower.stopTower();
         tower.stopFeeder();
       }
     } else{
+      System.out.println("Stop Shooting cause timer");
       tower.stopTower();
       tower.stopFeeder();
     }

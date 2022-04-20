@@ -70,6 +70,7 @@ public class BackClimb extends SubsystemBase {
 
   @Override
   public void periodic() {
+    //System.out.println("BACK CLIMB: " + readEncoder());
     checkNT();
     // This method will be called once per scheduler run
   }

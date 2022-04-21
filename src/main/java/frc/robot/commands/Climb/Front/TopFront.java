@@ -24,7 +24,7 @@ public class TopFront extends CommandBase {
   @Override
   public void execute() {
     System.out.println("TOPPING");
-    fClimb.moveArm(-105);
+    fClimb.moveArm(-111);
   }
 
   // Called once the command ends or is interrupted.
@@ -36,6 +36,6 @@ public class TopFront extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return fClimb.readEncoder() < -103;
+    return fClimb.readEncoder() < -109;
   }
 }

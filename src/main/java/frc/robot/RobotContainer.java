@@ -205,9 +205,9 @@ public class RobotContainer {
 
     new POVButton(m_controller, 0).whenPressed(new TopFront(m_fClimb));
 
-    // new POVButton(m_controller, 180).whenPressed(new BottomBack(m_bClimb));
+    new POVButton(m_controller, 180).whenPressed(new BottomBack(m_bClimb));
 
-    // new POVButton(m_controller, 270).whenPressed(new BottomFront(m_fClimb));
+    new POVButton(m_controller, 270).whenPressed(new BottomFront(m_fClimb));
 
     new Button(m_controller::getLeftStickButton).whenPressed(m_fClimb::resetEncoder);
 

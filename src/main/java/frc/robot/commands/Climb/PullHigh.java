@@ -5,8 +5,10 @@
 package frc.robot.commands.Climb;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.commands.Climb.Back.BottomBack;
 import frc.robot.commands.Climb.Back.TopBack;
 import frc.robot.commands.Climb.Front.BottomFront;
+import frc.robot.commands.Climb.Front.TopFront;
 import frc.robot.subsystems.BackClimb;
 import frc.robot.subsystems.FrontClimb;
 
@@ -24,8 +26,8 @@ public class PullHigh extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new BottomFront(this.fClimb),
-      new TopBack(this.bClimb)
+      new TopFront(this.fClimb),
+      new BottomBack(this.bClimb)
     );
   }
 }

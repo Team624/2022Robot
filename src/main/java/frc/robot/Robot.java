@@ -5,7 +5,9 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -55,14 +57,18 @@ public class Robot extends TimedRobot {
   private ShuffleboardTab tab_cam = Shuffleboard.getTab("Camera");
   private NetworkTableEntry spitoutEntry = tab_cam.add("Spitout", false).withPosition(9, 0).getEntry();
   private UsbCamera camera; 
-  private double camNum = 0;
 
   @Override
   public void robotInit() {
-    m_led.setPattern(m_greenChasePattern);
+    //m_led.setPattern(m_greenChasePattern);
     camera = CameraServer.startAutomaticCapture();
-    camera.setResolution(640/8, 480/8);
-    tab_cam.add(camera).withPosition(0, 0).withSize(8, 4);
+    
+    boolean x = camera.setVideoMode(VideoMode.PixelFormat.kMJPEG, 320, 240, 15);
+    System.out.println(" Set video mode : " + x);
+    // MjpegServer cameraServer = new MjpegServer("serve USB", 5810);
+    // cameraServer.setSource(camera);
+    // cameraServer.setCompression(10);
+    //tab_cam.add(camera).withPosition(0, 0).withSize(8, 4);
     spitoutEntry.setBoolean(true);
 
     compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);

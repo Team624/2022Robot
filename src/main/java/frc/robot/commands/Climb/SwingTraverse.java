@@ -6,7 +6,9 @@ package frc.robot.commands.Climb;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.Climb.Back.SwingHighBack;
+import frc.robot.commands.Climb.Back.SwingTraverseBack;
 import frc.robot.commands.Climb.Front.SwingHighFront;
+import frc.robot.commands.Climb.Front.SwingTraverseFront;
 import frc.robot.subsystems.BackClimb;
 import frc.robot.subsystems.FrontClimb;
 
@@ -25,8 +27,8 @@ public class SwingTraverse extends ParallelCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new SwingHighFront(this.fClimb),
-      new SwingHighBack(this.bClimb)
+      new SwingTraverseFront(this.fClimb),
+      new SwingTraverseBack(this.bClimb)
     );
   }
 }

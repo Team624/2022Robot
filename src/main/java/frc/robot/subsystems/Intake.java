@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
@@ -13,6 +15,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -93,6 +96,8 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // cam.setResolution(16*5, 9*5);
+    // cam.setFPS(15);
     checkNT();
     // This method will be called once per scheduler run
   }
@@ -144,12 +149,14 @@ public class Intake extends SubsystemBase {
   }
 
   public void resetCam(){
-    try{
-      tab_cam.add("Cam " + camNum, cam).withPosition(0, 0).withSize(8, 4);
-      camNum++;
-    } catch(Exception e){
-      System.out.println("CAMERA TAB FAILED TO OPEN");
-    }
+
+    // try{
+    // tab_cam.add("Cam " + camNum, cam).withPosition(0, 0).withSize(8, 4).withProperties(Map.of("fps", 15));
+    //   System.out.println("Cam mode: " + cam.getVideoMode().width);
+    //   camNum++;
+    // } catch(Exception e){
+    //   System.out.println("CAMERA TAB FAILED TO OPEN");
+    // }
   }
 
 }

@@ -115,8 +115,10 @@ public class Tower extends SubsystemBase {
 
   private final ColorMatch colorMatcher = new ColorMatch();
 
-  private final Color kBlueTarget = new Color(0.2055, 0.45141, 0.34326); //(.235, .47, .294)
-  private final Color kRedTarget = new Color(0.33715, 0.4353, 0.22875); //(.356, .434, .209)
+  // 0.229736328125 0.45654296875 0.314208984375
+  // 0.330810546875 0.445556640625 0.22412109375
+  private final Color kBlueTarget = new Color(0.229736328125, 0.45654296875, 0.314208984375); //(.235, .47, .294)
+  private final Color kRedTarget = new Color(0.330810546875, 0.445556640625, 0.22412109375); //(.356, .434, .209)
 
   private int alliance;
 
@@ -209,7 +211,7 @@ public class Tower extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //System.out.println("prox: " + cSense.getProximity());
+    System.out.println("prox: " + cSense.getProximity());
     checkNT();
     if (ledState == 4){
       m_led.setPattern(m_climbLED);
@@ -399,9 +401,10 @@ public class Tower extends SubsystemBase {
   public int checkAlliance(){
     // nukber 1 is blue, 2 is red
     Color detectedColor = cSense.getColor();
+    System.out.println("Color: " + detectedColor.red + " " + detectedColor.green + " " + detectedColor.blue);
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
     int number = 0;
-    if (cSense.getProximity() > 109){
+    if (cSense.getProximity() > 130){
       if(match.color == kBlueTarget){
         number = 1;
       }else if(match.color == kRedTarget){

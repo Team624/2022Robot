@@ -24,13 +24,12 @@ public class SwingHighFront extends CommandBase {
   public void initialize() {
     swingTimer.reset();
     swingTimer.start();
-    fClimb.stopMotor();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("Swinging");
+    fClimb.moveArm(3);
   }
 
   // Called once the command ends or is interrupted.

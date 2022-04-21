@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -85,11 +88,11 @@ public class RobotContainer {
   private Trigger mLeftTriggerDown = new mLeftTriggerDown(m_controller);
   private Trigger mLeftTriggerUp = new mLeftTriggerUp(m_controller);
 
-  public RobotContainer(TrobotAddressableLED m_led) {
+  public RobotContainer(TrobotAddressableLED m_led, UsbCamera camera) {
     m_fClimb = new FrontClimb();
     m_bClimb = new BackClimb();
     m_drivetrainSubsystem = new Drivetrain(m_led);
-    m_intake = new Intake();
+    m_intake = new Intake(camera);
     m_tower = new Tower(m_led);
     m_shooter = new Shooter(m_controller);
     m_shooterVision = new ShooterVision(m_shooter);
@@ -209,6 +212,8 @@ public class RobotContainer {
     new Button(m_controller::getLeftStickButton).whenPressed(m_fClimb::resetEncoder);
 
     new Button(m_controller::getLeftStickButton).whenPressed(m_bClimb::resetEncoder);
+
+    new Button(m_controller::getLeftStickButton).whenPressed(m_intake::resetCam);
 
   }
 

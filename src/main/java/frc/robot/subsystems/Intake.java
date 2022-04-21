@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -59,8 +61,13 @@ public class Intake extends SubsystemBase {
   private double intakePower = Constants.Intake.intakePower;
   public boolean slow = false;
 
+  private ShuffleboardTab tab_cam = Shuffleboard.getTab("Camera");
+  private UsbCamera cam;
+  private double camNum = 0;
+
   /** Creates a new Intake. */
-  public Intake() {
+  public Intake(UsbCamera camera) {
+    cam = camera;
     intakeSolenoid = new Solenoid(30, PneumaticsModuleType.CTREPCM, Constants.Intake.intakeSolenoidID);
     intakeMotor = new CANSparkMax(Constants.Intake.intakeMotorID, MotorType.kBrushless);
     intakeMotor.restoreFactoryDefaults();
@@ -134,6 +141,15 @@ public class Intake extends SubsystemBase {
 
   public void retractSolenoids(){
     intakeSolenoid.set(false);
+  }
+
+  public void resetCam(){
+    try{
+      tab_cam.add("Cam " + camNum, cam).withPosition(0, 0).withSize(8, 4);
+      camNum++;
+    } catch(Exception e){
+      System.out.println("CAMERA TAB FAILED TO OPEN");
+    }
   }
 
 }

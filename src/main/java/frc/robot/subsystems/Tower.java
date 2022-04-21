@@ -401,7 +401,7 @@ public class Tower extends SubsystemBase {
     Color detectedColor = cSense.getColor();
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
     int number = 0;
-    if (cSense.getProximity() > 106){
+    if (cSense.getProximity() > 109){
       if(match.color == kBlueTarget){
         number = 1;
       }else if(match.color == kRedTarget){

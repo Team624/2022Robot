@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
 
     compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);
 
-    m_robotContainer = new RobotContainer(m_led);
+    m_robotContainer = new RobotContainer(m_led, camera);
 
     auton = new Auton(
       m_robotContainer.getDrivetrain(),
@@ -134,13 +134,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    try{
-      tab_cam.add("Cam " + camNum, camera).withPosition(0, 0).withSize(8, 4);
-      camNum++;
-    } catch(Exception e){
-      System.out.println("CAMERA TAB FAILED TO OPEN");
-    }
-
     m_robotContainer.enableColorSensor();
     m_robotContainer.setAlliance();
     auton.setState(false);

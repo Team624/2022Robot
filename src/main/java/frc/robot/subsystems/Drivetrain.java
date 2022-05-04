@@ -27,9 +27,15 @@ import frc.robot.trobot5013lib.led.ChasePattern;
 import frc.robot.trobot5013lib.led.TrobotAddressableLED;
 import frc.robot.trobot5013lib.led.TrobotAddressableLEDPattern;
 
+import java.util.ArrayList;
+
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.music.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
 
 public class Drivetrain extends SubsystemBase {
+
+        public boolean musicMode;
 
   public static final double MAX_VOLTAGE = 12.0;
 
@@ -91,6 +97,7 @@ public class Drivetrain extends SubsystemBase {
   public TrobotAddressableLEDPattern m_shooting = new ChasePattern(greenWhiteArray, 3);
 
   public Drivetrain(TrobotAddressableLED m_led_strip) {
+
         m_led = m_led_strip;
          visionTurn_pid = getRotationPID();
          visionTurn_pidQuickTurn = getRotationQuickTurnPID();
@@ -138,6 +145,7 @@ public class Drivetrain extends SubsystemBase {
                   Constants.Drivetrain.BACK_RIGHT_MODULE_STEER_MOTOR,
                   Constants.Drivetrain.BACK_RIGHT_MODULE_STEER_ENCODER,
                   Constants.Drivetrain.BACK_RIGHT_MODULE_STEER_OFFSET);
+
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -149,6 +157,7 @@ public class Drivetrain extends SubsystemBase {
         // double ratio = (1.00832)/(1 + (0.00744* Math.pow(Math.E, 0.08467 * Math.abs(getVisionRotationAngle()))));
         // System.out.println("Ratio:" + ratio);
         // System.out.println("Estimated distance: " + getDistanceAngle()/ratio);
+
 
           SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
@@ -168,7 +177,9 @@ public class Drivetrain extends SubsystemBase {
           } else{
                 m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
           }
-          updateLeoPose();        
+          updateLeoPose(); 
+          
+        
   }
 
   private SwerveModuleState getState(SwerveModule module) {

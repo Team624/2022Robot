@@ -64,7 +64,6 @@ public class Robot extends TimedRobot {
     camera = CameraServer.startAutomaticCapture();
     
     boolean x = camera.setVideoMode(VideoMode.PixelFormat.kMJPEG, 320, 240, 15);
-    System.out.println(" Set video mode : " + x);
     // MjpegServer cameraServer = new MjpegServer("serve USB", 5810);
     // cameraServer.setSource(camera);
     // cameraServer.setCompression(10);

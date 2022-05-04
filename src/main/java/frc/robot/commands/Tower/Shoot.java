@@ -29,41 +29,38 @@ public class Shoot extends CommandBase {
   @Override
   public void initialize() {
     tower.setShootingLED();
-    currentHoodState = shooter.getHood();
-    time = 2.0;
-    timer = new Timer();
-    timer.reset();
-    timer.start();
-    shooting = false;
+    // currentHoodState = shooter.getHood();
+    // time = 2.0;
+    // timer = new Timer();
+    // timer.reset();
+    // timer.start();
+    // shooting = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    time += timer.get();
-    if (currentHoodState != shooter.getHood()){
-      currentHoodState = shooter.getHood();
-      time = 0;
-      timer.reset();
-      timer.start();
-    }
+    // time += timer.get();
+    // if (currentHoodState != shooter.getHood()){
+    //   currentHoodState = shooter.getHood();
+    //   time = 0;
+    //   timer.reset();
+    //   timer.start();
+    // }
     //double error = Math.abs(shooter.getRPM() - shooter.getGoalRPM());
-    if (time > 1.0){
-      if ((tower.getRpmOnTarget() && tower.getAngleOnTarget()) || shooting){
+    // if (time > 1.0){
+    //   if ((tower.getRpmOnTarget() && tower.getAngleOnTarget()) || shooting){
         tower.powerTower();
         tower.powerFeeder();
         shooting = true;
-        System.out.println("Shooting: " + shooting);
-      } else{
-        System.out.println("Stop Shooting cause tol");
-        tower.stopTower();
-        tower.stopFeeder();
-      }
-    } else{
-      System.out.println("Stop Shooting cause timer");
-      tower.stopTower();
-      tower.stopFeeder();
-    }
+    //   } else{
+    //     tower.stopTower();
+    //     tower.stopFeeder();
+    //   }
+    // } else{
+    //   tower.stopTower();
+    //   tower.stopFeeder();
+    // }
   }
 
   // Called once the command ends or is interrupted.

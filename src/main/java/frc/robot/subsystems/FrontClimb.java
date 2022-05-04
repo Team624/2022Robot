@@ -123,4 +123,8 @@ public class FrontClimb extends SubsystemBase {
     encoder.setPosition(0.0);
   }
 
+  public boolean getStatus(){
+    return climbStatus;
+  }
+
 }

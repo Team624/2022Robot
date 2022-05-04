@@ -6,16 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Triggers.Joysticks.mLeftActive;
-import frc.robot.Triggers.Joysticks.mLeftInactive;
-import frc.robot.Triggers.Joysticks.mRightActive;
-import frc.robot.Triggers.Joysticks.mRightInactive;
+import frc.robot.Triggers.States.ClimbOffDecreaseShoot;
+import frc.robot.Triggers.States.ClimbOffIncreaseShoot;
 import frc.robot.commands.Climb.AutoClimb;
 import frc.robot.commands.Climb.Back.BottomBack;
 import frc.robot.commands.Climb.Back.ControlBack;
@@ -33,13 +29,11 @@ import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.Shooter.LowShoot;
-import frc.robot.commands.Shooter.ManualShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Shooter.WallShoot;
 import frc.robot.commands.Tower.ClimbTower;
 import frc.robot.commands.Tower.EjectBottom;
 import frc.robot.commands.Tower.IdleTower;
-import frc.robot.commands.Tower.Reverse;
 import frc.robot.commands.Tower.Shoot;
 import frc.robot.commands.Tower.SlowReverse;
 import frc.robot.commands.Intake.DeployIntake;
@@ -75,18 +69,19 @@ public class RobotContainer {
   public final XboxController d_controller = new XboxController(0);
   private final XboxController m_controller = new XboxController(1);
 
-  private Trigger mLeftActive = new mLeftActive(m_controller);
-  private Trigger mLeftInactive = new mLeftInactive(m_controller);
-  private Trigger mRightActive = new mRightActive(m_controller);
-  private Trigger mRightInactive = new mRightInactive(m_controller);
+  // private Trigger dLeftActive = new mLeftActive(m_controller);
+  // private Trigger dLeftInactive = new mLeftInactive(m_controller);
+  // private Trigger dRightActive = new mRightActive(m_controller);
+  // private Trigger dRightInactive = new mRightInactive(m_controller);
+
+  private Trigger dRightTriggerDown = new mRightTriggerDown(d_controller);
+  private Trigger dRightTriggerUp = new mRightTriggerUp(d_controller);
 
   private Trigger dLeftTriggerDown = new mLeftTriggerDown(d_controller);
   private Trigger dLeftTriggerUp = new mLeftTriggerUp(d_controller);
 
-  private Trigger mRightTriggerDown = new mRightTriggerDown(m_controller);
-  private Trigger mRightTriggerUp = new mRightTriggerUp(m_controller);
-  private Trigger mLeftTriggerDown = new mLeftTriggerDown(m_controller);
-  private Trigger mLeftTriggerUp = new mLeftTriggerUp(m_controller);
+  private ClimbOffIncreaseShoot increaseShoot;
+  private ClimbOffDecreaseShoot decreaseShoot;
 
   public RobotContainer(TrobotAddressableLED m_led, UsbCamera camera) {
     m_fClimb = new FrontClimb();
@@ -109,22 +104,25 @@ public class RobotContainer {
         () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
     ));
-    configureButtonBindings();
+
+    increaseShoot = new ClimbOffIncreaseShoot(d_controller, m_fClimb);
+    decreaseShoot = new ClimbOffDecreaseShoot(d_controller, m_fClimb);
+
+    configureButtonBindings(); 
   }
+  
+  
 
   private void configureButtonBindings() {
     new Button(d_controller::getAButton)
              .whenPressed(m_drivetrainSubsystem::zeroGyroscope);
     
-    new Button(d_controller::getBButton)
-              .whenPressed(m_drivetrainSubsystem::quickZeroPose);
-
-    new Button(d_controller::getRightBumper)
-              .whenPressed(m_drivetrainSubsystem::yesCreepMode);
-
-    new Button(d_controller::getRightBumper)
-              .whenReleased(m_drivetrainSubsystem::noCreepMode);
+    new Button(d_controller::getXButton)
+               .whenPressed(m_drivetrainSubsystem::quickZeroPose);
     
+    dLeftTriggerDown.whenActive(m_drivetrainSubsystem::yesCreepMode);
+    dLeftTriggerUp.whenActive(m_drivetrainSubsystem::noCreepMode);
+
     new Button(d_controller::getLeftBumper).whenHeld(new VisionTurn(
        m_drivetrainSubsystem,
        m_shooterVision,
@@ -132,30 +130,35 @@ public class RobotContainer {
        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
        m_tower
     ));
+
+    new Button(d_controller::getLeftBumper).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem, m_tower));
     
-    dLeftTriggerDown.whenActive(new ShootOnRun(
-      m_drivetrainSubsystem,
-      m_shooterVision,
-      () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-      () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-      m_tower
-   ));
+  //   dLeftTriggerDown.whenActive(new ShootOnRun(
+  //     m_drivetrainSubsystem,
+  //     m_shooterVision,
+  //     () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+  //     () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+  //     m_tower
+  //  ));
 
-    dLeftTriggerUp.whenActive(new DefaultDriveCommand(
-      m_drivetrainSubsystem,
-      () -> -modifyAxis(d_controller.getRightTriggerAxis()), 
-      () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-  ));
+  //   dLeftTriggerUp.whenActive(new DefaultDriveCommand(
+  //     m_drivetrainSubsystem,
+  //     () -> -modifyAxis(d_controller.getRightTriggerAxis()), 
+  //     () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+  //     () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+  //     () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
+  // ));
 
-    new POVButton(d_controller, 0).whenPressed(m_shooter::increaseJankness);
-
-    new POVButton(d_controller, 180).whenPressed(m_shooter::decreaseJankness);
+  increaseShoot.whenActive(m_shooter::addRPM);
+  decreaseShoot.whenActive(m_shooter::loseRPM);
 
 //=====================================================================================
 
-    new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));
+    //new Button(d_controller::getXButton).whenHeld(new DeployIntake(m_intake));
+
+    dRightTriggerDown.whenActive(new DeployIntake(m_intake));
+
+    dRightTriggerUp.whenActive(new IdleIntake(m_intake));
 
     // mRightTriggerDown.whenActive(new Shoot(m_tower, m_shooter));
 
@@ -163,57 +166,55 @@ public class RobotContainer {
 
     // mRightTriggerUp.whenActive(new IdleTower(m_tower));
 
-    mLeftTriggerDown.whenActive(new WallShoot(m_shooter, m_tower));
+    // mLeftTriggerDown.whenActive(new WallShoot(m_shooter, m_tower));
 
-    mLeftTriggerUp.whenActive(new IdleShoot(m_shooter));
+    // mLeftTriggerUp.whenActive(new IdleShoot(m_shooter));
 
-    mLeftTriggerUp.whenActive(new IdleTower(m_tower, m_intake));
+    // mLeftTriggerUp.whenActive(new IdleTower(m_tower, m_intake));
 
-    new Button(m_controller::getRightBumper).whenHeld(new Shoot(m_tower, m_shooter));
+    new Button(d_controller::getRightBumper).whenHeld(new Shoot(m_tower, m_shooter));
 
-    new Button(m_controller::getLeftBumper).whenHeld(new EjectBottom(m_tower));
-
-    new Button(m_controller::getYButton).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem, m_tower));
+    // new Button(m_controller::getLeftBumper).whenHeld(new EjectBottom(m_tower));
 
     // new Button(m_controller::getBButton).whenPressed(m_shooter::testHoodOn);
     // new Button(m_controller::getBButton).whenReleased(m_shooter::testHoodOff);
-    new Button(m_controller::getAButton).whenPressed(m_tower::setReverse);
+    new Button(d_controller::getBButton).whenPressed(m_tower::setReverse);
 
-    new Button(m_controller::getBButton).whenHeld(new LowShoot(m_shooter, m_tower));
+    // new Button(m_controller::getBButton).whenHeld(new LowShoot(m_shooter, m_tower));
 
-    new Button(m_controller::getRightStickButton).whenHeld(new SlowReverse(m_tower));
+    new Button(d_controller::getRightStickButton).whenHeld(new SlowReverse(m_tower));
 
 //================================================================================================
 
-    new Button(m_controller::getStartButton).whenPressed(m_fClimb::setClimbStatus);
+    new Button(d_controller::getStartButton).whenPressed(m_fClimb::setClimbStatus);
 
-    new Button(m_controller::getStartButton).whenPressed(m_bClimb::setClimbStatus);
+    new Button(d_controller::getStartButton).whenPressed(m_bClimb::setClimbStatus);
 
-    new Button(m_controller::getStartButton).toggleWhenPressed(new ClimbTower(m_tower));
+    new Button(d_controller::getStartButton).toggleWhenPressed(new ClimbTower(m_tower));
 
-    mLeftActive.whenActive(new ControlFront(m_fClimb, m_controller));
+    // mLeftActive.whenActive(new ControlFront(m_fClimb, m_controller));
 
-    mRightActive.whenActive(new ControlBack(m_bClimb, m_controller));
+    // mRightActive.whenActive(new ControlBack(m_bClimb, m_controller));
 
-    mLeftInactive.whenActive(new IdleFront(m_fClimb));
+    // mLeftInactive.whenActive(new IdleFront(m_fClimb));
 
-    mRightInactive.whenActive(new IdleBack(m_bClimb));
+    // mRightInactive.whenActive(new IdleBack(m_bClimb));
 
-    new POVButton(m_controller, 90).whenPressed(new AutoClimb(m_fClimb, m_bClimb));
+    new POVButton(d_controller, 90).whenPressed(new AutoClimb(m_fClimb, m_bClimb));
 
-    new POVButton(m_controller, 0).whenPressed(new TopBack(m_bClimb));
+    new POVButton(d_controller, 0).whenPressed(new TopBack(m_bClimb));
 
-    new POVButton(m_controller, 0).whenPressed(new TopFront(m_fClimb));
+    new POVButton(d_controller, 0).whenPressed(new TopFront(m_fClimb));
 
-    new POVButton(m_controller, 180).whenPressed(new BottomBack(m_bClimb));
+    new POVButton(d_controller, 180).whenPressed(new BottomBack(m_bClimb));
 
-    new POVButton(m_controller, 270).whenPressed(new BottomFront(m_fClimb));
+    new POVButton(d_controller, 270).whenPressed(new BottomFront(m_fClimb));
 
     new Button(m_controller::getLeftStickButton).whenPressed(m_fClimb::resetEncoder);
 
     new Button(m_controller::getLeftStickButton).whenPressed(m_bClimb::resetEncoder);
 
-    new Button(m_controller::getLeftStickButton).whenPressed(m_intake::resetCam);
+    // new Button(m_controller::getLeftStickButton).whenPressed(m_intake::resetCam);
 
   }
 

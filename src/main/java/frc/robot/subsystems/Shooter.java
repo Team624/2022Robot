@@ -29,7 +29,7 @@ public class Shooter extends SubsystemBase {
 
   private double goalRPM;
 
-  public double jankShit = 0;
+  public double addedRPM = 0;
 
   // Set up the dashboard
   private ShuffleboardTab shootTab = Shuffleboard.getTab("Shooter");
@@ -37,6 +37,7 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry dashCurrentRPM = shootTab.add("Current RPM:", 0).withPosition(1, 1).getEntry();
   private NetworkTableEntry dashPrime = shootTab.add("Priming?", false).withPosition(2, 1).getEntry();
   private NetworkTableEntry manualRPM = shootTab.add("Manual RPM: ", 0).withPosition(0, 3).withWidget(BuiltInWidgets.kTextView).getEntry();
+  private NetworkTableEntry dashAddedRPM = shootTab.add("Added RPM:", 0).withPosition(1, 3).getEntry();
 
   private NetworkTableEntry PID_P = shootTab.add("PID P",Constants.Shooter.kP).withPosition(0,2).withWidget(BuiltInWidgets.kTextView).getEntry();
   private NetworkTableEntry PID_I = shootTab.add("PID I",Constants.Shooter.kI).withPosition(1,2).withWidget(BuiltInWidgets.kTextView).getEntry();
@@ -76,7 +77,6 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
     updateDash();
     updatePID();
   }
@@ -131,6 +131,7 @@ public class Shooter extends SubsystemBase {
     dashCurrentRPM.setDouble(getRPM());
     ntUpdatePID = tuningPID.getBoolean(false);
     dashPrime.setBoolean(isPriming);
+    dashAddedRPM.setDouble(addedRPM);
   }
 
   private void updatePID() {
@@ -165,11 +166,11 @@ public class Shooter extends SubsystemBase {
     setHood(false);
   }
 
-  public void increaseJankness(){
-    jankShit += 100;
+  public void addRPM(){
+    addedRPM += 100;
   }
 
-  public void decreaseJankness(){
-    jankShit -= 100;
+  public void loseRPM(){
+    addedRPM -= 100;
   }
 }

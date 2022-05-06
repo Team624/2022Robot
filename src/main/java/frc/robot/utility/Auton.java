@@ -7,9 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.Intake.DeployIntake;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
-import frc.robot.commands.Shooter.LowShoot;
+import frc.robot.commands.LowShoot;
 import frc.robot.commands.Shooter.PrimeShoot;
-import frc.robot.commands.Shooter.WallShoot;
 import frc.robot.commands.Tower.IdleTower;
 import frc.robot.commands.Tower.Poop;
 import frc.robot.commands.Tower.Reverse;
@@ -125,12 +124,9 @@ public class Auton {
 
     public String getShooterState(){
         String state = SmartDashboard.getEntry("/auto/shooter/state").getString("idle");
-        tower.setAngleOnTarget(true);
-        tower.setRpmOnTarget(true);
-        //System.out.println("STATE: " + state);
         if(state.equals("shoot") && !shooterState.equals("shoot")){
             shooterState = state;
-            new Shoot(tower, shooter).schedule();
+            new Shoot(tower).schedule();
             new PrimeShoot(shooter, vision, drivetrain, tower).schedule();
         }else if(state.equals("prime") && !shooterState.equals("prime")){
             shooterState = state;

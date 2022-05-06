@@ -10,19 +10,16 @@ import frc.robot.subsystems.Tower;
 
 public class ManualShoot extends CommandBase {
   private final Shooter shooter;
-  private final Tower tower;
+  
   /** Creates a new ManualShoot. */
-  public ManualShoot(Shooter shooter, Tower tower) {
+  public ManualShoot(Shooter shooter) {
     this.shooter = shooter;
-    this.tower = tower;
     addRequirements(this.shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    tower.setAngleOnTarget(true);
-    tower.setRpmOnTarget(true);
     shooter.setManualRPM();
   }
 
@@ -34,10 +31,7 @@ public class ManualShoot extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    tower.setAngleOnTarget(false);
-    tower.setRpmOnTarget(false);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

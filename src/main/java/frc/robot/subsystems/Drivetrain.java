@@ -26,11 +26,6 @@ import frc.robot.Constants;
 import frc.robot.trobot5013lib.led.ChasePattern;
 import frc.robot.trobot5013lib.led.TrobotAddressableLED;
 import frc.robot.trobot5013lib.led.TrobotAddressableLEDPattern;
-
-import java.util.ArrayList;
-
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.music.Orchestra;
 import com.kauailabs.navx.frc.AHRS;
 
 public class Drivetrain extends SubsystemBase {
@@ -78,6 +73,8 @@ public class Drivetrain extends SubsystemBase {
 //   private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();
 
   public boolean isCreepin = false;
+  public boolean isSpeedin = false;
+  public boolean controlStatus = true;
 
   public boolean isAuton = false;
   public boolean isUsingVision = false;
@@ -154,32 +151,26 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-        // double ratio = (1.00832)/(1 + (0.00744* Math.pow(Math.E, 0.08467 * Math.abs(getVisionRotationAngle()))));
-        // System.out.println("Ratio:" + ratio);
-        // System.out.println("Estimated distance: " + getDistanceAngle()/ratio);
+        if(controlStatus){
+                SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
+                if (!isAuton && !isUsingVision){
+                      states = freezeLogic(states);
+                }
+      
+                SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);       
+                m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
+                m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
+                m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
+                m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
 
-          SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
-
-          // TODO: Test if this doesn't mess auton up
-          if (!isAuton && !isUsingVision){
-                states = freezeLogic(states);
-          }
-
-          SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);       
-          m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
-          m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
-          m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
-          m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
-          
-          if (isAuton){
-                m_odometry.update(getGyroscopeRotation(), states);
-          } else{
-                m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
-          }
-          updateLeoPose(); 
-          
-        
+                if (isAuton){
+                        m_odometry.update(getGyroscopeRotation(), states);
+                  } else{
+                        m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
+                  }
+        }
+        updateLeoPose(); 
   }
 
   private SwerveModuleState getState(SwerveModule module) {
@@ -204,6 +195,10 @@ public class Drivetrain extends SubsystemBase {
         return Rotation2d.fromDegrees(-ahrs.getAngle());
   }
 
+  public void setControlStatus(){
+        controlStatus = !controlStatus;
+  }
+
   public void yesCreepMode(){
           isCreepin = true;
   }
@@ -211,6 +206,14 @@ public class Drivetrain extends SubsystemBase {
   public void noCreepMode(){
           isCreepin = false;
   }
+
+  public void yesSpeedMode(){
+        isSpeedin = true;
+}
+
+public void noSpeedMode(){
+        isSpeedin = false;
+}
 
   public void setAuton(boolean state){
           isAuton = state;

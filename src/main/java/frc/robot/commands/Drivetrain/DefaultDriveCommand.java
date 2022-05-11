@@ -11,7 +11,6 @@ import frc.robot.Constants;
 public class DefaultDriveCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;
 
-    private final DoubleSupplier m_rightTriggerSupplier;
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
@@ -21,7 +20,6 @@ public class DefaultDriveCommand extends CommandBase {
 
     public DefaultDriveCommand(Drivetrain drivetrainSubsystem, DoubleSupplier triggerSupplierR, DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
         this.m_drivetrainSubsystem = drivetrainSubsystem;
-        this.m_rightTriggerSupplier = triggerSupplierR;
         this.m_translationXSupplier = translationXSupplier;
         this.m_translationYSupplier = translationYSupplier;
         this.m_rotationSupplier = rotationSupplier;
@@ -48,6 +46,10 @@ public class DefaultDriveCommand extends CommandBase {
             vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
             vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
             omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
+        }else if(m_drivetrainSubsystem.isSpeedin){
+            vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_SPEED_MULTIPLIER;
+            vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_SPEED_MULTIPLIER;
+            //omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_SPEED_MULTIPLIER;
         }
             vx = filterX.calculate(vx);
             vy = filterY.calculate(vy);

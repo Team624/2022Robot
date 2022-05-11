@@ -22,6 +22,7 @@ public class BackClimb extends SubsystemBase {
   private SparkMaxPIDController pidController;
 
   private boolean climbStatus = false;
+  private boolean controlStatus = false;
 
   private double P;
   private double I; 
@@ -90,7 +91,8 @@ public class BackClimb extends SubsystemBase {
   }
 
   public void powerArm(double speed){
-    if(climbStatus){
+    System.out.println(climbStatus + " + " + controlStatus);
+    if(climbStatus && controlStatus){
       backWinch.set(speed);
     }
   }
@@ -109,6 +111,7 @@ public class BackClimb extends SubsystemBase {
 
   public void resetClimbStatus(boolean state){
     climbStatus = state;
+    controlStatus = state;
     encoder.setPosition(0.0);
   }
 
@@ -117,6 +120,14 @@ public class BackClimb extends SubsystemBase {
       climbStatus = false;
     }else{
       climbStatus = true;
+    }
+  }
+
+  public void setControlStatus(){
+    if(controlStatus){
+      controlStatus = false;
+    }else{
+      controlStatus = true;
     }
   }
 

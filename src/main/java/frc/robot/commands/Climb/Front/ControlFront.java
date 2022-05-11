@@ -26,6 +26,7 @@ public class ControlFront extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("controlling");
     fClimb.powerArm(controller.getLeftY());
   }
 

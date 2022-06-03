@@ -12,10 +12,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -26,7 +23,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.trobot5013lib.led.BlinkingPattern;
 import frc.robot.trobot5013lib.led.ChaosPattern;
 import frc.robot.trobot5013lib.led.ChasePattern;
 import frc.robot.trobot5013lib.led.SolidColorPattern;
@@ -206,11 +202,12 @@ public class Tower extends SubsystemBase {
     colorMatcher.addColorMatch(kBlueTarget);
     colorMatcher.addColorMatch(kRedTarget);
 
-    allowReverse = true;
+    allowReverse = false;
   }
 
   @Override
   public void periodic() {
+  
     checkNT();
     if (ledState == 4){
       m_led.setPattern(m_climbLED);

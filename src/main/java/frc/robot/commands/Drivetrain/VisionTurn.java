@@ -75,9 +75,6 @@ public class VisionTurn extends CommandBase {
 
     double visionRot = m_drivetrainSubsystem.getVisionRotationAngle();
 
-    double[] goalRelVel = m_drivetrainSubsystem.getGoalRelVelocity(getQuickTurnValue());
-
-    boolean isNotMoving = Math.abs(goalRelVel[0]) + Math.abs(goalRelVel[1]) < 0.3;
     double radius = shooterVision.calculateActualDistance();
 
     if((Math.abs(visionRot) < quickTurnTolerance)){
@@ -85,7 +82,7 @@ public class VisionTurn extends CommandBase {
     }
 
     // If doing normal vision targeting
-    if((Math.abs(visionRot) < 500) && isNotMoving && quickTurnDone){
+    if((Math.abs(visionRot) < 500) && quickTurnDone){
       //System.out.println("Vision targeting error = " + visionRot);
 
       // For leds
@@ -104,25 +101,7 @@ public class VisionTurn extends CommandBase {
         //System.out.println("reseting robot pose: " + radius);
         m_drivetrainSubsystem.visionCorrectPose(targetPose[0] - x, targetPose[1] - y);
       }
-      
-      // double shootToSideAngle = 0;
-      // double lowDist = (78/39.37);
-      // double highDist = (252/39.37);
-
-      // double distanceBetween = highDist - lowDist;
-      // if (radius < lowDist + distanceBetween/3){
-      //   shootToSideAngle = -4;
-      // } else if (radius < lowDist + (2 * distanceBetween)/3){
-      //   shootToSideAngle = -2;
-      // }
-      // else{
-      //   shootToSideAngle = -1;
-      // }
-
-      // System.out.println("Shoot to side angle: " + shootToSideAngle);
-
-      // visionRot += shootToSideAngle;
-
+    
       if (usedQuickTurn){
         thVelocity = getRotationPID(visionRot);
 
@@ -142,21 +121,6 @@ public class VisionTurn extends CommandBase {
       } else{
         thVelocity = getVisionPID(visionRot);
       }
-     
-      // TODO: Test if this helps get a more accurate angle
-      // double min = 0.3;
-      // double tol = 0.5;
-      // if (visionRot < 3 && visionRot > tol){
-      //   if (thVelocity < min){
-      //     thVelocity = min;
-      //   }
-      // }
-      // if (visionRot > -3 && visionRot < -tol){
-      //   if (thVelocity > -min){
-      //     thVelocity = -min;
-      //   }
-      // }
-      //System.out.println("thVelocity " + thVelocity);
       
     } else{
       // Quick turn
@@ -189,7 +153,6 @@ public class VisionTurn extends CommandBase {
         m_drivetrainSubsystem.getGyroscopeRotation()
       )
     );
-    m_drivetrainSubsystem.updateFieldRelVelocity(new ChassisSpeeds(vx, vy, thVelocity));
   }
 
   private double getQuickTurnValue(){
@@ -203,23 +166,11 @@ public class VisionTurn extends CommandBase {
     return angle;
   }
 
-  private double getShootOnRunAngle(double[] goalRelVel){
-    double x = targetPose[0] - m_drivetrainSubsystem.getSwervePose()[0];
-    double y = targetPose[1] - m_drivetrainSubsystem.getSwervePose()[1];
-
-    double distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-    //System.out.println("Distance: " + goalRelVel[1]/distance);
-
-    return Math.atan(goalRelVel[1]/distance) * (180/Math.PI);
-  }
-
   private double getRotationPID(double wantedDeltaAngle){
-    //System.out.println(pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle));
     return m_drivetrainSubsystem.visionTurn_pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
   }
 
   private double getVisionPID(double wantedDeltaAngle){
-    //System.out.println(pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle));
     return m_drivetrainSubsystem.visionTurn2_pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
   }
 

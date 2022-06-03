@@ -6,7 +6,6 @@ package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Tower;
 
 public class ManualShoot extends CommandBase {
   private final Shooter shooter;

@@ -127,10 +127,10 @@ public class Auton {
         if(state.equals("shoot") && !shooterState.equals("shoot")){
             shooterState = state;
             new Shoot(tower).schedule();
-            new PrimeShoot(shooter, vision, drivetrain, tower).schedule();
+            new PrimeShoot(shooter, vision, tower).schedule();
         }else if(state.equals("prime") && !shooterState.equals("prime")){
             shooterState = state;
-            new PrimeShoot(shooter, vision, drivetrain, tower).schedule();
+            new PrimeShoot(shooter, vision, tower).schedule();
         }else if(state.equals("hide_shoot") && !shooterState.equals("hide_shoot")){
             shooterState = state;
             new Reverse(tower).schedule();

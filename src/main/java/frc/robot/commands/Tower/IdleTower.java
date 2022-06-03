@@ -33,7 +33,7 @@ public class IdleTower extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    //System.out.println("Current alliance is: " + tower.getAlliance());
+    System.out.println("Current alliance is: " + tower.checkAlliance());
 
     //System.out.println("Time: " + timer.get());
     if((tower.checkAlliance() == 0 || tower.getAlliance() == tower.checkAlliance())){

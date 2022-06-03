@@ -305,28 +305,4 @@ public void noSpeedMode(){
         return pose;
   }
 
-  // For shooting on the run with vision
-  public void updateFieldRelVelocity(ChassisSpeeds c){
-        m_fieldChassisSpeeds = c;
-  }
-
-  public double[] getGoalRelVelocity(double angleToGoal){
-        double vector = Math.sqrt(Math.pow(m_fieldChassisSpeeds.vxMetersPerSecond, 2) + Math.pow(m_fieldChassisSpeeds.vyMetersPerSecond, 2));
-
-        double angleOfMovement = Math.atan2(m_fieldChassisSpeeds.vyMetersPerSecond, m_fieldChassisSpeeds.vxMetersPerSecond);
-        if (angleOfMovement < 0)
-                angleOfMovement += Math.PI * 2;
-
-        if (angleToGoal < 0)
-                angleToGoal += Math.PI * 2;
-
-        double diff_angle = angleOfMovement - angleToGoal;
-
-        // goal orientated velocities
-        double goal_vx = vector * Math.cos(diff_angle);
-        double goal_vy = vector * Math.sin(diff_angle);
-        double[] goalRelVel = {goal_vx, goal_vy};
-        return goalRelVel;
-  }
-
 }

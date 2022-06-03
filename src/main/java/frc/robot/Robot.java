@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -43,14 +42,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    //m_led.setPattern(m_greenChasePattern);
     camera = CameraServer.startAutomaticCapture();
     
-    boolean x = camera.setVideoMode(VideoMode.PixelFormat.kMJPEG, 320, 240, 15);
-    // MjpegServer cameraServer = new MjpegServer("serve USB", 5810);
-    // cameraServer.setSource(camera);
-    // cameraServer.setCompression(10);
-    //tab_cam.add(camera).withPosition(0, 0).withSize(8, 4);
     spitoutEntry.setBoolean(true);
 
     compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);

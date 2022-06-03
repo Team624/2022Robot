@@ -96,7 +96,9 @@ public class FrontClimb extends SubsystemBase {
   }
 
   public void moveArm(double setPoint){
-    pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+    if(climbStatus){
+      pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
+    }
   }
 
   public void stopMotor(){

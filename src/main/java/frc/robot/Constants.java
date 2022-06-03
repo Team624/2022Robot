@@ -190,7 +190,7 @@ public final class Constants {
         public static final double DRIVETRAIN_INPUT_DEADBAND = .04;
         public static final double DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER = .8;
         public static final double DRIVETRAIN_INPUT_ROTATION_MULTIPLIER = .4;
-        public static final double DRIVETRAIN_INPUT_CREEP_MULTIPLIER = .6;
+        public static final double DRIVETRAIN_INPUT_CREEP_MULTIPLIER = .4;
         public static final double DRIVETRAIN_INPUT_SPEED_MULTIPLIER = 1.2;
 
         public static final double visionP = .09;

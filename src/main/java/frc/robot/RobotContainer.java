@@ -82,7 +82,7 @@ public class RobotContainer {
     m_fClimb = new FrontClimb();
     m_bClimb = new BackClimb();
     m_drivetrainSubsystem = new Drivetrain(m_led);
-    m_intake = new Intake(camera);
+    m_intake = new Intake();
     m_tower = new Tower(m_led);
     m_shooter = new Shooter(m_controller);
     m_shooterVision = new ShooterVision(m_shooter);
@@ -90,7 +90,8 @@ public class RobotContainer {
     m_fClimb.setDefaultCommand(new IdleFront(m_fClimb));
     m_bClimb.setDefaultCommand(new IdleBack(m_bClimb));
     m_intake.setDefaultCommand(new IdleIntake(m_intake));
-    m_tower.setDefaultCommand(new IdleTower(m_tower, m_intake));
+    m_tower.setDefaultCommand(new ClimbTower(m_tower));
+    //m_tower.setDefaultCommand(new IdleTower(m_tower, m_intake));
     m_shooter.setDefaultCommand(new IdleShoot(m_shooter));
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
         m_drivetrainSubsystem,      
@@ -112,7 +113,7 @@ public class RobotContainer {
     new Button(d_controller::getXButton).whenPressed(m_drivetrainSubsystem::quickZeroPose);
     new Button(d_controller::getYButton).whenHeld(new LowShoot(m_shooter, m_tower));
 
-    new Button(d_controller::getLeftBumper).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_drivetrainSubsystem, m_tower));
+    new Button(d_controller::getLeftBumper).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_tower));
     new Button(d_controller::getLeftBumper).whenHeld(new VisionTurn(
        m_drivetrainSubsystem,
        m_shooterVision,
@@ -151,11 +152,9 @@ public class RobotContainer {
     
     new Button(d_controller::getLeftStickButton).whenPressed(m_fClimb::resetEncoder);
     new Button(d_controller::getLeftStickButton).whenPressed(m_bClimb::resetEncoder);
-    new Button(d_controller::getRightStickButton).whenHeld(new DeployIntake(m_intake));
+    new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));
   }
-//Bruh This code whack fr
-//michaels code go brrrrrrrrr
-//codey boi
+
   private static double deadband(double value, double deadband) {
     if (Math.abs(value) > deadband) {
       if (value > 0.0) {

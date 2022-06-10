@@ -394,12 +394,14 @@ public class Tower extends SubsystemBase {
     return IrSensor_feeder.get();
   }
 
-  public int checkAlliance(){
+  public int ballAlliance(){
     // nukber 1 is blue, 2 is red
     Color detectedColor = cSense.getColor();
+    //System.out.println("Blue: " + detectedColor.blue + " Red: " + detectedColor.red + " Green: " + detectedColor.green);
+    //System.out.println(cSense.getProximity());
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
     int number = 0;
-    if (cSense.getProximity() > 130){
+    if (cSense.getProximity() > 142){
       if(match.color == kBlueTarget){
         number = 1;
       }else if(match.color == kRedTarget){
@@ -410,7 +412,6 @@ public class Tower extends SubsystemBase {
       number = 0;
     }
 
-    //System.out.println(number);
 
     colorDetected.setNumber(number);
     return number;

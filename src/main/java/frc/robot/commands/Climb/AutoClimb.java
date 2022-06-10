@@ -25,9 +25,7 @@ public class AutoClimb extends SequentialCommandGroup {
       new ReachHigh(this.fClimb, this.bClimb),
       new SwingHigh(this.fClimb, this.bClimb),
       new PullHigh(this.fClimb, this.bClimb),
-      new ReachTraverse(this.fClimb, this.bClimb),
-      new SwingTraverse(this.fClimb, this.bClimb)
-      //new PullTraverse(this.fClimb, this.bClimb)
+      new ReachTraverse(this.fClimb, this.bClimb)
     );
   }
 }

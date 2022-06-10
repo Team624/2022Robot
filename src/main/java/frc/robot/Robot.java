@@ -82,6 +82,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     //m_robotContainer.setDisabledLED();
+    m_robotContainer.ghostSwerve();
     compressor.disable();
     auton.setState(false);
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {

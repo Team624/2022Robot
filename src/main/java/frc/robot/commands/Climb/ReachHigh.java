@@ -5,16 +5,11 @@
 package frc.robot.commands.Climb;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.commands.Climb.Back.BottomBack;
 import frc.robot.commands.Climb.Back.TopBack;
 import frc.robot.commands.Climb.Front.BottomFront;
-import frc.robot.commands.Climb.Front.TopFront;
 import frc.robot.subsystems.BackClimb;
 import frc.robot.subsystems.FrontClimb;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ReachHigh extends ParallelCommandGroup {
   private final FrontClimb fClimb;
   private final BackClimb bClimb;

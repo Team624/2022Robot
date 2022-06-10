@@ -63,8 +63,6 @@ public class Drivetrain extends SubsystemBase {
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
-  private ChassisSpeeds m_fieldChassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-
   private SwerveModuleState[] lstates = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
   private ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
@@ -74,7 +72,6 @@ public class Drivetrain extends SubsystemBase {
 
   public boolean isCreepin = false;
   public boolean isSpeedin = false;
-  public boolean controlStatus = true;
 
   public boolean isAuton = false;
   public boolean isUsingVision = false;
@@ -151,7 +148,6 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-        if(controlStatus){
                 SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
                 if (!isAuton && !isUsingVision){
@@ -169,7 +165,6 @@ public class Drivetrain extends SubsystemBase {
                   } else{
                         m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
                   }
-        }
         updateLeoPose(); 
   }
 
@@ -193,10 +188,6 @@ public class Drivetrain extends SubsystemBase {
 
   public Rotation2d getGyroscopeRotation() {
         return Rotation2d.fromDegrees(-ahrs.getAngle());
-  }
-
-  public void setControlStatus(){
-        controlStatus = !controlStatus;
   }
 
   public void yesCreepMode(){

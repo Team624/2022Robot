@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase {
   private CANSparkMax intakeMotor;
   private RelativeEncoder encoder;
 
- 
+  public boolean isDeployed = false;
 
   private SparkMaxPIDController intakePID;
 
@@ -58,6 +58,8 @@ public class Intake extends SubsystemBase {
 
   private double intakePower = Constants.Intake.intakePower;
   public boolean slow = false;
+
+  public boolean recentlyRetracted = false;
 
   /** Creates a new Intake. */
   public Intake() {
@@ -132,10 +134,19 @@ public class Intake extends SubsystemBase {
 
   public void actuateSolenoids(){
     intakeSolenoid.set(true);
+    isDeployed = true;
+    recentlyRetracted = false;
   }
 
   public void retractSolenoids(){
     intakeSolenoid.set(false);
+    isDeployed = false;
+    recentlyRetracted = true;
+  }
+
+  public void setupSolenoids(){
+    intakeSolenoid.set(false);
+    isDeployed = false;
   }
 
 }

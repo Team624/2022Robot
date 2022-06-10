@@ -13,6 +13,11 @@ public class IdleTower extends CommandBase {
   private final Tower tower;
   private final Intake intake;
   private Timer timer;
+  private Timer timer2;
+
+  private boolean feederThreshold = false;
+  private boolean timerStarted = false;
+
   /** Creates a new IdleTower. */
   public IdleTower(Tower tower, Intake intake) {
     this.tower = tower;
@@ -28,29 +33,59 @@ public class IdleTower extends CommandBase {
     timer.reset();
     timer.start();
     tower.setIdleLED();
+    timer2 = new Timer();
+    timer2.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    System.out.println("Current alliance is: " + tower.checkAlliance());
+    if(intake.recentlyRetracted){
+      if(!timerStarted){
+        timer2.start();
+        timerStarted = true;
+        feederThreshold = true;
+      }else if(timer2.get() < 1){
+        feederThreshold = true;
+      }else{
+        feederThreshold = false;
+      }
+    }
 
-    //System.out.println("Time: " + timer.get());
-    if((tower.checkAlliance() == 0 || tower.getAlliance() == tower.checkAlliance())){
+    System.out.println("TOWER: " + tower.checkTowerIR());
+    System.out.println("FEEDER: " + tower.checkFeederIR());
+
+    if((tower.ballAlliance() == 0 || tower.getAlliance() == tower.ballAlliance())){
       //System.out.println("Not rejecting 1");
       intake.slow = false;
       if (timer.get() < 0.05){
         intake.slow = true;
         tower.reverseFeeder();
-      } else if(!tower.checkTowerIR()){
-        tower.powerTower();
-        tower.powerFeeder();
-      }else{
-        tower.stopTower();
-        if(!tower.checkFeederIR()){
+      }else if(!tower.checkTowerIR()){
+        if(tower.checkFeederIR()){
           tower.powerFeeder();
+          tower.powerTower();
         }else{
+          if(intake.isDeployed || feederThreshold){
+            tower.powerFeeder();
+            tower.powerTower();
+          }else{
+            tower.stopFeeder();
+            tower.stopTower();
+          }
+        }
+      }else{
+        if(tower.checkFeederIR()){
           tower.stopFeeder();
+          tower.stopTower();
+        }else{
+          if(intake.isDeployed || feederThreshold){
+            tower.powerFeeder();
+            tower.stopTower();
+          }else{
+            tower.stopFeeder();
+            tower.stopTower();
+          }
         }
       }
     }else{

@@ -23,7 +23,7 @@ public class BottomFront extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() { 
-    fClimb.moveArm(4);
+    fClimb.moveArm(8);
   }
 
   // Called once the command ends or is interrupted.
@@ -35,6 +35,6 @@ public class BottomFront extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return fClimb.readEncoder() > -1;
+    return fClimb.readEncoder() > 4;
   }
 }

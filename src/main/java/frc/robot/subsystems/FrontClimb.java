@@ -21,7 +21,6 @@ public class FrontClimb extends SubsystemBase {
   private RelativeEncoder encoder;
 
   private boolean climbStatus = false;
-  private boolean controlStatus = false;
 
   private SparkMaxPIDController pidController;
 
@@ -90,7 +89,7 @@ public class FrontClimb extends SubsystemBase {
   }
 
   public void powerArm(double speed){
-    if(climbStatus && controlStatus){
+    if(climbStatus){
       frontWinch.set(speed);
     }
   }
@@ -111,7 +110,6 @@ public class FrontClimb extends SubsystemBase {
 
   public void resetClimbStatus(boolean state){
     climbStatus = state;
-    controlStatus = state;
     encoder.setPosition(0.0);
   }
 
@@ -120,14 +118,6 @@ public class FrontClimb extends SubsystemBase {
       climbStatus = false;
     }else{
       climbStatus = true;
-    }
-  }
-
-  public void setControlStatus(){
-    if(controlStatus){
-      controlStatus = false;
-    }else{
-      controlStatus = true;
     }
   }
   

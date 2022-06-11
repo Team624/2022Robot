@@ -106,6 +106,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.setBlankDrivetrainCommand();
     m_robotContainer.getAutonomousDriveCommand(auton).schedule(true);
     m_robotContainer.resetClimbMode();
+    
   }
 
   /** This function is called periodically during autonomous. */
@@ -125,6 +126,7 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.setDrivetrainDefaultCommand();
     m_robotContainer.resetClimbMode();
+    m_robotContainer.resetIntake();
   }
 
   /** This function is called periodically during operator control. */

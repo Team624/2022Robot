@@ -52,8 +52,11 @@ public class IdleTower extends CommandBase {
       }
     }
 
-    System.out.println("TOWER: " + tower.checkTowerIR());
-    System.out.println("FEEDER: " + tower.checkFeederIR());
+    // System.out.println("TOWER: " + tower.checkTowerIR());
+    // System.out.println("FEEDER: " + tower.checkFeederIR());
+    System.out.println("Timer: " + !timerStarted);
+    System.out.println("THRESHOLD: " + feederThreshold);
+    System.out.println("Retracted: " + intake.recentlyRetracted);
 
     if((tower.ballAlliance() == 0 || tower.getAlliance() == tower.ballAlliance())){
       //System.out.println("Not rejecting 1");

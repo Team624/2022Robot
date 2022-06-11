@@ -207,7 +207,6 @@ public class Tower extends SubsystemBase {
 
   @Override
   public void periodic() {
-  
     checkNT();
     if (ledState == 4){
       m_led.setPattern(m_climbLED);

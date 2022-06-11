@@ -109,8 +109,11 @@ public class RobotContainer {
   
   private void configureButtonBindings() {
     new Button(d_controller::getAButton).whenPressed(m_drivetrainSubsystem::zeroGyroscope);
+
     new Button(d_controller::getBButton).whenPressed(m_tower::setReverse);
+
     new Button(d_controller::getXButton).whenPressed(m_drivetrainSubsystem::quickZeroPose);
+
     new Button(d_controller::getYButton).whenHeld(new LowShoot(m_shooter, m_tower));
 
     new Button(d_controller::getLeftBumper).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_tower));
@@ -122,6 +125,14 @@ public class RobotContainer {
        m_tower
     ));
     new Button(d_controller::getRightBumper).whenHeld(new Shoot(m_tower));
+
+    dLeftTriggerDown.whenActive(m_drivetrainSubsystem::yesCreepMode);
+    dLeftTriggerUp.whenActive(m_drivetrainSubsystem::noCreepMode);
+    dRightTriggerDown.whenActive(m_drivetrainSubsystem::yesSpeedMode);
+    dRightTriggerUp.whenActive(m_drivetrainSubsystem::noSpeedMode);
+
+    increaseShoot.whenActive(m_shooter::addRPM);
+    decreaseShoot.whenActive(m_shooter::loseRPM);
 
     new Button(m_controller::getStartButton).whenPressed(m_fClimb::setClimbStatus);
     new Button(m_controller::getStartButton).whenPressed(m_bClimb::setClimbStatus);
@@ -137,14 +148,6 @@ public class RobotContainer {
     new POVButton(m_controller, 90).whenPressed(new AutoClimb(m_fClimb, m_bClimb));
     new POVButton(m_controller, 180).whenPressed(new BottomBack(m_bClimb));
     new POVButton(m_controller, 270).whenPressed(new BottomFront(m_fClimb));
-    
-    increaseShoot.whenActive(m_shooter::addRPM);
-    decreaseShoot.whenActive(m_shooter::loseRPM);
-
-    dLeftTriggerDown.whenActive(m_drivetrainSubsystem::yesCreepMode);
-    dLeftTriggerUp.whenActive(m_drivetrainSubsystem::noCreepMode);
-    dRightTriggerDown.whenActive(m_drivetrainSubsystem::yesSpeedMode);
-    dRightTriggerUp.whenActive(m_drivetrainSubsystem::noSpeedMode);
     
     new Button(m_controller::getLeftStickButton).whenPressed(m_fClimb::resetEncoder);
     new Button(m_controller::getLeftStickButton).whenPressed(m_bClimb::resetEncoder);
@@ -244,6 +247,10 @@ public class RobotContainer {
 
   public void ghostSwerve(){
     new DisabledSwerve(m_drivetrainSubsystem);
+  }
+
+  public void resetIntake(){
+    m_intake.recentlyRetracted = false;
   }
 
 }

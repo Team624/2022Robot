@@ -35,6 +35,7 @@ public class IdleTower extends CommandBase {
     tower.setIdleLED();
     timer2 = new Timer();
     timer2.reset();
+    timerStarted = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,13 +49,14 @@ public class IdleTower extends CommandBase {
       }else if(timer2.get() < 1){
         feederThreshold = true;
       }else{
+        intake.recentlyRetracted = false;
         feederThreshold = false;
       }
     }
 
     // System.out.println("TOWER: " + tower.checkTowerIR());
     // System.out.println("FEEDER: " + tower.checkFeederIR());
-    System.out.println("Timer: " + !timerStarted);
+    System.out.println("Timer: " + timerStarted);
     System.out.println("THRESHOLD: " + feederThreshold);
     System.out.println("Retracted: " + intake.recentlyRetracted);
 

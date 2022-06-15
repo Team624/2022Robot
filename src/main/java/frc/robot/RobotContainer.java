@@ -33,9 +33,11 @@ import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
 import frc.robot.commands.LowShoot;
+import frc.robot.commands.SpitTop;
 import frc.robot.commands.Shooter.PrimeShoot;
 import frc.robot.commands.Tower.ClimbTower;
 import frc.robot.commands.Tower.IdleTower;
+import frc.robot.commands.Tower.Reverse;
 import frc.robot.commands.Tower.Shoot;
 import frc.robot.commands.Tower.SlowReverse;
 import frc.robot.commands.Intake.DeployIntake;
@@ -134,6 +136,11 @@ public class RobotContainer {
     increaseShoot.whenActive(m_shooter::addRPM);
     decreaseShoot.whenActive(m_shooter::loseRPM);
 
+    new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));
+    new Button(m_controller::getBButton).whenHeld(new Reverse(m_tower));
+    new Button(m_controller::getYButton).whenHeld(new SpitTop(m_shooter, m_tower));
+    new Button(m_controller::getAButton).whenHeld(new SlowReverse(m_tower));
+
     new Button(m_controller::getStartButton).whenPressed(m_fClimb::setClimbStatus);
     new Button(m_controller::getStartButton).whenPressed(m_bClimb::setClimbStatus);
     new Button(m_controller::getStartButton).toggleWhenPressed(new ClimbTower(m_tower));
@@ -151,7 +158,6 @@ public class RobotContainer {
     
     new Button(m_controller::getLeftStickButton).whenPressed(m_fClimb::resetEncoder);
     new Button(m_controller::getLeftStickButton).whenPressed(m_bClimb::resetEncoder);
-    new Button(m_controller::getXButton).whenHeld(new DeployIntake(m_intake));
   }
 
   private static double deadband(double value, double deadband) {

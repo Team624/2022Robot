@@ -23,7 +23,8 @@ public class VisionTurn extends CommandBase {
 
   private final ShooterVision shooterVision;
 
-  private double quickTurnTolerance = 15;
+  //15
+  private double quickTurnTolerance = 25;
   private double visionResetTolerance = 1;
 
   private SlewRateLimiter filterX = new SlewRateLimiter(4.5);
@@ -83,7 +84,6 @@ public class VisionTurn extends CommandBase {
 
     // If doing normal vision targeting
     if((Math.abs(visionRot) < 500) && quickTurnDone){
-      //System.out.println("Vision targeting error = " + visionRot);
 
       // For leds
       if ((Math.abs(visionRot) < 4.0)){
@@ -98,7 +98,6 @@ public class VisionTurn extends CommandBase {
         double x = radius * Math.cos(degree % (Math.PI * 2));
         double y = radius * Math.sin(degree % (Math.PI * 2));
 
-        //System.out.println("reseting robot pose: " + radius);
         m_drivetrainSubsystem.visionCorrectPose(targetPose[0] - x, targetPose[1] - y);
       }
     
@@ -107,7 +106,8 @@ public class VisionTurn extends CommandBase {
 
         double lim;
         if (usedQuickTurn){
-          lim = 0.8;
+          //.8
+          lim = 0.7;
         } else{
           lim = 1.3;
         }
@@ -118,13 +118,27 @@ public class VisionTurn extends CommandBase {
         if (thVelocity < -lim){
           thVelocity = -lim;
         }
+
       } else{
         thVelocity = getVisionPID(visionRot);
+        if(Math.abs(visionRot) > 15){
+          if(thVelocity > 1.1){
+            thVelocity = 1.1;
+          }else if(thVelocity < -1.1){
+            thVelocity = -1.1;
+          }
+        }else{
+          if(thVelocity > .7){
+            thVelocity = .7;
+          }else if(thVelocity < -.7){
+            thVelocity = -.7;
+          }
+        }
+        System.out.println(thVelocity);
       }
       
     } else{
       // Quick turn
-      //System.out.println("Doing shooting on run");
       tower.setAngleOnTarget(false);
       usedQuickTurn = true;
       double angle = m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + (wantedDeltaAngle * (180/Math.PI));
@@ -144,7 +158,6 @@ public class VisionTurn extends CommandBase {
     }
     vx = filterX.calculate(vx);
     vy = filterY.calculate(vy);
-    //System.out.println("vx: " + vx + " vy: " + vy + " th: " + thVelocity + " isNotMoving: " + isNotMoving);
     m_drivetrainSubsystem.drive(
       ChassisSpeeds.fromFieldRelativeSpeeds(
         vx,

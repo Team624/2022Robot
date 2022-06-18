@@ -15,8 +15,7 @@ public class SpitTop extends ParallelCommandGroup {
     this.shooter = shooter;
     this.tower = tower;
     addCommands(
-      new LowShoot(this.shooter, this.tower),
-      new TowerOn(this.tower)
+      new LowShoot(this.shooter, this.tower)
     );
   }
 }

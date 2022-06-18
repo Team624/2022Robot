@@ -210,13 +210,15 @@ public void noSpeedMode(){
           isAuton = state;
   }
   private PIDController getRotationPID(){
+          //.1,0,0
         //return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
         return new PIDController(0.1, 0.0, 0.0);  
   }
 
   private PIDController getVisionPID(){
+          //.055,0,0
         //return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
-        return new PIDController(0.055, 0.0, 0.0);  
+        return new PIDController(0.1, 0.0, 0.0);  
   }
 
   private PIDController getAutonRotationPID(){

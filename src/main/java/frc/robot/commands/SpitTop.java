@@ -2,7 +2,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.commands.Tower.TowerOn;
+import frc.robot.commands.Shooter.LowRPM;
+import frc.robot.commands.Shooter.ManualShoot;
+import frc.robot.commands.Tower.ShootTop;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tower;
 
@@ -15,7 +17,8 @@ public class SpitTop extends ParallelCommandGroup {
     this.shooter = shooter;
     this.tower = tower;
     addCommands(
-      new LowShoot(this.shooter, this.tower)
+      new LowRPM(this.shooter),
+      new ShootTop(this.tower)
     );
   }
 }

@@ -15,16 +15,22 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.NetworkTableEntry;
+//import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.trobot5013lib.led.ChasePattern;
+import frc.robot.trobot5013lib.led.TrobotAddressableLED;
+import frc.robot.trobot5013lib.led.TrobotAddressableLEDPattern;
 import com.kauailabs.navx.frc.AHRS;
 
 public class Drivetrain extends SubsystemBase {
+
+        public boolean musicMode;
 
   public static final double MAX_VOLTAGE = 12.0;
 
@@ -56,19 +62,44 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveModule m_backRightModule;
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
+
   private SwerveModuleState[] lstates = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
 
   private ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
-  private NetworkTableEntry getRotationConts = tab.add("Set Constants", false).withPosition(8, 0).getEntry();
-  private NetworkTableEntry rotationP = tab.add("Tracking P", 0.0).withPosition(8, 1).getEntry();
-  private NetworkTableEntry rotationI = tab.add("Tracking I", 0.0).withPosition(8, 2).getEntry();
-  private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();
+//   private NetworkTableEntry rotationP = tab.add("Tracking P", 0.0).withPosition(8, 1).getEntry();
+//   private NetworkTableEntry rotationI = tab.add("Tracking I", 0.0).withPosition(8, 2).getEntry();
+//   private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();
 
-  private boolean isCreepin = false;
+  public boolean isCreepin = false;
+  public boolean isSpeedin = false;
+
+  public boolean isAuton = false;
+  public boolean isUsingVision = false;
 
   public boolean lastPointCommand = false;
+  public boolean stopAuton = false;
 
-  public Drivetrain() {
+  public PIDController visionTurn_pid;
+  public PIDController visionTurn_pidQuickTurn;
+  public PIDController visionTurn2_pid;
+
+  public PIDController autonPoint_pidPathRotation;
+  public PIDController autonPath_pidVision;
+
+  public TrobotAddressableLED m_led;
+  private Color[] greenWhiteArray = {Color.kGreen, Color.kSeaGreen};
+  public TrobotAddressableLEDPattern m_shooting = new ChasePattern(greenWhiteArray, 3);
+
+  public Drivetrain(TrobotAddressableLED m_led_strip) {
+
+        m_led = m_led_strip;
+         visionTurn_pid = getRotationPID();
+         visionTurn_pidQuickTurn = getRotationQuickTurnPID();
+         visionTurn2_pid = getVisionPID();
+
+         autonPoint_pidPathRotation = getRotationPathPID();
+         autonPath_pidVision = getAutonRotationPID();
+
           m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
                   tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                   .withSize(2, 4)
@@ -109,7 +140,6 @@ public class Drivetrain extends SubsystemBase {
                   Constants.Drivetrain.BACK_RIGHT_MODULE_STEER_ENCODER,
                   Constants.Drivetrain.BACK_RIGHT_MODULE_STEER_OFFSET);
 
-
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -118,16 +148,28 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-          SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
-          states = freezeLogic(states);
-          states = creepify(states);
-          SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);       
-          m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
-          m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
-          m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
-          m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
-          m_odometry.update(getGyroscopeRotation(), states);
-          updateLeoPose();          
+                SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+
+                if (!isAuton && !isUsingVision){
+                      states = freezeLogic(states);
+                }
+      
+                SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);       
+                m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
+                m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
+                m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
+                m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
+
+                if (isAuton){
+                        m_odometry.update(getGyroscopeRotation(), states);
+                  } else{
+                        m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
+                  }
+        updateLeoPose(); 
+  }
+
+  private SwerveModuleState getState(SwerveModule module) {
+          return new SwerveModuleState(module.getDriveVelocity(), new Rotation2d(module.getSteerAngle()));
   }
 
   private SwerveModuleState[] freezeLogic(SwerveModuleState[] current){
@@ -144,18 +186,8 @@ public class Drivetrain extends SubsystemBase {
           return current; 
   }
 
-  private SwerveModuleState[] creepify(SwerveModuleState[] state){
-        SwerveModuleState[] current = state;
-        if(isCreepin){
-                for(int i = 0; i < 4; i++){
-                        current[i].speedMetersPerSecond *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
-                      }
-              }
-              return current;
-  }
-
   public Rotation2d getGyroscopeRotation() {
-          return Rotation2d.fromDegrees(-ahrs.getAngle());
+        return Rotation2d.fromDegrees(-ahrs.getAngle());
   }
 
   public void yesCreepMode(){
@@ -166,14 +198,42 @@ public class Drivetrain extends SubsystemBase {
           isCreepin = false;
   }
 
-  public PIDController getRotationPID(){
-        if(getRotationConts.getBoolean(false)){
-                return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
-        }else{
-                return new PIDController(Constants.Drivetrain.visionP, Constants.Drivetrain.visionI, Constants.Drivetrain.visionD);
-        }
-        
+  public void yesSpeedMode(){
+        isSpeedin = true;
+}
+
+public void noSpeedMode(){
+        isSpeedin = false;
+}
+
+  public void setAuton(boolean state){
+          isAuton = state;
   }
+  private PIDController getRotationPID(){
+          //.1,0,0
+        //return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
+        return new PIDController(0.1, 0.0, 0.0);  
+  }
+
+  private PIDController getVisionPID(){
+          //.055,0,0
+        //return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
+        return new PIDController(0.1, 0.0, 0.0);  
+  }
+
+  private PIDController getAutonRotationPID(){
+        return new PIDController(Constants.Drivetrain.visionP, Constants.Drivetrain.visionI, Constants.Drivetrain.visionD);  
+  }
+
+
+  private PIDController getRotationPathPID(){
+        return new PIDController(.06, 0, 0);
+  }
+
+  private PIDController getRotationQuickTurnPID(){
+        return new PIDController(.05, 0, 0);
+  }
+
 
   public double normalizeAngle(double angle){
         //   Normalizes angle between (-pi and pi)
@@ -201,14 +261,39 @@ public class Drivetrain extends SubsystemBase {
           ahrs.setAngleAdjustment(newRot.getDegrees());
   }
 
+  public void quickZeroPose(){
+        zeroGyroscope();
+        // zero point against driver station wall
+        double[] startPosition = {0.406,-6.0198,0};
+        Rotation2d newRot = new Rotation2d(-startPosition[2]);
+        Pose2d newPose = new Pose2d(startPosition[0], startPosition[1], newRot);
+        m_odometry.resetPosition(newPose, newRot);
+        ahrs.setAngleAdjustment(newRot.getDegrees());
+  }
+
+  public void visionCorrectPose(double x, double y){
+        Rotation2d newRot = getGyroscopeRotation();
+        Pose2d newPose = new Pose2d(x, y, newRot);
+        m_odometry.resetPosition(newPose, newRot);
+        // Not sure if needed
+        //ahrs.setAngleAdjustment(newRot.getDegrees());
+}
+
   public void updateLeoPose(){
         SmartDashboard.putNumber("/pose/th", getGyroscopeRotation().getRadians());
         SmartDashboard.putNumber("/pose/x", m_odometry.getPoseMeters().getX());
         SmartDashboard.putNumber("/pose/y", m_odometry.getPoseMeters().getY());
   }
 
+  public double getVisionRotationAngle(){
+        return -SmartDashboard.getEntry("/vision/rotationAngle").getDouble(0.0);
+  }
+
+  public double getDistanceAngle(){
+        return SmartDashboard.getEntry("/vision/distanceAngle").getDouble(0.0);
+  }
+
   public double[] getSwervePose(){
-          
         double[] pose = {m_odometry.getPoseMeters().getX(), m_odometry.getPoseMeters().getY()};
         return pose;
   }

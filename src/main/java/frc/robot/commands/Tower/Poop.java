@@ -2,18 +2,18 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.Tower;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Tower;
 
-public class IdleShooter extends CommandBase {
-  private final Shooter shooter;
-  /** Creates a new IdleShooter. */
-  public IdleShooter(Shooter shooter) {
-    this.shooter = shooter;
+public class Poop extends CommandBase {
+  private final Tower tower;
+  /** Creates a new Reverse. */
+  public Poop(Tower tower) {
+    this.tower = tower;
+    addRequirements(this.tower);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -22,7 +22,10 @@ public class IdleShooter extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    tower.manualTower(-1);
+    tower.manualFeeder(-.7);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

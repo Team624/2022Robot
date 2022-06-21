@@ -4,12 +4,12 @@
 
 package frc.robot.commands.Drivetrain;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.commands.Drivetrain.auton.*;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.utility.Auton;
-import frc.robot.commands.Drivetrain.auton.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class AutonomousDrive extends CommandBase {
   private Auton auton;
@@ -21,25 +21,28 @@ public class AutonomousDrive extends CommandBase {
   public AutonomousDrive(Drivetrain drivetrainSubsystem, Auton auton) {
     this.m_drivetrainSubsystem = drivetrainSubsystem;
     this.auton = auton;
-    addRequirements(m_drivetrainSubsystem);
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.addRequirements(drivetrainSubsystem);
+    addRequirements(drivetrainSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SmartDashboard.getEntry("/pathTable/status/finishedPath").setString("false " + "-1");
+    m_drivetrainSubsystem.setAuton(true);
+    m_drivetrainSubsystem.stopAuton = false;
     m_drivetrainSubsystem.setPose();
     commandGroup = new SequentialCommandGroup();
     for (int i = 0; i < auton.getPathCount(); i++){
       commandGroup.addCommands(new AutonPathCommand(m_drivetrainSubsystem, auton.auton[i], auton));
     }
-    commandGroup.schedule();
+    //this.alongWith(commandGroup);
+    commandGroup.schedule(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    System.out.println("In Main Auotnomous Drive");
   }
 
   // Called once the command ends or is interrupted.

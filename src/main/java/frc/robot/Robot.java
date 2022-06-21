@@ -4,8 +4,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.trobot5013lib.led.TrobotAddressableLED;
 import frc.robot.utility.Auton;
 
 /**
@@ -17,17 +25,39 @@ import frc.robot.utility.Auton;
 public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
-  private Auton auton = new Auton();
+  private Auton auton;
+
+  private Compressor compressor;
+
+  private TrobotAddressableLED m_led = new TrobotAddressableLED(9, 15);
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+
+  private ShuffleboardTab tab_cam = Shuffleboard.getTab("Camera");
+  private NetworkTableEntry spitoutEntry = tab_cam.add("Spitout", false).withPosition(9, 0).getEntry();
+  private UsbCamera camera; 
+
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    camera = CameraServer.startAutomaticCapture();
+    
+    spitoutEntry.setBoolean(true);
+
+    compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);
+
+    m_robotContainer = new RobotContainer(m_led, camera);
+
+    auton = new Auton(
+      m_robotContainer.getDrivetrain(),
+      m_robotContainer.getIntake(),
+      m_robotContainer.getTower(),
+      m_robotContainer.getShooter(),
+      m_robotContainer.getShooterVision()
+    );
+
     auton.setState(false);
   }
 
@@ -51,8 +81,10 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    //m_robotContainer.setDisabledLED();
+    m_robotContainer.ghostSwerve();
+    compressor.disable();
     auton.setState(false);
-    // TODO: Im not sure if not properly canceling the command could cause the issues but I guess we'll see lol
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
       m_robotContainer.getAutonomousDriveCommand(auton).cancel();
     }
@@ -66,25 +98,43 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    m_robotContainer.enableColorSensor();
+    auton.resetStates();
+    m_robotContainer.setAlliance();
+    compressor.enableDigital();
     auton.setState(true);
-    m_robotContainer.getAutonomousDriveCommand(auton).schedule();
+    m_robotContainer.setBlankDrivetrainCommand();
+    m_robotContainer.getAutonomousDriveCommand(auton).schedule(true);
+    m_robotContainer.resetClimbMode();
+    
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    spitoutEntry.setBoolean(m_robotContainer.getSpitoutSetting());
+  }
 
   @Override
   public void teleopInit() {
+    m_robotContainer.enableColorSensor();
+    m_robotContainer.setAlliance();
+    auton.setState(false);
+    compressor.enableDigital();
     if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
       m_robotContainer.getAutonomousDriveCommand(auton).cancel();
     }
-    auton.setState(false);
+    m_robotContainer.setDrivetrainDefaultCommand();
+    m_robotContainer.resetClimbMode();
+    m_robotContainer.resetIntake();
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    spitoutEntry.setBoolean(m_robotContainer.getSpitoutSetting());
+    // m_robotContainer.setDrivetrainDefaultCommand();
+  }
 
   @Override
   public void testInit() {

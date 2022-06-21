@@ -1,6 +1,5 @@
 package frc.robot.commands.Drivetrain.auton;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,7 +13,6 @@ public class AutonPointCommand extends CommandBase {
     private final Drivetrain m_drivetrainSubsystem;
     private final Path path;
     private final int point;
-    private final PIDController pid = new PIDController(0.04, 0, 0);
 
     private Auton auton;
 
@@ -28,33 +26,46 @@ public class AutonPointCommand extends CommandBase {
         this.path = path;
         this.point = point;
         this.auton = auton;
-        this.addRequirements(drive);
+        addRequirements(drive);
         
     }
 
     @Override
     public void initialize() {
       System.out.println("On point: " + point);
-        SmartDashboard.getEntry("/pathTable/status/point").setNumber(point);    
+      SmartDashboard.getEntry("/pathTable/status/point").setNumber(point); 
+      SmartDashboard.getEntry("/pathTable/status/finishedPath").setString("false " + path.getPathId()); 
+      m_drivetrainSubsystem.autonPoint_pidPathRotation.reset();
     }
 
     @Override
     public void execute () {
-        currentX = m_drivetrainSubsystem.getSwervePose()[0];
-        currentY = m_drivetrainSubsystem.getSwervePose()[1];
+        if (!auton.isAuton){
+          m_drivetrainSubsystem.drive(new ChassisSpeeds(0,0,0));
+          System.out.println("CANCELED POINT COMMAND");
+          this.cancel();
+        }
+        if (!m_drivetrainSubsystem.stopAuton){
+          currentX = m_drivetrainSubsystem.getSwervePose()[0];
+          currentY = m_drivetrainSubsystem.getSwervePose()[1];
 
-        PathPoint pathPoint = path.getPoint(point);
-        if (point < path.getLength()-1){
-          double[] nearestPoint = getClosestPointOnLine(pathPoint.getX(), pathPoint.getY(), path.getPoint(point+1).getX(), path.getPoint(point + 1).getY(), currentX, currentY);
+          PathPoint pathPoint = path.getPoint(point);
+          if (point < path.getLength()-1){
+            double[] nearestPoint = getClosestPointOnLine(pathPoint.getX(), pathPoint.getY(), path.getPoint(point+1).getX(), path.getPoint(point + 1).getY(), currentX, currentY);
 
-          double velocityX = pathPoint.getVx() + (nearestPoint[0] - currentX) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
-          double velocityY = pathPoint.getVy() + (nearestPoint[1] - currentY) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
- 
-          autonDrive(velocityX, velocityY, pathPoint.getHeading());
+            double velocityX = pathPoint.getVx() + (nearestPoint[0] - currentX) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
+            double velocityY = pathPoint.getVy() + (nearestPoint[1] - currentY) * Constants.Drivetrain.TRANSLATION_TUNING_CONSTANT;
+  
+            autonDrive(velocityX, velocityY, pathPoint.getHeading());
+          }
+        }
+        else {
+          System.out.println("E Stopped Auton");
         }
     }
 
     private void autonDrive(double xVelocity, double yVelocity, double theta){
+        //System.out.println("Still driving in auton");
         double wantedAngle = m_drivetrainSubsystem.normalizeAngle(theta);
         // Check left and right angles to see which way of rotation will make it quicker (subtract from pi)
         double errorA = wantedAngle - m_drivetrainSubsystem.normalizeAngle(m_drivetrainSubsystem.getGyroscopeRotation().getRadians());
@@ -66,19 +77,31 @@ public class AutonPointCommand extends CommandBase {
         wantedDeltaAngle = Math.abs(errorB) < Math.abs(errorC) ? errorB : errorC;
         wantedDeltaAngle = Math.abs(wantedDeltaAngle) < Math.abs(errorA) ? wantedDeltaAngle : errorA; 
 
+        double thVelocity = 0;
+        // If the vision tracking is running
+        // if ((auton.getShooterState().equals("prime") || auton.getShooterState().equals("shoot")) && (Math.abs(m_drivetrainSubsystem.getVisionRotationAngle()) < 500)){
+        //   System.out.println("Using Vision in Path: " + m_drivetrainSubsystem.getVisionRotationAngle());
+        //   thVelocity = getRotationVisionPID(m_drivetrainSubsystem.getVisionRotationAngle());
+        // } else{
+        thVelocity = getRotationPathPID(wantedDeltaAngle * (180/Math.PI));
+      
         m_drivetrainSubsystem.drive(
           ChassisSpeeds.fromFieldRelativeSpeeds(
             xVelocity,
             yVelocity,
-            getRotationPID(wantedDeltaAngle * (180/Math.PI)), // Convert from radians to degrees
+            thVelocity, // In degrees
             m_drivetrainSubsystem.getGyroscopeRotation()
           )
         );
     }
 
-    private double getRotationPID(double wantedDeltaAngle){
-        return pid.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getRadians(), m_drivetrainSubsystem.getGyroscopeRotation().getRadians() + wantedDeltaAngle);
-    }
+    // private double getRotationVisionPID(double wantedDeltaAngle){
+    //     return pidVision.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
+    // }
+
+    private double getRotationPathPID(double wantedDeltaAngle){
+      return m_drivetrainSubsystem.autonPoint_pidPathRotation.calculate(m_drivetrainSubsystem.getGyroscopeRotation().getDegrees(), m_drivetrainSubsystem.getGyroscopeRotation().getDegrees() + wantedDeltaAngle);
+  }
 
     private double calculateDistance(double point1X, double point1Y, double point2X, double point2Y) {
         double distanceX = point1X - point2X;
@@ -131,8 +154,15 @@ public class AutonPointCommand extends CommandBase {
         if (point == path.getLength() -1){
           System.out.println("LAST POINT IN PATH OF LENGTH: " + path.getLength());
           m_drivetrainSubsystem.lastPointCommand = true;
+          SmartDashboard.getEntry("/pathTable/status/finishedPath").setString("true " + path.getPathId());
           return true;
         }
-        return calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY()) < auton.getPathPointRange();
+        double distance = calculateDistance(currentX, currentY, path.getPoint(point + 1).getX(), path.getPoint(point + 1).getY());
+        if (distance > 1.0){
+          System.out.println("EMERGENCY STOPPED AUTON");
+          m_drivetrainSubsystem.stopAuton = true;
+          return true;
+        }
+        return distance < path.getPoint(point).getTolerance();
     }
 }

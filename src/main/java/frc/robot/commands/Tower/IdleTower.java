@@ -40,7 +40,7 @@ public class IdleTower extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() { 
+  public void execute() {     
     if(intake.recentlyRetracted){
       if(!timerStarted){
         timer2.start();
@@ -56,16 +56,21 @@ public class IdleTower extends CommandBase {
 
     if((tower.ballAlliance() == 0 || tower.getAlliance() == tower.ballAlliance())){
       //System.out.println("Not rejecting 1");
-      intake.slow = false;
-      if (timer.get() < 0.05){
-        intake.slow = true;
-        tower.reverseFeeder();
+      if (timer.get() < .1){
+        if(intake.isDeployed){
+          intake.slow = true;
+          tower.reverseFeeder();
+        }
       }else if(!tower.checkTowerIR()){
+        intake.slow = false;
         if(tower.checkFeederIR()){
           tower.powerFeeder();
           tower.powerTower();
         }else{
           if(intake.isDeployed || feederThreshold){
+            tower.powerFeeder();
+            tower.powerTower();
+          }else if(tower.getAlliance() == tower.ballAlliance()){
             tower.powerFeeder();
             tower.powerTower();
           }else{
@@ -74,6 +79,7 @@ public class IdleTower extends CommandBase {
           }
         }
       }else{
+        intake.slow = false;
         if(tower.checkFeederIR()){
           tower.stopFeeder();
           tower.stopTower();

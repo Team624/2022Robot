@@ -3,7 +3,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.commands.Shooter.LowRPM;
-import frc.robot.commands.Shooter.ManualShoot;
 import frc.robot.commands.Tower.ShootTop;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tower;

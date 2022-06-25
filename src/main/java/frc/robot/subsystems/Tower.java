@@ -45,28 +45,26 @@ public class Tower extends SubsystemBase {
   private double MaxOutput_tower;
   private double MinOutput_tower; 
 
-  private double Pnew_tower;
-  private double Inew_tower;
-  private double Dnew_tower;
-  private double Iznew_tower;
-  private double FFnew_tower;
-
   private DigitalInput IrSensor_tower = new DigitalInput(0);
 
   private ShuffleboardTab tab_tower = Shuffleboard.getTab("Tower");
-  private NetworkTableEntry setSpeed_tower = tab_tower.add("Set Speed", false).withPosition(0, 0).getEntry();
-  private NetworkTableEntry speed_tower = tab_tower.add("Tower Speed", 0.0).withPosition(0, 1).getEntry();
+  private NetworkTableEntry setSpeed_tower = tab_tower.add("Set T-Speed", false).withPosition(0, 0).getEntry();
+  private NetworkTableEntry speed_tower = tab_tower.add("T-Speed", 0.0).withPosition(0, 1).getEntry();
 
-  private NetworkTableEntry setPoint_tower = tab_tower.add("Setpoint", 0.0).withPosition(2, 0).getEntry();
-  private NetworkTableEntry currentSpeed_tower = tab_tower.add("Encoder", 0.0).withPosition(2, 1).getEntry();
+  private NetworkTableEntry setPoint_tower = tab_tower.add("T-Setpoint", 0.0).withPosition(1, 0).getEntry();
+  private NetworkTableEntry currentSpeed_tower = tab_tower.add("T-Encoder", 0.0).withPosition(1, 1).getEntry();
 
-  private NetworkTableEntry Pterm_tower = tab_tower.add("P Term", 0.0).withPosition(1, 0).getEntry();
-  private NetworkTableEntry Iterm_tower = tab_tower.add("I Term", 0.0).withPosition(1, 1).getEntry();
-  private NetworkTableEntry Dterm_tower = tab_tower.add("D Term", 0.0).withPosition(1, 2).getEntry();
-  private NetworkTableEntry IzTerm_tower = tab_tower.add("Iz Term", 0.0).withPosition(1, 3).getEntry();
-  private NetworkTableEntry FFterm_tower = tab_tower.add("FF Term", 0.0).withPosition(1, 4).getEntry();
+  private NetworkTableEntry colorDetected = tab_tower.add("Color", 0.0).withPosition(2, 0).getEntry();
+  private NetworkTableEntry ballProximity = tab_tower.add("Prox", 0.0).withPosition(2, 1).getEntry();
 
-  private NetworkTableEntry colorDetected = tab_tower.add("Color", 0.0).withPosition(3, 0).getEntry();
+  private NetworkTableEntry towerIR = tab_tower.add("T-IR", false).withPosition(2, 3).getEntry();
+  private NetworkTableEntry feederIR = tab_tower.add("F-IR", false).withPosition(3, 3).getEntry();
+
+  private NetworkTableEntry setSpeed_feeder = tab_tower.add("Set F-Speed", false).withPosition(4, 0).getEntry();
+  private NetworkTableEntry speed_feeder = tab_tower.add("Feeder F-Speed", 0.0).withPosition(4, 1).getEntry();
+
+  private NetworkTableEntry setPoint_feeder = tab_tower.add("F-Setpoint", 0.0).withPosition(5, 0).getEntry();
+  private NetworkTableEntry currentSpeed_feeder = tab_tower.add("F-Encoder", 0.0).withPosition(5, 1).getEntry();
 
   private double towerPower = Constants.Tower.towerPower;
 
@@ -85,25 +83,6 @@ public class Tower extends SubsystemBase {
   private double FF_feeder;
   private double MaxOutput_feeder;
   private double MinOutput_feeder; 
-
-  private double Pnew_feeder;
-  private double Inew_feeder;
-  private double Dnew_feeder;
-  private double Iznew_feeder;
-  private double FFnew_feeder;
-
-  private ShuffleboardTab tab_feeder = Shuffleboard.getTab("Feeder");
-  private NetworkTableEntry setSpeed_feeder = tab_feeder.add("Set Speed", false).withPosition(0, 0).getEntry();
-  private NetworkTableEntry speed_feeder = tab_feeder.add("Feeder Speed", 0.0).withPosition(0, 1).getEntry();
-
-  private NetworkTableEntry setPoint_feeder = tab_feeder.add("Setpoint", 0.0).withPosition(2, 0).getEntry();
-  private NetworkTableEntry currentSpeed_feeder = tab_feeder.add("Encoder", 0.0).withPosition(2, 1).getEntry();
-
-  private NetworkTableEntry Pterm_feeder = tab_feeder.add("P Term", 0.0).withPosition(1, 0).getEntry();
-  private NetworkTableEntry Iterm_feeder = tab_feeder.add("I Term", 0.0).withPosition(1, 1).getEntry();
-  private NetworkTableEntry Dterm_feeder = tab_feeder.add("D Term", 0.0).withPosition(1, 2).getEntry();
-  private NetworkTableEntry IzTerm_feeder = tab_feeder.add("Iz Term", 0.0).withPosition(1, 3).getEntry();
-  private NetworkTableEntry FFterm_feeder = tab_feeder.add("FF Term", 0.0).withPosition(1, 4).getEntry();
 
   private double feederPower = Constants.Feeder.feederPower;
 
@@ -259,18 +238,6 @@ public class Tower extends SubsystemBase {
       towerPower = Constants.Tower.towerPower;
     }
 
-    Pnew_tower = Pterm_tower.getDouble(Constants.Tower.P);
-    Inew_tower = Iterm_tower.getDouble(Constants.Tower.I);
-    Dnew_tower = Dterm_tower.getDouble(Constants.Tower.D);
-    Iznew_tower = IzTerm_tower.getDouble(Constants.Tower.Iz);
-    FFnew_tower = FFterm_tower.getDouble(Constants.Tower.FF);
-
-    if((P_tower != Pnew_tower && Pnew_tower != 0.0)) { towerPID.setP(Pnew_tower); P_tower = Pnew_tower; }
-    if((I_tower != Inew_tower && Inew_tower != 0.0)) { towerPID.setI(Inew_tower); I_tower = Inew_tower; }
-    if((D_tower != Dnew_tower && Dnew_tower != 0.0)) { towerPID.setD(Dnew_tower); D_tower = Dnew_tower; }
-    if((Iz_tower != Iznew_tower && Iznew_tower != 0.0)) { towerPID.setIZone(Iznew_tower); Iz_tower = Iznew_tower; }
-    if((FF_tower != FFnew_tower && FFnew_tower != 0.0)) { towerPID.setFF(FFnew_tower); FF_tower = FFnew_tower; }
-
     currentSpeed_tower.setDouble(towerEncoder.getVelocity());
     setPoint_tower.setDouble(towerPower * Constants.Feeder.maxRPM);
 
@@ -282,20 +249,11 @@ public class Tower extends SubsystemBase {
       feederPower = Constants.Feeder.feederPower;
     }
 
-    Pnew_feeder = Pterm_feeder.getDouble(Constants.Feeder.P);
-    Inew_feeder = Iterm_feeder.getDouble(Constants.Feeder.I);
-    Dnew_feeder = Dterm_feeder.getDouble(Constants.Feeder.D);
-    Iznew_feeder = IzTerm_feeder.getDouble(Constants.Feeder.Iz);
-    FFnew_feeder = FFterm_feeder.getDouble(Constants.Feeder.FF);
-
-    if((P_feeder != Pnew_feeder && Pnew_feeder != 0.0)) { feederPID.setP(Pnew_feeder); P_feeder = Pnew_feeder; }
-    if((I_feeder != Inew_feeder && Inew_feeder != 0.0)) { feederPID.setI(Inew_feeder); I_feeder = Inew_feeder; }
-    if((D_feeder != Dnew_feeder && Dnew_feeder != 0.0)) { feederPID.setD(Dnew_feeder); D_feeder = Dnew_feeder; }
-    if((Iz_feeder != Iznew_feeder && Iznew_feeder != 0.0)) { feederPID.setIZone(Iznew_feeder); Iz_feeder = Iznew_feeder; }
-    if((FF_feeder != FFnew_feeder && FFnew_feeder != 0.0)) { feederPID.setFF(FFnew_feeder); FF_feeder = FFnew_feeder; }
-
     currentSpeed_feeder.setDouble(feederEncoder.getVelocity());
     setPoint_feeder.setDouble(feederPower * Constants.Feeder.maxRPM);
+
+    towerIR.setBoolean(IrSensor_tower.get());
+    feederIR.setBoolean(IrSensor_feeder.get());
   }
 
 
@@ -396,9 +354,9 @@ public class Tower extends SubsystemBase {
   public int ballAlliance(){
     // nukber 1 is blue, 2 is red
     Color detectedColor = cSense.getColor();
-    //System.out.println("Blue: " + detectedColor.blue + " Red: " + detectedColor.red + " Green: " + detectedColor.green);
-    //System.out.println(cSense.getProximity());
+    System.out.println("Blue: " + detectedColor.blue + " Red: " + detectedColor.red + " Green: " + detectedColor.green);
     ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
+    ballProximity.setDouble(cSense.getProximity());
     int number = 0;
     if (cSense.getProximity() > 142){
       if(match.color == kBlueTarget){

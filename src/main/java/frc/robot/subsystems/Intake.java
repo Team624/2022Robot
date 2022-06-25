@@ -53,6 +53,9 @@ public class Intake extends SubsystemBase {
   private NetworkTableEntry IzTerm = tab.add("Iz Term", 0.0).withPosition(1, 3).getEntry();
   private NetworkTableEntry FFterm = tab.add("FF Term", 0.0).withPosition(1, 4).getEntry();
 
+  private NetworkTableEntry recentlyRetract = tab.add("Recent Retract", false).withPosition(3, 0).getEntry();
+  private NetworkTableEntry slowTake = tab.add("Intake Slow", false).withPosition(3, 1).getEntry();
+
   //private NetworkTableEntry AgitateTime = tab.add("Agitate Time", Constants.Intake.agitateTime).withPosition(3, 0).getEntry();
   private NetworkTableEntry AgitateSpeed = tab.add("Agitate Speed", Constants.Intake.agitateSpeed).withPosition(3,1).getEntry();
 
@@ -88,8 +91,6 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // cam.setResolution(16*5, 9*5);
-    // cam.setFPS(15);
     checkNT();
     // This method will be called once per scheduler run
   }
@@ -98,7 +99,7 @@ public class Intake extends SubsystemBase {
     if(setSpeed.getBoolean(false)){
       intakePower = intakeSpeed.getDouble(Constants.Intake.intakePower);
     } else if (slow){
-      intakePower = 0.6;
+      intakePower = 0.3;
     } else{
       intakePower = Constants.Intake.intakePower;
     }
@@ -118,6 +119,8 @@ public class Intake extends SubsystemBase {
     currentSpeed.setDouble(encoder.getVelocity());
     setPoint.setDouble(intakePower * Constants.Intake.maxRPM);
 
+    recentlyRetract.setBoolean(recentlyRetracted);
+    slowTake.setBoolean(slow);
   }
 
   public void powerIntake(){

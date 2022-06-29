@@ -56,7 +56,7 @@ public class IdleTower extends CommandBase {
 
     if((tower.ballAlliance() == 0 || tower.getAlliance() == tower.ballAlliance())){
       //System.out.println("Not rejecting 1");
-      if (timer.get() < .1){
+      if (timer.get() < .2){
         if(intake.isDeployed){
           intake.slow = true;
           tower.reverseFeeder();
@@ -84,7 +84,7 @@ public class IdleTower extends CommandBase {
           tower.stopFeeder();
           tower.stopTower();
         }else{
-          if(intake.isDeployed || feederThreshold){
+          if(intake.isDeployed || feederThreshold || (tower.ballAlliance() == tower.getAlliance())){
             tower.powerFeeder();
             tower.stopTower();
           }else{

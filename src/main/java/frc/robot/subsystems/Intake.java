@@ -99,7 +99,7 @@ public class Intake extends SubsystemBase {
     if(setSpeed.getBoolean(false)){
       intakePower = intakeSpeed.getDouble(Constants.Intake.intakePower);
     } else if (slow){
-      intakePower = 0.3;
+      intakePower = 0.5;
     } else{
       intakePower = Constants.Intake.intakePower;
     }

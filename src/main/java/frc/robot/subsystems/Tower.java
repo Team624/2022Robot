@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -92,8 +93,8 @@ public class Tower extends SubsystemBase {
 
   // 0.229736328125 0.45654296875 0.314208984375
   // 0.330810546875 0.445556640625 0.22412109375
-  private final Color kBlueTarget = new Color(0.229736328125, 0.45654296875, 0.314208984375); //(.235, .47, .294)
-  private final Color kRedTarget = new Color(0.330810546875, 0.445556640625, 0.22412109375); //(.356, .434, .209)
+  private final Color kBlueTarget = new Color(0.179, 0.43, 0.39); //(.235, .47, .294)
+  private final Color kRedTarget = new Color(0.50, 0.359, 0.13); //(.356, .434, .209)
 
   private int alliance;
 
@@ -161,7 +162,7 @@ public class Tower extends SubsystemBase {
     feederPID = feederMotor.getPIDController();
 
     feederMotor.restoreFactoryDefaults();
-    feederMotor.setIdleMode(IdleMode.kBrake);
+    feederMotor.setIdleMode(IdleMode.kCoast);
 
     P_feeder = Constants.Feeder.P;
     I_feeder = Constants.Feeder.I;
@@ -355,16 +356,15 @@ public class Tower extends SubsystemBase {
     // nukber 1 is blue, 2 is red
     Color detectedColor = cSense.getColor();
     System.out.println("Blue: " + detectedColor.blue + " Red: " + detectedColor.red + " Green: " + detectedColor.green);
-    ColorMatchResult match = colorMatcher.matchClosestColor(detectedColor);
     ballProximity.setDouble(cSense.getProximity());
     int number = 0;
-    if (cSense.getProximity() > 142){
-      if(match.color == kBlueTarget){
-        number = 1;
-      }else if(match.color == kRedTarget){
+
+      if(detectedColor.red > .26){
         number = 2;
+      }else if(detectedColor.red < .24){
+        number = 1;
       }
-    }
+    
     else{
       number = 0;
     }

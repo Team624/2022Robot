@@ -56,43 +56,84 @@ public class IdleTower extends CommandBase {
 
     if((tower.ballAlliance() == 0 || tower.getAlliance() == tower.ballAlliance())){
       //System.out.println("Not rejecting 1");
-      if (timer.get() < .1){
-        if(intake.isDeployed){
-          intake.slow = true;
-          tower.reverseFeeder();
-        }
-      }else if(!tower.checkTowerIR()){
-        intake.slow = false;
-        if(tower.checkFeederIR()){
-          tower.powerFeeder();
-          tower.powerTower();
-        }else{
-          if(intake.isDeployed || feederThreshold){
-            tower.powerFeeder();
-            tower.powerTower();
-          }else if(tower.getAlliance() == tower.ballAlliance()){
+      if(tower.checkTowerIR()){
+        if (timer.get() < .1){
+          if(intake.isDeployed){
+            intake.slow = true;
+            tower.reverseFeeder();
+          }
+        }else if(!tower.checkTowerIR()){
+          intake.slow = false;
+          if(tower.checkFeederIR()){
             tower.powerFeeder();
             tower.powerTower();
           }else{
+            if(intake.isDeployed || feederThreshold){
+              tower.powerFeeder();
+              tower.powerTower();
+            }else if(tower.getAlliance() == tower.ballAlliance()){
+              tower.powerFeeder();
+              tower.powerTower();
+            }else{
+              tower.stopFeeder();
+              tower.stopTower();
+            }
+          }
+        }else{
+          intake.slow = false;
+          if(tower.checkFeederIR()){
             tower.stopFeeder();
             tower.stopTower();
+          }else{
+            if(intake.isDeployed || feederThreshold){
+              tower.powerFeeder();
+              tower.stopTower();
+            }else{
+              tower.stopFeeder();
+              tower.stopTower();
+            }
           }
         }
       }else{
-        intake.slow = false;
-        if(tower.checkFeederIR()){
-          tower.stopFeeder();
-          tower.stopTower();
-        }else{
-          if(intake.isDeployed || feederThreshold){
+        if (timer.get() < .2){
+          if(intake.isDeployed){
+            intake.slow = true;
+            tower.reverseFeeder();
+          }
+        }else if(!tower.checkTowerIR()){
+          intake.slow = false;
+          if(tower.checkFeederIR()){
             tower.powerFeeder();
-            tower.stopTower();
+            tower.powerTower();
           }else{
+            if(intake.isDeployed || feederThreshold){
+              tower.powerFeeder();
+              tower.powerTower();
+            }else if(tower.getAlliance() == tower.ballAlliance()){
+              tower.powerFeeder();
+              tower.powerTower();
+            }else{
+              tower.stopFeeder();
+              tower.stopTower();
+            }
+          }
+        }else{
+          intake.slow = false;
+          if(tower.checkFeederIR()){
             tower.stopFeeder();
             tower.stopTower();
+          }else{
+            if(intake.isDeployed || feederThreshold){
+              tower.powerFeeder();
+              tower.stopTower();
+            }else{
+              tower.stopFeeder();
+              tower.stopTower();
+            }
           }
         }
       }
+
     }else{
       if(tower.getReverse()){
         //System.out.println("Color Sensor rejecting");

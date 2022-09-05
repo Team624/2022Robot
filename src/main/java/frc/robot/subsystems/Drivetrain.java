@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableEntry;
 //import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -27,6 +28,8 @@ import frc.robot.trobot5013lib.led.ChasePattern;
 import frc.robot.trobot5013lib.led.TrobotAddressableLED;
 import frc.robot.trobot5013lib.led.TrobotAddressableLEDPattern;
 import com.kauailabs.navx.frc.AHRS;
+
+
 
 public class Drivetrain extends SubsystemBase {
 
@@ -64,8 +67,12 @@ public class Drivetrain extends SubsystemBase {
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
   private SwerveModuleState[] lstates = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
-
+  
   private ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+  private NetworkTableEntry gyro_value = tab.add("Gyro", 0.0).withPosition(5, 2).getEntry();
+
+
+  
 //   private NetworkTableEntry rotationP = tab.add("Tracking P", 0.0).withPosition(8, 1).getEntry();
 //   private NetworkTableEntry rotationI = tab.add("Tracking I", 0.0).withPosition(8, 2).getEntry();
 //   private NetworkTableEntry rotationD = tab.add("Tracking D", 0.0).withPosition(8, 3).getEntry();
@@ -149,6 +156,7 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
                 SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+                gyro_value.setDouble(getGyroscopeRotation().getDegrees());
 
                 if (!isAuton && !isUsingVision){
                       states = freezeLogic(states);

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
@@ -18,6 +19,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.util.Color;
@@ -66,6 +68,8 @@ public class Tower extends SubsystemBase {
 
   private NetworkTableEntry setPoint_feeder = tab_tower.add("F-Setpoint", 0.0).withPosition(5, 0).getEntry();
   private NetworkTableEntry currentSpeed_feeder = tab_tower.add("F-Encoder", 0.0).withPosition(5, 1).getEntry();
+
+ 
 
   private double towerPower = Constants.Tower.towerPower;
 

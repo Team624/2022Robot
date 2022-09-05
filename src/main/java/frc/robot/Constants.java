@@ -215,32 +215,28 @@ public final class Constants {
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 20;
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 23;
-        //FOR PROTO
-        //public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(67);
+        
         //FOR FINAL
         public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(247);
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 19;
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 18;
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 22;
-        //FOR PROTO
-        //public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(116);
+        
         //FOR FINAL 
         public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(275);
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 9; 
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 8;
         public static final int BACK_LEFT_MODULE_STEER_ENCODER = 24;
-        //FOR PROTO
-        //public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(356);
+        
         //FOR FINAL
         public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(284);
 
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 11;
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 10;
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 21;
-        //FOR PROTO
-        //public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(12.9);
+        
         //FOR FINAL
         public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(53);
 

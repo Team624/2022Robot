@@ -53,6 +53,7 @@ public class DefaultDriveCommand extends CommandBase {
         }
             vx = filterX.calculate(vx);
             vy = filterY.calculate(vy);
+        System.out.println("THIS IS OMEGa"+omega+vx+vy);
 
             m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(

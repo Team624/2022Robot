@@ -29,8 +29,6 @@ import frc.robot.trobot5013lib.led.TrobotAddressableLED;
 import frc.robot.trobot5013lib.led.TrobotAddressableLEDPattern;
 import com.kauailabs.navx.frc.AHRS;
 
-
-
 public class Drivetrain extends SubsystemBase {
 
         public boolean musicMode;
@@ -65,8 +63,8 @@ public class Drivetrain extends SubsystemBase {
   private final SwerveModule m_backRightModule;
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-
   private SwerveModuleState[] lstates = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+  
   
   private ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
   private NetworkTableEntry gyro_value = tab.add("Gyro", 0.0).withPosition(5, 2).getEntry();
@@ -90,6 +88,9 @@ public class Drivetrain extends SubsystemBase {
   public PIDController visionTurn_pidQuickTurn;
   public PIDController visionTurn2_pid;
 
+  public PIDController driftCorrection_pid;
+  public double desiredHeading;
+
   public PIDController autonPoint_pidPathRotation;
   public PIDController autonPath_pidVision;
 
@@ -98,7 +99,6 @@ public class Drivetrain extends SubsystemBase {
   public TrobotAddressableLEDPattern m_shooting = new ChasePattern(greenWhiteArray, 3);
 
   public Drivetrain(TrobotAddressableLED m_led_strip) {
-
         m_led = m_led_strip;
          visionTurn_pid = getRotationPID();
          visionTurn_pidQuickTurn = getRotationQuickTurnPID();
@@ -152,28 +152,45 @@ public class Drivetrain extends SubsystemBase {
   public void drive(ChassisSpeeds chassisSpeeds) {
           m_chassisSpeeds = chassisSpeeds;
   }
+double pXY = 0;
+  public void driftCorrection(ChassisSpeeds chassis){
+        double xy = Math.abs(chassis.vxMetersPerSecond) + Math.abs(chassis.vyMetersPerSecond);
+
+        if(Math.abs(chassis.omegaRadiansPerSecond) > 0.0 || pXY <= 0){
+                desiredHeading = getGyroscopeRotation().getDegrees();
+        }
+        else if(xy > 0){
+                chassis.omegaRadiansPerSecond += driftCorrection_pid.calculate(getGyroscopeRotation().getDegrees(), desiredHeading);
+        } 
+        pXY = xy;
+      }
+
 
   @Override
   public void periodic() {
-                SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
-                gyro_value.setDouble(getGyroscopeRotation().getDegrees());
+        driftCorrection(m_chassisSpeeds);
+        SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+        gyro_value.setDouble(getGyroscopeRotation().getDegrees());
+        
+        
+        if (!isAuton && !isUsingVision){
+                states = freezeLogic(states);
+        }
 
-                if (!isAuton && !isUsingVision){
-                      states = freezeLogic(states);
+        SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);       
+        m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
+        m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
+        m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
+        m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
+        // m_odometry.update(hasGyroOffset ? getGyroscopeRotation().rotateBy(gyroOffset) : getGyroscopeRotation(),states[0],states[1],states[2],states[3],states[4]);
+        if (isAuton){
+                m_odometry.update(getGyroscopeRotation(), states);
+                } 
+        else{
+                m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
                 }
-      
-                SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);       
-                m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
-                m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
-                m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
-                m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
-
-                if (isAuton){
-                        m_odometry.update(getGyroscopeRotation(), states);
-                  } else{
-                        m_odometry.update(getGyroscopeRotation(), getState(m_frontLeftModule), getState(m_frontRightModule), getState(m_backLeftModule), getState(m_backRightModule));
-                  }
-        updateLeoPose(); 
+                  
+        updateLeoPose();
   }
 
   private SwerveModuleState getState(SwerveModule module) {
@@ -193,6 +210,9 @@ public class Drivetrain extends SubsystemBase {
          }
           return current; 
   }
+
+
+
 
   public Rotation2d getGyroscopeRotation() {
         return Rotation2d.fromDegrees(-ahrs.getAngle());
@@ -257,6 +277,12 @@ public void noSpeedMode(){
   public void zeroGyroscope() {
         ahrs.setAngleAdjustment(0.0);
         ahrs.reset();
+}
+public Pose2d getPose(){
+        double xPose = SmartDashboard.getEntry("/pose/x").getDouble(0.0);
+        double yPose = SmartDashboard.getEntry("/pose/y").getDouble(0.0);
+        Pose2d pose = new Pose2d(xPose, yPose, getGyroscopeRotation());
+        return pose;
 }
 
   public void setPose(){

@@ -49,12 +49,10 @@ public class DefaultDriveCommand extends CommandBase {
         }else if(m_drivetrainSubsystem.isSpeedin){
             vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_SPEED_MULTIPLIER;
             vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_SPEED_MULTIPLIER;
-            //omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_SPEED_MULTIPLIER;
         }
             vx = filterX.calculate(vx);
             vy = filterY.calculate(vy);
-        System.out.println("THIS IS OMEGa"+omega+vx+vy);
-
+            
             m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     vx,

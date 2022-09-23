@@ -246,7 +246,7 @@ public void noSpeedMode(){
 
   private PIDController getdriftCorrection_pid(){
           //0.07, 0.00, 0.004
-          return new PIDController(0.07, 0.0, 0.0003);
+          return new PIDController(0.09, 0.0, 0.0003);
   }
 
   private PIDController getVisionPID(){

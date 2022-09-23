@@ -65,14 +65,14 @@ public class IdleTower extends CommandBase {
         }else if(!tower.checkTowerIR()){
           intake.slow = false;
           if(tower.checkFeederIR()){
-            tower.powerFeeder();
+            // tower.powerFeeder();
             tower.powerTower();
           }else{
             if(intake.isDeployed || feederThreshold){
               tower.powerFeeder();
               tower.powerTower();
             }else if(tower.getAlliance() == tower.ballAlliance()){
-              tower.powerFeeder();
+              // tower.powerFeeder();
               tower.powerTower();
             }else{
               tower.stopFeeder();
@@ -103,14 +103,14 @@ public class IdleTower extends CommandBase {
         }else if(!tower.checkTowerIR()){
           intake.slow = false;
           if(tower.checkFeederIR()){
-            tower.powerFeeder();
+            // tower.powerFeeder();
             tower.powerTower();
           }else{
             if(intake.isDeployed || feederThreshold){
               tower.powerFeeder();
               tower.powerTower();
             }else if(tower.getAlliance() == tower.ballAlliance()){
-              tower.powerFeeder();
+              // tower.powerFeeder();
               tower.powerTower();
             }else{
               tower.stopFeeder();
@@ -150,11 +150,11 @@ public class IdleTower extends CommandBase {
         intake.slow = false;
         if(!tower.checkTowerIR()){
           tower.powerTower();
-          tower.powerFeeder();
+          // tower.powerFeeder();
         }else{
           tower.stopTower();
           if(!tower.checkFeederIR()){
-            tower.powerFeeder();
+            // tower.powerFeeder();
           }else{
             tower.stopFeeder();
           }

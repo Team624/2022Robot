@@ -189,7 +189,7 @@ public class Tower extends SubsystemBase {
 
   @Override
   public void periodic() {
-    checkNT();
+    // checkNT();
     if (ledState == 4){
       m_led.setPattern(m_climbLED);
     }
@@ -246,11 +246,11 @@ public class Tower extends SubsystemBase {
 
 
     // FEEDER STUFF
-    if(setSpeed_feeder.getBoolean(false)){
-      feederPower = speed_feeder.getDouble(Constants.Feeder.feederPower);
-    }else{
-      feederPower = Constants.Feeder.feederPower;
-    }
+    // if(setSpeed_feeder.getBoolean(false)){
+    //   feederPower = speed_feeder.getDouble(Constants.Feeder.feederPower);
+    // }else{
+    //   feederPower = Constants.Feeder.feederPower;
+    // }
 
     currentSpeed_feeder.setDouble(feederEncoder.getVelocity());
     setPoint_feeder.setDouble(feederPower * Constants.Feeder.maxRPM);

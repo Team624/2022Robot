@@ -103,6 +103,7 @@ public class Drivetrain extends SubsystemBase {
          visionTurn_pid = getRotationPID();
          visionTurn_pidQuickTurn = getRotationQuickTurnPID();
          visionTurn2_pid = getVisionPID();
+         driftCorrection_pid = getdriftCorrection_pid();
 
          autonPoint_pidPathRotation = getRotationPathPID();
          autonPath_pidVision = getAutonRotationPID();
@@ -241,6 +242,11 @@ public void noSpeedMode(){
           //.1,0,0
         //return new PIDController(rotationP.getDouble(Constants.Drivetrain.visionP), rotationI.getDouble(Constants.Drivetrain.visionI), rotationD.getDouble(Constants.Drivetrain.visionD));
         return new PIDController(0.1, 0.0, 0.0);  
+  }
+
+  private PIDController getdriftCorrection_pid(){
+          //0.07, 0.00, 0.004
+          return new PIDController(0.07, 0.0, 0.0003);
   }
 
   private PIDController getVisionPID(){

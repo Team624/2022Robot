@@ -49,7 +49,11 @@ public final class Constants {
         public static final double kIzone = 200.0;
 
         public static final double idlePercent = .2;
+<<<<<<< Updated upstream
         public static final double lowShootRPM = 3000;
+=======
+        public static final double lowShootRPM = 100000;
+>>>>>>> Stashed changes
         public static final double wallShootRPM = 8350;
 
         public static final double hoodSwitchCam = 201;

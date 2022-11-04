@@ -11,14 +11,20 @@ import frc.robot.subsystems.Tower;
 public class SpitTop extends ParallelCommandGroup {
   private final Shooter shooter;
   private final Tower tower;
+  
 
   /** Creates a new ShootTop. */
   public SpitTop(Shooter shooter, Tower tower) {
     this.shooter = shooter;
     this.tower = tower;
+    shooter.setHood(true);
+    
     addCommands(
       new LowRPM(this.shooter),
       new ShootTop(this.tower)
+
+      
+      
     );
   }
 }

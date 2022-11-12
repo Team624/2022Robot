@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,6 +30,7 @@ import frc.robot.commands.Drivetrain.AutonomousDrive;
 import frc.robot.commands.Drivetrain.BlankDrive;
 import frc.robot.commands.Drivetrain.DefaultDriveCommand;
 import frc.robot.commands.Drivetrain.DisabledSwerve;
+import frc.robot.commands.Drivetrain.PhotonVision;
 import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
@@ -47,6 +49,7 @@ import frc.robot.subsystems.FrontClimb;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Tower;
+import frc.robot.subsystems.TargetVision;
 import frc.robot.trobot5013lib.led.TrobotAddressableLED;
 import frc.robot.utility.Auton;
 import frc.robot.utility.ShooterVision;
@@ -63,6 +66,7 @@ public class RobotContainer {
   private final Tower m_tower;
   private final Shooter m_shooter;
   private final ShooterVision m_shooterVision;
+  private final TargetVision m_photonVision;
 
   public final XboxController d_controller = new XboxController(0);
   private final XboxController m_controller = new XboxController(1);
@@ -89,6 +93,7 @@ public class RobotContainer {
     m_tower = new Tower(m_led);
     m_shooter = new Shooter(m_controller);
     m_shooterVision = new ShooterVision(m_shooter);
+    m_photonVision = new TargetVision();
 
     m_fClimb.setDefaultCommand(new IdleFront(m_fClimb));
     m_bClimb.setDefaultCommand(new IdleBack(m_bClimb));
@@ -119,12 +124,13 @@ public class RobotContainer {
     new Button(d_controller::getYButton).whenHeld(new LowShoot(m_shooter, m_tower));
 
     new Button(d_controller::getLeftBumper).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_tower));
-    new Button(d_controller::getLeftBumper).whenHeld(new VisionTurn(
+    new Button(d_controller::getLeftBumper).whenHeld(new PhotonVision(
        m_drivetrainSubsystem,
        m_shooterVision,
        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-       m_tower
+       m_tower,
+       m_photonVision
     ));
     new Button(d_controller::getRightBumper).whenHeld(new Shoot(m_tower));
 

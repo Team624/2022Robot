@@ -32,6 +32,7 @@ import frc.robot.commands.Drivetrain.DisabledSwerve;
 import frc.robot.commands.Drivetrain.VisionTurn;
 import frc.robot.commands.Intake.IdleIntake;
 import frc.robot.commands.Shooter.IdleShoot;
+import frc.robot.commands.Shooter.PrimeManual;
 import frc.robot.commands.LowShoot;
 import frc.robot.commands.SpitTop;
 import frc.robot.commands.Shooter.PrimeShoot;
@@ -119,6 +120,7 @@ public class RobotContainer {
     new Button(d_controller::getYButton).whenHeld(new LowShoot(m_shooter, m_tower));
 
     new Button(d_controller::getLeftBumper).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_tower));
+    new Button(d_controller::getYButton).whenHeld(new PrimeManual(m_shooter, m_shooterVision, m_tower,6000,true));
     new Button(d_controller::getLeftBumper).whenHeld(new VisionTurn(
        m_drivetrainSubsystem,
        m_shooterVision,

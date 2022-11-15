@@ -6,24 +6,26 @@ package frc.robot.trobot5013lib.led;
 
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
-public class RainbowPattern implements TrobotAddressableLEDPattern{
+public class RainbowPattern implements TrobotAddressableLEDPattern {
 	private int m_firstHue = 0;
-	public RainbowPattern(){
+
+	public RainbowPattern() {
 		super();
-		
+
 	}
 
 	@Override
 	public void setLEDs(AddressableLEDBuffer buffer) {
 		int currentHue;
-		for (int index = 0; index < buffer.getLength(); index++){
+		for (int index = 0; index < buffer.getLength(); index++) {
 			currentHue = (m_firstHue + (index * 180 / buffer.getLength())) % 180;
 			buffer.setHSV(index, currentHue, 255, 128);
 		}
 
 		m_firstHue = (m_firstHue + 3) % 180;
 	}
-	public boolean isAnimated(){
+
+	public boolean isAnimated() {
 		return true;
 	}
 }

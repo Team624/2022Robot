@@ -12,7 +12,8 @@ public class ChasePattern implements TrobotAddressableLEDPattern {
 	private Color[] m_Colors;
 	private int m_SegmentWidth;
 	private int m_offset;
-	public ChasePattern(Color[] colors, int segmentWidth){
+
+	public ChasePattern(Color[] colors, int segmentWidth) {
 		super();
 		m_Colors = colors;
 		m_SegmentWidth = segmentWidth;
@@ -24,15 +25,16 @@ public class ChasePattern implements TrobotAddressableLEDPattern {
 		int effectiveIndex;
 		int colorIndex;
 		int bufferLength = buffer.getLength();
-		for (int index = 0; index < bufferLength; index++){
+		for (int index = 0; index < bufferLength; index++) {
 			effectiveIndex = (index + m_offset) % bufferLength;
-			colorIndex =( index /m_SegmentWidth )% numberOfColors;
+			colorIndex = (index / m_SegmentWidth) % numberOfColors;
 			buffer.setLED(effectiveIndex, m_Colors[colorIndex]);
 		}
 
-		m_offset =(m_offset+1) %bufferLength;
+		m_offset = (m_offset + 1) % bufferLength;
 	}
-	public boolean isAnimated(){
+
+	public boolean isAnimated() {
 		return true;
 	}
 }

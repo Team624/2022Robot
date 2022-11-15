@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class dRightActive extends Trigger {
   XboxController cont;
 
-  public dRightActive(XboxController controller){
+  public dRightActive(XboxController controller) {
     cont = controller;
   }
 

@@ -10,12 +10,12 @@ public class Path {
     private PathPoint[] path;
     private int pathId;
 
-    public Path(PathPoint[] points, int pathId){
+    public Path(PathPoint[] points, int pathId) {
         path = points;
         this.pathId = pathId;
     }
 
-    public PathPoint getPoint(int point){
+    public PathPoint getPoint(int point) {
         return path[point];
     }
 

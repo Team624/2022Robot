@@ -14,7 +14,7 @@ public class DeployIntake extends CommandBase {
 
   /** Creates a new DeployIntake. */
   public DeployIntake(Intake intake) {
-    
+
     this.intake = intake;
     addRequirements(this.intake);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -32,9 +32,9 @@ public class DeployIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(timer.get() > .3){
+    if (timer.get() > .3) {
       intake.powerIntake();
-    }else{
+    } else {
       intake.agitate();
     }
   }
@@ -46,8 +46,6 @@ public class DeployIntake extends CommandBase {
     intake.retractSolenoids();
     intake.stopIntake();
   }
-
-
 
   // Returns true when the command should end.
   @Override

@@ -14,12 +14,13 @@ public class PrimeManual extends CommandBase {
   private Tower tower;
   private double desiredRPM;
   private boolean hoodStatus;
+
   /** Creates a new PrimeShoot. */
-  public PrimeManual(Shooter shooter, ShooterVision vision, Tower tower, double wantedRPM,boolean hood) {
+  public PrimeManual(Shooter shooter, ShooterVision vision, Tower tower, double wantedRPM, boolean hood) {
     this.shooter = shooter;
     this.tower = tower;
-    this.desiredRPM=wantedRPM;
-    this.hoodStatus=hood;
+    this.desiredRPM = wantedRPM;
+    this.hoodStatus = hood;
     addRequirements(this.shooter);
   }
 
@@ -36,9 +37,9 @@ public class PrimeManual extends CommandBase {
     shooter.setRPM(desiredRPM + shooter.addedRPM);
     shooter.setHood(hoodStatus);
     // For leds
-    if (Math.abs(desiredRPM - shooter.getRPM()) < 20){
+    if (Math.abs(desiredRPM - shooter.getRPM()) < 20) {
       tower.setRpmOnTarget(true);
-    } else{
+    } else {
       tower.setRpmOnTarget(false);
     }
 
@@ -48,7 +49,6 @@ public class PrimeManual extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.setPriming(false);
-    //tower.setRpmOnTarget(false);
     tower.setIdleLED();
   }
 

@@ -32,10 +32,10 @@ public class LinearServo extends Servo {
 	 */
 	public void setHeight(double setpoint) {
 		desiredHeight = MathUtil.clamp(setpoint, 0, m_length);
-		set(desiredHeight/m_length);
+		set(desiredHeight / m_length);
 	}
 
-	public double getHeight(){
+	public double getHeight() {
 		return getPosition() * m_length;
 	}
 }

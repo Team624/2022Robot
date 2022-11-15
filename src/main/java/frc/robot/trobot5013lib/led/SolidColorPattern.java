@@ -8,21 +8,21 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 
 /** Add your docs here. */
-public class SolidColorPattern implements TrobotAddressableLEDPattern{
+public class SolidColorPattern implements TrobotAddressableLEDPattern {
 	private Color m_color;
 
-	public SolidColorPattern(Color aColor){
+	public SolidColorPattern(Color aColor) {
 		super();
 		this.m_color = aColor;
 	}
 
 	@Override
 	public void setLEDs(AddressableLEDBuffer buffer) {
-		
-		for (int index = 0; index < buffer.getLength(); index++){
+
+		for (int index = 0; index < buffer.getLength(); index++) {
 			buffer.setLED(index, m_color);
 		}
-		
+
 	}
 
 }

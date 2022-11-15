@@ -10,6 +10,7 @@ import frc.robot.subsystems.Drivetrain;
 
 public class DisabledSwerve extends CommandBase {
   private final Drivetrain m_drivetrainSubsystem;
+
   /** Creates a new X_Swerve. */
   public DisabledSwerve(Drivetrain drivetrain) {
     m_drivetrainSubsystem = drivetrain;
@@ -18,20 +19,21 @@ public class DisabledSwerve extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     m_drivetrainSubsystem.drive(
-      ChassisSpeeds.fromFieldRelativeSpeeds(
-        0, 0, .01, m_drivetrainSubsystem.getGyroscopeRotation())
-    );
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+            0, 0, .01, m_drivetrainSubsystem.getGyroscopeRotation()));
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

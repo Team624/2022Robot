@@ -16,9 +16,7 @@ public class ShooterVision {
   }
 
   public double getDistanceAngle() {
-    // double ratio = (1.00504)/(1 + (0.004325* Math.pow(Math.E, 0.140352 * Math.abs(getRotationAngle()))));
-    // double ratio = (1.01796)/(1 + (0.014241* Math.pow(Math.E, 0.099751 * Math.abs(getRotationAngle()))));
-    // double estimatedDistance = distanceAngleEntry.getDouble(-1)/ratio;
+
     return distanceAngleEntry.getDouble(-1);
   }
 
@@ -30,31 +28,29 @@ public class ShooterVision {
     int upperDataPoint = getUpperExperimentPoint(getDistanceAngle(), 0);
     double[][] experimentData = getCurrentExperimentMatrix();
 
-    try{
+    try {
       double lowerAngle = experimentData[upperDataPoint - 1][0];
       double lowerRpm = experimentData[upperDataPoint - 1][1];
       double upperAngle = experimentData[upperDataPoint][0];
       double upperRpm = experimentData[upperDataPoint][1];
       return pointSlope(lowerAngle, lowerRpm, upperAngle, upperRpm, getDistanceAngle());
-    } 
-    catch(Exception e){
+    } catch (Exception e) {
       return 0;
     }
   }
 
   public double calculateRPMShootOnRun(double distance) {
-    //System.out.println("Distance: " + distance);
+    // System.out.println("Distance: " + distance);
     int upperDataPoint = getUpperExperimentPoint(distance, 2);
     double[][] experimentData = getCurrentExperimentMatrix();
 
-    try{
+    try {
       double lowerDis = experimentData[upperDataPoint - 1][2];
       double lowerRpm = experimentData[upperDataPoint - 1][1];
       double upperDis = experimentData[upperDataPoint][2];
       double upperRpm = experimentData[upperDataPoint][1];
       return pointSlope(lowerDis, lowerRpm, upperDis, upperRpm, distance);
-    } 
-    catch(Exception e){
+    } catch (Exception e) {
       return 0;
     }
   }
@@ -63,14 +59,13 @@ public class ShooterVision {
     int upperDataPoint = getUpperExperimentPoint(getDistanceAngle(), 0);
     double[][] experimentData = getCurrentExperimentMatrix();
 
-    try{
+    try {
       double lowerAngle = experimentData[upperDataPoint - 1][0];
       double lowerActualDistance = experimentData[upperDataPoint - 1][2];
       double upperAngle = experimentData[upperDataPoint][0];
       double upperActualDistance = experimentData[upperDataPoint][2];
       return pointSlope(lowerAngle, lowerActualDistance, upperAngle, upperActualDistance, getDistanceAngle());
-    } 
-    catch(Exception e){
+    } catch (Exception e) {
       return 0;
     }
   }
@@ -112,16 +107,17 @@ public class ShooterVision {
 
     int upperDataPoint = experimentData.length - 1;
     for (int i = 0; i < experimentData.length; i++) {
-       if (distance < experimentData[i][disIndex]) {
+      if (distance < experimentData[i][disIndex]) {
         upperDataPoint = i;
         break;
-       }
+      }
     }
     return upperDataPoint;
   }
 
   public double[][] getCurrentExperimentMatrix() {
-    double[][] experimentData = shooter.getHood() ? Constants.Shooter.shooterExperimentDataHigh : Constants.Shooter.shooterExperimentDataLow;
+    double[][] experimentData = shooter.getHood() ? Constants.Shooter.shooterExperimentDataHigh
+        : Constants.Shooter.shooterExperimentDataLow;
     return experimentData;
   }
 }

@@ -24,12 +24,12 @@ public class BackClimb extends SubsystemBase {
   private boolean climbStatus = false;
 
   private double P;
-  private double I; 
-  private double D; 
-  private double Iz; 
+  private double I;
+  private double D;
+  private double Iz;
   private double FF;
   private double MaxOutput;
-  private double MinOutput; 
+  private double MinOutput;
 
   private double Pnew;
   private double Inew;
@@ -70,63 +70,78 @@ public class BackClimb extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //System.out.println("BACK CLIMB: " + readEncoder());
+
     checkNT();
     // This method will be called once per scheduler run
   }
 
-  public void checkNT(){
+  public void checkNT() {
     Pnew = Pterm.getDouble(Constants.Climb.P);
     Inew = Iterm.getDouble(Constants.Climb.I);
     Dnew = Dterm.getDouble(Constants.Climb.D);
     Iznew = IzTerm.getDouble(Constants.Climb.Iz);
     FFnew = FFterm.getDouble(Constants.Climb.FF);
 
-    if((P != Pnew && Pnew != 0.0)) { pidController.setP(Pnew); P = Pnew; }
-    if((I != Inew && Inew != 0.0)) { pidController.setI(Inew); I = Inew; }
-    if((D != Dnew && Dnew != 0.0)) { pidController.setD(Dnew); D = Dnew; }
-    if((Iz != Iznew && Iznew != 0.0)) { pidController.setIZone(Iznew); Iz = Iznew; }
-    if((FF != FFnew && FFnew != 0.0)) { pidController.setFF(FFnew); FF = FFnew; }
+    if ((P != Pnew && Pnew != 0.0)) {
+      pidController.setP(Pnew);
+      P = Pnew;
+    }
+    if ((I != Inew && Inew != 0.0)) {
+      pidController.setI(Inew);
+      I = Inew;
+    }
+    if ((D != Dnew && Dnew != 0.0)) {
+      pidController.setD(Dnew);
+      D = Dnew;
+    }
+    if ((Iz != Iznew && Iznew != 0.0)) {
+      pidController.setIZone(Iznew);
+      Iz = Iznew;
+    }
+    if ((FF != FFnew && FFnew != 0.0)) {
+      pidController.setFF(FFnew);
+      FF = FFnew;
+    }
   }
 
-  public void powerArm(double speed){
-    if(climbStatus){
+  public void powerArm(double speed) {
+    if (climbStatus) {
       backWinch.set(speed);
     }
   }
 
-  public void moveArm(double setPoint){
-    if(climbStatus){
+  public void moveArm(double setPoint) {
+    if (climbStatus) {
       pidController.setReference(setPoint, CANSparkMax.ControlType.kPosition);
     }
   }
 
-  public void stopMotor(){
+  public void stopMotor() {
     backWinch.stopMotor();
   }
 
-  public double readEncoder(){
+  public double readEncoder() {
     return encoder.getPosition();
   }
 
-  public void resetClimbStatus(boolean state){
+  public void resetClimbStatus(boolean state) {
     climbStatus = state;
     encoder.setPosition(0.0);
   }
 
-  public void setClimbStatus(){
-    if(climbStatus){
+  public void setClimbStatus() {
+    if (climbStatus) {
       climbStatus = false;
-    }else{
+    } else {
       climbStatus = true;
     }
   }
 
-  public void resetEncoder(){
+  public void resetEncoder() {
     encoder.setPosition(0.0);
   }
 
-  public boolean getStatus(){
+  public boolean getStatus() {
     return climbStatus;
   }
 

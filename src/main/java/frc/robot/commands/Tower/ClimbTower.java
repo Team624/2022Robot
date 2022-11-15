@@ -9,6 +9,7 @@ import frc.robot.subsystems.Tower;
 
 public class ClimbTower extends CommandBase {
   private final Tower tower;
+
   /** Creates a new ClimbTower. */
   public ClimbTower(Tower tower) {
     this.tower = tower;
@@ -26,7 +27,8 @@ public class ClimbTower extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override

@@ -36,15 +36,22 @@ public class Shooter extends SubsystemBase {
   private NetworkTableEntry dashSetRPM = shootTab.add("Goal RPM:", 0).withPosition(0, 1).getEntry();
   private NetworkTableEntry dashCurrentRPM = shootTab.add("Current RPM:", 0).withPosition(1, 1).getEntry();
   private NetworkTableEntry dashPrime = shootTab.add("Priming?", false).withPosition(2, 1).getEntry();
-  private NetworkTableEntry manualRPM = shootTab.add("Manual RPM: ", 0).withPosition(0, 3).withWidget(BuiltInWidgets.kTextView).getEntry();
+  private NetworkTableEntry manualRPM = shootTab.add("Manual RPM: ", 0).withPosition(0, 3)
+      .withWidget(BuiltInWidgets.kTextView).getEntry();
   private NetworkTableEntry dashAddedRPM = shootTab.add("Added RPM:", 0).withPosition(1, 3).getEntry();
 
-  private NetworkTableEntry PID_P = shootTab.add("PID P",Constants.Shooter.kP).withPosition(0,2).withWidget(BuiltInWidgets.kTextView).getEntry();
-  private NetworkTableEntry PID_I = shootTab.add("PID I",Constants.Shooter.kI).withPosition(1,2).withWidget(BuiltInWidgets.kTextView).getEntry();
-  private NetworkTableEntry PID_Izone = shootTab.add("PID I-zone",Constants.Shooter.kIzone).withPosition(2,2).withWidget(BuiltInWidgets.kTextView).getEntry();
-  private NetworkTableEntry PID_D = shootTab.add("PID D",Constants.Shooter.kD).withPosition(3,2).withWidget(BuiltInWidgets.kTextView).getEntry();
-  private NetworkTableEntry PID_F = shootTab.add("PID F",Constants.Shooter.kF).withPosition(4,2).withWidget(BuiltInWidgets.kTextView).getEntry();
-  private NetworkTableEntry tuningPID = shootTab.add("Tuning PID?", false).withPosition(3,1).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+  private NetworkTableEntry PID_P = shootTab.add("PID P", Constants.Shooter.kP).withPosition(0, 2)
+      .withWidget(BuiltInWidgets.kTextView).getEntry();
+  private NetworkTableEntry PID_I = shootTab.add("PID I", Constants.Shooter.kI).withPosition(1, 2)
+      .withWidget(BuiltInWidgets.kTextView).getEntry();
+  private NetworkTableEntry PID_Izone = shootTab.add("PID I-zone", Constants.Shooter.kIzone).withPosition(2, 2)
+      .withWidget(BuiltInWidgets.kTextView).getEntry();
+  private NetworkTableEntry PID_D = shootTab.add("PID D", Constants.Shooter.kD).withPosition(3, 2)
+      .withWidget(BuiltInWidgets.kTextView).getEntry();
+  private NetworkTableEntry PID_F = shootTab.add("PID F", Constants.Shooter.kF).withPosition(4, 2)
+      .withWidget(BuiltInWidgets.kTextView).getEntry();
+  private NetworkTableEntry tuningPID = shootTab.add("Tuning PID?", false).withPosition(3, 1)
+      .withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
   /** Creates a new Shooter. */
   public Shooter(XboxController test) {
@@ -96,7 +103,7 @@ public class Shooter extends SubsystemBase {
     dashSetRPM.setNumber(goalRPM);
   }
 
-  public void setManualRPM(){
+  public void setManualRPM() {
     goalRPM = manualRPM.getDouble(0);
     leftFlywheel.set(TalonFXControlMode.Velocity, goalRPM);
     rightFlywheel.set(TalonFXControlMode.Velocity, goalRPM);
@@ -108,7 +115,7 @@ public class Shooter extends SubsystemBase {
     rightFlywheel.set(TalonFXControlMode.PercentOutput, -Constants.Shooter.idlePercent);
   }
 
-  public void stopFlywheel(){
+  public void stopFlywheel() {
     leftFlywheel.set(TalonFXControlMode.PercentOutput, 0.0);
     rightFlywheel.set(TalonFXControlMode.PercentOutput, 0.0);
   }
@@ -135,7 +142,7 @@ public class Shooter extends SubsystemBase {
   }
 
   private void updatePID() {
-    if(ntUpdatePID) {
+    if (ntUpdatePID) {
       leftFlywheel.config_kP(0, PID_P.getDouble(Constants.Shooter.kP));
       leftFlywheel.config_kI(0, PID_I.getDouble(Constants.Shooter.kI));
       leftFlywheel.config_IntegralZone(0, PID_Izone.getDouble(Constants.Shooter.kIzone));
@@ -158,19 +165,19 @@ public class Shooter extends SubsystemBase {
     return manualRPM.getDouble(0);
   }
 
-  public void testHoodOn(){
+  public void testHoodOn() {
     setHood(true);
   }
 
-  public void testHoodOff(){
+  public void testHoodOff() {
     setHood(false);
   }
 
-  public void addRPM(){
+  public void addRPM() {
     addedRPM += 100;
   }
 
-  public void loseRPM(){
+  public void loseRPM() {
     addedRPM -= 100;
   }
 }

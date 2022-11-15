@@ -13,8 +13,7 @@ public class ClimbOffDecreaseShoot extends Trigger {
   private XboxController cont;
   private final FrontClimb fClimb;
 
-
-  public ClimbOffDecreaseShoot(XboxController controller, FrontClimb climb){
+  public ClimbOffDecreaseShoot(XboxController controller, FrontClimb climb) {
     cont = controller;
     fClimb = climb;
   }

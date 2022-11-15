@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorSensorV3;
@@ -39,12 +38,12 @@ public class Tower extends SubsystemBase {
   private SparkMaxPIDController towerPID;
 
   private double P_tower;
-  private double I_tower; 
-  private double D_tower; 
-  private double Iz_tower; 
+  private double I_tower;
+  private double D_tower;
+  private double Iz_tower;
   private double FF_tower;
   private double MaxOutput_tower;
-  private double MinOutput_tower; 
+  private double MinOutput_tower;
 
   private DigitalInput IrSensor_tower = new DigitalInput(0);
 
@@ -67,8 +66,6 @@ public class Tower extends SubsystemBase {
   private NetworkTableEntry setPoint_feeder = tab_tower.add("F-Setpoint", 0.0).withPosition(5, 0).getEntry();
   private NetworkTableEntry currentSpeed_feeder = tab_tower.add("F-Encoder", 0.0).withPosition(5, 1).getEntry();
 
- 
-
   private double towerPower = Constants.Tower.towerPower;
 
   // FEEDER STUFF
@@ -80,12 +77,12 @@ public class Tower extends SubsystemBase {
   private DigitalInput IrSensor_feeder = new DigitalInput(1);
 
   private double P_feeder;
-  private double I_feeder; 
-  private double D_feeder; 
-  private double Iz_feeder; 
+  private double I_feeder;
+  private double D_feeder;
+  private double Iz_feeder;
   private double FF_feeder;
   private double MaxOutput_feeder;
-  private double MinOutput_feeder; 
+  private double MinOutput_feeder;
 
   private double feederPower = Constants.Feeder.feederPower;
 
@@ -93,40 +90,38 @@ public class Tower extends SubsystemBase {
 
   private final ColorMatch colorMatcher = new ColorMatch();
 
-  // 0.229736328125 0.45654296875 0.314208984375
-  // 0.330810546875 0.445556640625 0.22412109375
-  private final Color kBlueTarget = new Color(0.179, 0.43, 0.39); //(.235, .47, .294)
-  private final Color kRedTarget = new Color(0.50, 0.359, 0.13); //(.356, .434, .209)
+  private final Color kBlueTarget = new Color(0.179, 0.43, 0.39);
+  private final Color kRedTarget = new Color(0.50, 0.359, 0.13);
 
   private int alliance;
 
   private boolean allowReverse;
 
-  private Color[] redWhiteArray = {Color.kRed, Color.kWhiteSmoke};
+  private Color[] redWhiteArray = { Color.kRed, Color.kWhiteSmoke };
   private TrobotAddressableLEDPattern m_redChasePattern = new ChasePattern(redWhiteArray, 3);
-  private Color[] blueWhiteArray = {Color.kBlue, Color.kWhiteSmoke};
+  private Color[] blueWhiteArray = { Color.kBlue, Color.kWhiteSmoke };
   private TrobotAddressableLEDPattern m_blueChasePattern = new ChasePattern(blueWhiteArray, 3);
 
   private TrobotAddressableLEDPattern m_greenPattern = new SolidColorPattern(Color.kGreen);
   private TrobotAddressableLEDPattern m_redPattern = new SolidColorPattern(Color.kRed);
   private TrobotAddressableLEDPattern m_bluePattern = new SolidColorPattern(Color.kBlue);
-  //private TrobotAddressableLEDPattern m_shooting = new BlinkingPattern(Color.kGreen, 0.05);
-  private Color[] greenWhiteArray = {Color.kGreen, Color.kSeaGreen};
+  // private TrobotAddressableLEDPattern m_shooting = new
+  // BlinkingPattern(Color.kGreen, 0.05);
+  private Color[] greenWhiteArray = { Color.kGreen, Color.kSeaGreen };
   private TrobotAddressableLEDPattern m_onTarget = new ChasePattern(greenWhiteArray, 3);
 
-  private Color[] greenRedArray = {Color.kGreen, Color.kRed};
+  private Color[] greenRedArray = { Color.kGreen, Color.kRed };
   private TrobotAddressableLEDPattern m_shootingRed = new ChasePattern(greenRedArray, 3);
 
-  private Color[] greenBlueArray = {Color.kGreen, Color.kBlue};
+  private Color[] greenBlueArray = { Color.kGreen, Color.kBlue };
   private TrobotAddressableLEDPattern m_shootingBlue = new ChasePattern(greenBlueArray, 3);
 
   private TrobotAddressableLEDPattern m_climbLED = new ChaosPattern();
-  
+
   private TrobotAddressableLED m_led;
   private double ledState = 0;
   private boolean rpmOnTarget = false;
   private boolean angleOnTarget = false;
-
 
   /** Creates a new Tower. */
   public Tower(TrobotAddressableLED m_led_strip) {
@@ -156,10 +151,9 @@ public class Tower extends SubsystemBase {
     towerPID.setFF(FF_tower);
     towerPID.setOutputRange(MinOutput_tower, MaxOutput_tower);
 
-
     // FEEDER STUFF
     feederMotor = new CANSparkMax(Constants.Feeder.feederMotorID, MotorType.kBrushless);
-    
+
     feederEncoder = feederMotor.getEncoder();
     feederPID = feederMotor.getPIDController();
 
@@ -190,67 +184,59 @@ public class Tower extends SubsystemBase {
   @Override
   public void periodic() {
     // checkNT();
-    if (ledState == 4){
+    if (ledState == 4) {
       m_led.setPattern(m_climbLED);
     }
-    if (!checkTowerIR()){
+    if (!checkTowerIR()) {
       SmartDashboard.getEntry("/auto/numBall").setNumber(0);
-      if (alliance == 1 && ledState == 1){
+      if (alliance == 1 && ledState == 1) {
         m_led.setPattern(m_bluePattern);
-      } else if (ledState == 1){
+      } else if (ledState == 1) {
         m_led.setPattern(m_redPattern);
-      } else if (ledState == 2){
+      } else if (ledState == 2) {
         m_led.setPattern(m_onTarget);
-      } else if (ledState == 3 && alliance == 1){
+      } else if (ledState == 3 && alliance == 1) {
         m_led.setPattern(m_shootingBlue);
-      } else if (ledState == 3){
+      } else if (ledState == 3) {
         m_led.setPattern(m_shootingRed);
       }
-    } else if (!checkFeederIR()){
+    } else if (!checkFeederIR()) {
       SmartDashboard.getEntry("/auto/numBall").setNumber(1);
-      if (alliance == 1 && ledState == 1){
+      if (alliance == 1 && ledState == 1) {
         m_led.setPattern(m_blueChasePattern);
-      } else if (ledState == 1){
+      } else if (ledState == 1) {
         m_led.setPattern(m_redChasePattern);
-      } else if (ledState == 2){
+      } else if (ledState == 2) {
         m_led.setPattern(m_onTarget);
-      } else if (ledState == 3 && alliance == 1){
+      } else if (ledState == 3 && alliance == 1) {
         m_led.setPattern(m_shootingBlue);
-      } else if (ledState == 3){
+      } else if (ledState == 3) {
         m_led.setPattern(m_shootingRed);
       }
-    } else{
+    } else {
       SmartDashboard.getEntry("/auto/numBall").setNumber(2);
-      if (ledState == 1){
+      if (ledState == 1) {
         m_led.setPattern(m_greenPattern);
-      } else if (ledState == 2){
+      } else if (ledState == 2) {
         m_led.setPattern(m_onTarget);
-      } else if (ledState == 3 && alliance == 1){
+      } else if (ledState == 3 && alliance == 1) {
         m_led.setPattern(m_shootingBlue);
-      } else if (ledState == 3){
+      } else if (ledState == 3) {
         m_led.setPattern(m_shootingRed);
       }
     }
   }
 
-  private void checkNT(){
+  private void checkNT() {
     // TOWER STUFF
-    if(setSpeed_tower.getBoolean(false)){
+    if (setSpeed_tower.getBoolean(false)) {
       towerPower = speed_tower.getDouble(Constants.Tower.towerPower);
-    }else{
+    } else {
       towerPower = Constants.Tower.towerPower;
     }
 
     currentSpeed_tower.setDouble(towerEncoder.getVelocity());
     setPoint_tower.setDouble(towerPower * Constants.Feeder.maxRPM);
-
-
-    // FEEDER STUFF
-    // if(setSpeed_feeder.getBoolean(false)){
-    //   feederPower = speed_feeder.getDouble(Constants.Feeder.feederPower);
-    // }else{
-    //   feederPower = Constants.Feeder.feederPower;
-    // }
 
     currentSpeed_feeder.setDouble(feederEncoder.getVelocity());
     setPoint_feeder.setDouble(feederPower * Constants.Feeder.maxRPM);
@@ -259,74 +245,70 @@ public class Tower extends SubsystemBase {
     feederIR.setBoolean(IrSensor_feeder.get());
   }
 
-
-
   // TOWER STUFF
-  public boolean checkTowerIR(){
+  public boolean checkTowerIR() {
     return IrSensor_tower.get();
   }
 
-  public void powerTower(){
+  public void powerTower() {
     towerPID.setReference(towerPower * Constants.Tower.maxRPM, CANSparkMax.ControlType.kVelocity);
     setPoint_tower.setDouble(towerPower);
   }
 
-  public void reverseTower(){
+  public void reverseTower() {
     towerPID.setReference(-towerPower * Constants.Tower.maxRPM, CANSparkMax.ControlType.kVelocity);
     setPoint_tower.setDouble(-towerPower);
   }
 
-  public void manualTower(double speed){
+  public void manualTower(double speed) {
     towerPID.setReference(speed * Constants.Tower.maxRPM, CANSparkMax.ControlType.kVelocity);
     setPoint_tower.setDouble(speed);
   }
 
-  public void stopTower(){
+  public void stopTower() {
     towerMotor.stopMotor();
   }
 
   // 0 is disabled, 1 is idle, 2 is on target, 3 is shooting
-  public void setClimbLED(){
+  public void setClimbLED() {
     ledState = 4;
   }
 
-  public void setShootingLED(){
+  public void setShootingLED() {
     ledState = 3;
   }
 
-  public void setRpmOnTarget(boolean onTarget){
+  public void setRpmOnTarget(boolean onTarget) {
     rpmOnTarget = onTarget;
-    if (rpmOnTarget && angleOnTarget){
+    if (rpmOnTarget && angleOnTarget) {
       ledState = 2;
-    }
-    else{
+    } else {
       setIdleLED();
     }
   }
 
-  public void setAngleOnTarget(boolean onTarget){
+  public void setAngleOnTarget(boolean onTarget) {
     angleOnTarget = onTarget;
-    if (rpmOnTarget && angleOnTarget){
+    if (rpmOnTarget && angleOnTarget) {
       ledState = 2;
-    }
-    else{
+    } else {
       setIdleLED();
     }
   }
 
-  public boolean getRpmOnTarget(){
+  public boolean getRpmOnTarget() {
     return rpmOnTarget;
   }
 
-  public boolean getAngleOnTarget(){
+  public boolean getAngleOnTarget() {
     return angleOnTarget;
   }
 
-  public void setIdleLED(){
+  public void setIdleLED() {
     ledState = 1;
   }
 
-  public void setDisabledLED(){
+  public void setDisabledLED() {
     ledState = 0;
   }
 
@@ -337,11 +319,11 @@ public class Tower extends SubsystemBase {
   }
 
   public void reverseFeeder() {
-    feederPID.setReference(-(feederPower/3) * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
+    feederPID.setReference(-(feederPower / 3) * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
     setPoint_feeder.setDouble(-feederPower);
   }
 
-  public void manualFeeder(double speed){
+  public void manualFeeder(double speed) {
     feederPID.setReference(speed * Constants.Feeder.maxRPM, CANSparkMax.ControlType.kVelocity);
     setPoint_feeder.setDouble(speed);
   }
@@ -350,61 +332,60 @@ public class Tower extends SubsystemBase {
     feederMotor.stopMotor();
   }
 
-  public boolean checkFeederIR(){
+  public boolean checkFeederIR() {
     return IrSensor_feeder.get();
   }
 
-  public int ballAlliance(){
-    // nukber 1 is blue, 2 is red
+  public int ballAlliance() {
+    // number 1 is blue, 2 is red
     Color detectedColor = cSense.getColor();
     System.out.println("Blue: " + detectedColor.blue + " Red: " + detectedColor.red + " Green: " + detectedColor.green);
     ballProximity.setDouble(cSense.getProximity());
     int number = 0;
 
-      if(detectedColor.red > .26){
-        number = 2;
-      }else if(detectedColor.red < .24){
-        number = 1;
-      }
-    
-    else{
-      number = 0;
+    if (detectedColor.red > .26) {
+      number = 2;
+    } else if (detectedColor.red < .24) {
+      number = 1;
     }
 
+    else {
+      number = 0;
+    }
 
     colorDetected.setNumber(number);
     return number;
   }
 
-  public void updateAlliance(){
-    if(DriverStation.getAlliance() == Alliance.Blue){
+  public void updateAlliance() {
+    if (DriverStation.getAlliance() == Alliance.Blue) {
       alliance = 1;
-    }else{
+    } else {
       alliance = 2;
     }
   }
 
-  public int getAlliance(){
+  public int getAlliance() {
     return alliance;
   }
 
-  public void setReverse(){
-    if(allowReverse){
+  public void setReverse() {
+    if (allowReverse) {
       allowReverse = false;
-    }else{
+    } else {
       allowReverse = true;
     }
   }
 
-  public void enableColorSensor(){
+  public void enableColorSensor() {
     allowReverse = true;
   }
 
-  public void disableColorSensor(){
+  public void disableColorSensor() {
     allowReverse = false;
   }
 
-  public boolean getReverse(){
+  public boolean getReverse() {
     return allowReverse;
   }
 

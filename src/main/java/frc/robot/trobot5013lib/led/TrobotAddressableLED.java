@@ -66,7 +66,7 @@ public class TrobotAddressableLED {
 				timer.scheduleAtFixedRate(
 						task,
 						20, // run first occurrence in 20ms
-						m_animationDelay); 
+						m_animationDelay);
 			}
 			update();
 		}

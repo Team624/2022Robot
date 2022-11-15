@@ -97,19 +97,18 @@ public class RobotContainer {
     m_tower.setDefaultCommand(new IdleTower(m_tower, m_intake));
     m_shooter.setDefaultCommand(new IdleShoot(m_shooter));
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-        m_drivetrainSubsystem,      
-        () -> -modifyAxis(d_controller.getRightTriggerAxis()), 
+        m_drivetrainSubsystem,
+        () -> -modifyAxis(d_controller.getRightTriggerAxis()),
         () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
         () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-        () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-    ));
+        () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND));
 
     increaseShoot = new ClimbOffIncreaseShoot(d_controller, m_fClimb);
     decreaseShoot = new ClimbOffDecreaseShoot(d_controller, m_fClimb);
 
-    configureButtonBindings(); 
+    configureButtonBindings();
   }
-  
+
   private void configureButtonBindings() {
     new Button(d_controller::getAButton).whenPressed(m_drivetrainSubsystem::zeroGyroscope);
 
@@ -120,14 +119,15 @@ public class RobotContainer {
     new Button(d_controller::getYButton).whenHeld(new LowShoot(m_shooter, m_tower));
 
     new Button(d_controller::getLeftBumper).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_tower));
-    new Button(d_controller::getYButton).whenHeld(new PrimeManual(m_shooter, m_shooterVision, m_tower,6000,true));
+    new Button(d_controller::getYButton).whenHeld(new PrimeManual(m_shooter, m_shooterVision, m_tower, 6000, true));
     new Button(d_controller::getLeftBumper).whenHeld(new VisionTurn(
-       m_drivetrainSubsystem,
-       m_shooterVision,
-       () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-       () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-       m_tower
-    ));
+        m_drivetrainSubsystem,
+        m_shooterVision,
+        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND
+            * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND
+            * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+        m_tower));
     new Button(d_controller::getRightBumper).whenHeld(new Shoot(m_tower));
 
     dLeftTriggerDown.whenActive(m_drivetrainSubsystem::yesCreepMode);
@@ -157,7 +157,7 @@ public class RobotContainer {
     new POVButton(m_controller, 90).whenPressed(new AutoClimb(m_fClimb, m_bClimb));
     new POVButton(m_controller, 180).whenPressed(new BottomBack(m_bClimb));
     new POVButton(m_controller, 270).whenPressed(new BottomFront(m_fClimb));
-    
+
     new Button(m_controller::getLeftStickButton).whenPressed(m_fClimb::resetEncoder);
     new Button(m_controller::getLeftStickButton).whenPressed(m_bClimb::resetEncoder);
   }
@@ -184,40 +184,39 @@ public class RobotContainer {
     return value;
   }
 
-  public void setDrivetrainDefaultCommand(){
+  public void setDrivetrainDefaultCommand() {
     Command c = new DefaultDriveCommand(
-      m_drivetrainSubsystem,
-      () -> -modifyAxis(d_controller.getRightTriggerAxis()),
-      () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
-      () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-    );
+        m_drivetrainSubsystem,
+        () -> -modifyAxis(d_controller.getRightTriggerAxis()),
+        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND,
+        () -> -modifyAxis(d_controller.getRightX()) * Drivetrain.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND);
 
     m_drivetrainSubsystem.setDefaultCommand(c);
     c.schedule();
   }
 
-  public void setBlankDrivetrainCommand(){
+  public void setBlankDrivetrainCommand() {
     m_drivetrainSubsystem.setDefaultCommand(new BlankDrive(m_drivetrainSubsystem));
   }
 
-  public Drivetrain getDrivetrain(){
+  public Drivetrain getDrivetrain() {
     return m_drivetrainSubsystem;
   }
 
-  public Intake getIntake(){
+  public Intake getIntake() {
     return m_intake;
   }
 
-  public Tower getTower(){
+  public Tower getTower() {
     return m_tower;
   }
 
-  public Shooter getShooter(){
+  public Shooter getShooter() {
     return m_shooter;
   }
 
-  public ShooterVision getShooterVision(){
+  public ShooterVision getShooterVision() {
     return m_shooterVision;
   }
 
@@ -225,39 +224,39 @@ public class RobotContainer {
     return new AutonomousDrive(m_drivetrainSubsystem, auton);
   }
 
-  public void setAlliance(){
+  public void setAlliance() {
     m_tower.updateAlliance();
   }
 
-  public void setDisabledLED(){
+  public void setDisabledLED() {
     m_tower.setDisabledLED();
   }
 
-  public void resetClimbMode(){
+  public void resetClimbMode() {
     m_fClimb.resetClimbStatus(false);
     m_bClimb.resetClimbStatus(false);
-    if(m_tower.getCurrentCommand() != m_tower.getDefaultCommand()){
+    if (m_tower.getCurrentCommand() != m_tower.getDefaultCommand()) {
       new IdleTower(m_tower, m_intake).schedule();
     }
   }
 
-  public void enableColorSensor(){
+  public void enableColorSensor() {
     m_tower.enableColorSensor();
   }
 
-  public void disableColorSensor(){
+  public void disableColorSensor() {
     m_tower.disableColorSensor();
   }
 
-  public boolean getSpitoutSetting(){
+  public boolean getSpitoutSetting() {
     return m_tower.getReverse();
   }
 
-  public void ghostSwerve(){
+  public void ghostSwerve() {
     new DisabledSwerve(m_drivetrainSubsystem);
   }
 
-  public void resetIntake(){
+  public void resetIntake() {
     m_intake.recentlyRetracted = false;
   }
 

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class mLeftTriggerUp extends Trigger {
   XboxController cont;
 
-  public mLeftTriggerUp(XboxController controller){
+  public mLeftTriggerUp(XboxController controller) {
     cont = controller;
   }
 

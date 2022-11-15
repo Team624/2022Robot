@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 
 /** Add your docs here. */
-public class IntensityPattern  implements TrobotAddressableLEDPattern {
+public class IntensityPattern implements TrobotAddressableLEDPattern {
 	private Color m_HighColor;
 	private Color m_LowColor;
 	private double m_Intensity;
@@ -17,13 +17,13 @@ public class IntensityPattern  implements TrobotAddressableLEDPattern {
 	/**
 	 * 
 	 * @param highColor Brightest color
-	 * @param intensity 0..1 with 1 being the color and 0 being black 
+	 * @param intensity 0..1 with 1 being the color and 0 being black
 	 */
-	public IntensityPattern(Color highColor, double intensity){
-		this(Color.kBlack,highColor,intensity);
+	public IntensityPattern(Color highColor, double intensity) {
+		this(Color.kBlack, highColor, intensity);
 	}
 
-	public IntensityPattern(Color lowColor, Color highColor, double intensity){
+	public IntensityPattern(Color lowColor, Color highColor, double intensity) {
 		super();
 		this.m_HighColor = highColor;
 		this.m_LowColor = lowColor;
@@ -33,12 +33,12 @@ public class IntensityPattern  implements TrobotAddressableLEDPattern {
 	@Override
 	public void setLEDs(AddressableLEDBuffer buffer) {
 		double red = MathUtil.interpolate(m_LowColor.red, m_HighColor.red, m_Intensity);
-		double green =		MathUtil.interpolate(m_LowColor.green, m_HighColor.green, m_Intensity);
-		double blue =		MathUtil.interpolate(m_LowColor.blue, m_HighColor.blue, m_Intensity);
-		for (int index = 0; index < buffer.getLength(); index++){
-			buffer.setLED(index, new Color(red,green,blue));
+		double green = MathUtil.interpolate(m_LowColor.green, m_HighColor.green, m_Intensity);
+		double blue = MathUtil.interpolate(m_LowColor.blue, m_HighColor.blue, m_Intensity);
+		for (int index = 0; index < buffer.getLength(); index++) {
+			buffer.setLED(index, new Color(red, green, blue));
 		}
-		
+
 	}
 
 	@Override
@@ -46,10 +46,9 @@ public class IntensityPattern  implements TrobotAddressableLEDPattern {
 		return true;
 	}
 
-	public void setIntensity(double intensity){
+	public void setIntensity(double intensity) {
 		m_Intensity = intensity;
-		
-	}
 
+	}
 
 }

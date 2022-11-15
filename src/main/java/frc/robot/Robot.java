@@ -17,9 +17,12 @@ import frc.robot.trobot5013lib.led.TrobotAddressableLED;
 import frc.robot.utility.Auton;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
@@ -32,18 +35,19 @@ public class Robot extends TimedRobot {
   private TrobotAddressableLED m_led = new TrobotAddressableLED(9, 15);
 
   /**
-   * This function is run when the robot is first started up and should be used for any
+   * This function is run when the robot is first started up and should be used
+   * for any
    * initialization code.
    */
 
   private ShuffleboardTab tab_cam = Shuffleboard.getTab("Camera");
   private NetworkTableEntry spitoutEntry = tab_cam.add("Spitout", false).withPosition(9, 0).getEntry();
-  private UsbCamera camera; 
+  private UsbCamera camera;
 
   @Override
   public void robotInit() {
     camera = CameraServer.startAutomaticCapture();
-    
+
     spitoutEntry.setBoolean(true);
 
     compressor = new Compressor(30, PneumaticsModuleType.CTREPCM);
@@ -51,29 +55,35 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer(m_led, camera);
 
     auton = new Auton(
-      m_robotContainer.getDrivetrain(),
-      m_robotContainer.getIntake(),
-      m_robotContainer.getTower(),
-      m_robotContainer.getShooter(),
-      m_robotContainer.getShooterVision()
-    );
+        m_robotContainer.getDrivetrain(),
+        m_robotContainer.getIntake(),
+        m_robotContainer.getTower(),
+        m_robotContainer.getShooter(),
+        m_robotContainer.getShooterVision());
 
     auton.setState(false);
   }
 
   /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
+   * This function is called every robot packet, no matter the mode. Use this for
+   * items like
+   * diagnostics that you want ran during disabled, autonomous, teleoperated and
+   * test.
    *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and
    * SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
     auton.sendAutoChoice();
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled
+    // commands, running already-scheduled commands, removing finished or
+    // interrupted commands,
+    // and running subsystem periodic() methods. This must be called from the
+    // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
@@ -81,11 +91,11 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    //m_robotContainer.setDisabledLED();
+    // m_robotContainer.setDisabledLED();
     m_robotContainer.ghostSwerve();
     compressor.disable();
     auton.setState(false);
-    if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
+    if (m_robotContainer.getAutonomousDriveCommand(auton) != null) {
       m_robotContainer.getAutonomousDriveCommand(auton).cancel();
     }
   }
@@ -95,7 +105,10 @@ public class Robot extends TimedRobot {
     auton.updatePaths();
   }
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  /**
+   * This autonomous runs the autonomous command selected by your
+   * {@link RobotContainer} class.
+   */
   @Override
   public void autonomousInit() {
     auton.resetStates();
@@ -105,7 +118,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.setBlankDrivetrainCommand();
     m_robotContainer.getAutonomousDriveCommand(auton).schedule(true);
     m_robotContainer.resetClimbMode();
-    
+
   }
 
   /** This function is called periodically during autonomous. */
@@ -120,7 +133,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.setAlliance();
     auton.setState(false);
     compressor.enableDigital();
-    if (m_robotContainer.getAutonomousDriveCommand(auton)!= null) {
+    if (m_robotContainer.getAutonomousDriveCommand(auton) != null) {
       m_robotContainer.getAutonomousDriveCommand(auton).cancel();
     }
     m_robotContainer.setDrivetrainDefaultCommand();
@@ -143,5 +156,6 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 }

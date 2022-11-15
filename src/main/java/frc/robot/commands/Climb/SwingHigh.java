@@ -10,9 +10,6 @@ import frc.robot.commands.Climb.Front.SwingHighFront;
 import frc.robot.subsystems.BackClimb;
 import frc.robot.subsystems.FrontClimb;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SwingHigh extends ParallelCommandGroup {
   private final FrontClimb fClimb;
   private final BackClimb bClimb;
@@ -21,12 +18,11 @@ public class SwingHigh extends ParallelCommandGroup {
   public SwingHigh(FrontClimb fClimb, BackClimb bClimb) {
     this.fClimb = fClimb;
     this.bClimb = bClimb;
-  
+
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new SwingHighFront(this.fClimb),
-      new SwingHighBack(this.bClimb)
-    );
+        new SwingHighFront(this.fClimb),
+        new SwingHighBack(this.bClimb));
   }
 }

@@ -93,8 +93,6 @@ public class LinearInterpolator {
             }
         }
 
-        // System.out.println("index of " + x + " is " + index);
-
         if (index >= table.length) {
             return table[table.length - 1][1];
         }

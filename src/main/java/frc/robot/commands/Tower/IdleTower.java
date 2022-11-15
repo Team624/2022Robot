@@ -40,93 +40,93 @@ public class IdleTower extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {     
-    if(intake.recentlyRetracted){
-      if(!timerStarted){
+  public void execute() {
+    if (intake.recentlyRetracted) {
+      if (!timerStarted) {
         timer2.start();
         timerStarted = true;
         feederThreshold = true;
-      }else if(timer2.get() < 1){
+      } else if (timer2.get() < 1) {
         feederThreshold = true;
-      }else{
+      } else {
         intake.recentlyRetracted = false;
         feederThreshold = false;
       }
     }
 
-    if((tower.ballAlliance() == 0 || tower.getAlliance() == tower.ballAlliance())){
-      //System.out.println("Not rejecting 1");
-      if(tower.checkTowerIR()){
-        if (timer.get() < .1){
-          if(intake.isDeployed){
+    if ((tower.ballAlliance() == 0 || tower.getAlliance() == tower.ballAlliance())) {
+
+      if (tower.checkTowerIR()) {
+        if (timer.get() < .1) {
+          if (intake.isDeployed) {
             intake.slow = true;
             tower.reverseFeeder();
           }
-        }else if(!tower.checkTowerIR()){
+        } else if (!tower.checkTowerIR()) {
           intake.slow = false;
-          if(tower.checkFeederIR()){
-            // tower.powerFeeder();
+          if (tower.checkFeederIR()) {
+
             tower.powerTower();
-          }else{
-            if(intake.isDeployed || feederThreshold){
+          } else {
+            if (intake.isDeployed || feederThreshold) {
               tower.powerFeeder();
               tower.powerTower();
-            }else if(tower.getAlliance() == tower.ballAlliance()){
-              // tower.powerFeeder();
+            } else if (tower.getAlliance() == tower.ballAlliance()) {
+
               tower.powerTower();
-            }else{
+            } else {
               tower.stopFeeder();
               tower.stopTower();
             }
           }
-        }else{
+        } else {
           intake.slow = false;
-          if(tower.checkFeederIR()){
+          if (tower.checkFeederIR()) {
             tower.stopFeeder();
             tower.stopTower();
-          }else{
-            if(intake.isDeployed || feederThreshold){
+          } else {
+            if (intake.isDeployed || feederThreshold) {
               tower.powerFeeder();
               tower.stopTower();
-            }else{
+            } else {
               tower.stopFeeder();
               tower.stopTower();
             }
           }
         }
-      }else{
-        if (timer.get() < .2){
-          if(intake.isDeployed){
+      } else {
+        if (timer.get() < .2) {
+          if (intake.isDeployed) {
             intake.slow = true;
             tower.reverseFeeder();
           }
-        }else if(!tower.checkTowerIR()){
+        } else if (!tower.checkTowerIR()) {
           intake.slow = false;
-          if(tower.checkFeederIR()){
-            // tower.powerFeeder();
+          if (tower.checkFeederIR()) {
+
             tower.powerTower();
-          }else{
-            if(intake.isDeployed || feederThreshold){
+          } else {
+            if (intake.isDeployed || feederThreshold) {
               tower.powerFeeder();
               tower.powerTower();
-            }else if(tower.getAlliance() == tower.ballAlliance()){
-              // tower.powerFeeder();
+            } else if (tower.getAlliance() == tower.ballAlliance()) {
+
               tower.powerTower();
-            }else{
+            } else {
               tower.stopFeeder();
               tower.stopTower();
             }
           }
-        }else{
+        } else {
           intake.slow = false;
-          if(tower.checkFeederIR()){
+          if (tower.checkFeederIR()) {
             tower.stopFeeder();
             tower.stopTower();
-          }else{
-            if(intake.isDeployed || feederThreshold){
+          } else {
+            if (intake.isDeployed || feederThreshold) {
               tower.powerFeeder();
               tower.stopTower();
-            }else{
+            } else {
               tower.stopFeeder();
               tower.stopTower();
             }
@@ -134,28 +134,28 @@ public class IdleTower extends CommandBase {
         }
       }
 
-    }else{
-      if(tower.getReverse()){
-        //System.out.println("Color Sensor rejecting");
+    } else {
+      if (tower.getReverse()) {
+
         timer.reset();
         tower.reverseFeeder();
         intake.slow = true;
-        if(!tower.checkTowerIR()){
+        if (!tower.checkTowerIR()) {
           tower.powerTower();
-        }else{
+        } else {
           tower.stopTower();
         }
-      } else{
-        //System.out.println("Not rejecting 2");
+      } else {
+
         intake.slow = false;
-        if(!tower.checkTowerIR()){
+        if (!tower.checkTowerIR()) {
           tower.powerTower();
-          // tower.powerFeeder();
-        }else{
+
+        } else {
           tower.stopTower();
-          if(!tower.checkFeederIR()){
-            // tower.powerFeeder();
-          }else{
+          if (!tower.checkFeederIR()) {
+
+          } else {
             tower.stopFeeder();
           }
         }

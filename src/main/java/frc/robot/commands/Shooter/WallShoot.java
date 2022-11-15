@@ -12,6 +12,7 @@ import frc.robot.subsystems.Tower;
 public class WallShoot extends CommandBase {
   private final Shooter shooter;
   private final Tower tower;
+
   /** Creates a new ManualShoot. */
   public WallShoot(Shooter shooter, Tower tower) {
     this.shooter = shooter;
@@ -31,7 +32,7 @@ public class WallShoot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
   }
 
   // Called once the command ends or is interrupted.

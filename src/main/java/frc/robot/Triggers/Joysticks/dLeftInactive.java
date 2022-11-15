@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class dLeftInactive extends Trigger {
   XboxController cont;
 
-  public dLeftInactive(XboxController controller){
+  public dLeftInactive(XboxController controller) {
     cont = controller;
   }
 

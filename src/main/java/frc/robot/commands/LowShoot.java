@@ -14,8 +14,7 @@ public class LowShoot extends ParallelCommandGroup {
     this.shooter = shooter;
     this.tower = tower;
     addCommands(
-      new LowRPM(this.shooter),
-      new Shoot(this.tower)
-    );
+        new LowRPM(this.shooter),
+        new Shoot(this.tower));
   }
 }

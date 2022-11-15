@@ -32,10 +32,10 @@ public class AutonomousDrive extends CommandBase {
     m_drivetrainSubsystem.stopAuton = false;
     m_drivetrainSubsystem.setPose();
     commandGroup = new SequentialCommandGroup();
-    for (int i = 0; i < auton.getPathCount(); i++){
+    for (int i = 0; i < auton.getPathCount(); i++) {
       commandGroup.addCommands(new AutonPathCommand(m_drivetrainSubsystem, auton.auton[i], auton));
     }
-    //this.alongWith(commandGroup);
+    // this.alongWith(commandGroup);
     commandGroup.schedule(false);
   }
 
@@ -49,9 +49,6 @@ public class AutonomousDrive extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     System.out.println("Main Auton Command is ended---------------");
-    // TODO: Could cause problems if auton command is immediatly canceled when commandGroups starts TEST it
-    // commandGroup.cancel();
-    // m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
   }
 
   // Returns true when the command should end.

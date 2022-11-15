@@ -8,13 +8,12 @@ public class Gains {
     public final double kF;
     public final double iZone;
 
-
-    public Gains( double p, double i, double d, double f, double zone){
+    public Gains(double p, double i, double d, double f, double zone) {
         kP = p;
         kI = i;
         kD = d;
         kF = f;
         iZone = i;
     }
-    
+
 }

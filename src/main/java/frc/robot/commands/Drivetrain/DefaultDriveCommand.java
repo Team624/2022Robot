@@ -18,7 +18,8 @@ public class DefaultDriveCommand extends CommandBase {
     private SlewRateLimiter filterX = new SlewRateLimiter(7);
     private SlewRateLimiter filterY = new SlewRateLimiter(7);
 
-    public DefaultDriveCommand(Drivetrain drivetrainSubsystem, DoubleSupplier triggerSupplierR, DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
+    public DefaultDriveCommand(Drivetrain drivetrainSubsystem, DoubleSupplier triggerSupplierR,
+            DoubleSupplier translationXSupplier, DoubleSupplier translationYSupplier, DoubleSupplier rotationSupplier) {
         this.m_drivetrainSubsystem = drivetrainSubsystem;
         this.m_translationXSupplier = translationXSupplier;
         this.m_translationYSupplier = translationYSupplier;
@@ -42,26 +43,23 @@ public class DefaultDriveCommand extends CommandBase {
         omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_ROTATION_MULTIPLIER;
 
         // the creep mode
-        if (m_drivetrainSubsystem.isCreepin){
+        if (m_drivetrainSubsystem.isCreepin) {
             vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
             vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
             omega *= Constants.Drivetrain.DRIVETRAIN_INPUT_CREEP_MULTIPLIER;
-        }else if(m_drivetrainSubsystem.isSpeedin){
+        } else if (m_drivetrainSubsystem.isSpeedin) {
             vx *= Constants.Drivetrain.DRIVETRAIN_INPUT_SPEED_MULTIPLIER;
             vy *= Constants.Drivetrain.DRIVETRAIN_INPUT_SPEED_MULTIPLIER;
         }
-            vx = filterX.calculate(vx);
-            vy = filterY.calculate(vy);
-            
-            m_drivetrainSubsystem.drive(
-                ChassisSpeeds.fromFieldRelativeSpeeds(
-                    vx,
-                    vy,
-                    omega,
-                    m_drivetrainSubsystem.getGyroscopeRotation()
-                )
-            );
+        vx = filterX.calculate(vx);
+        vy = filterY.calculate(vy);
 
+        m_drivetrainSubsystem.drive(
+                ChassisSpeeds.fromFieldRelativeSpeeds(
+                        vx,
+                        vy,
+                        omega,
+                        m_drivetrainSubsystem.getGyroscopeRotation()));
 
     }
 

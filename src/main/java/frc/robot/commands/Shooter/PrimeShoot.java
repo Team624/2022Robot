@@ -34,11 +34,11 @@ public class PrimeShoot extends CommandBase {
   public void execute() {
     shooter.setRPM(vision.calculateRPM() + shooter.addedRPM);
     shooter.setHood(vision.calculateHood());
-    
+
     // For leds
-    if (Math.abs(shooter.getGoalRPM() - shooter.getRPM()) < 20){
+    if (Math.abs(shooter.getGoalRPM() - shooter.getRPM()) < 20) {
       tower.setRpmOnTarget(true);
-    } else{
+    } else {
       tower.setRpmOnTarget(false);
     }
 
@@ -48,7 +48,6 @@ public class PrimeShoot extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     shooter.setPriming(false);
-    //tower.setRpmOnTarget(false);
     tower.setIdleLED();
   }
 

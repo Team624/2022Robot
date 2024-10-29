@@ -52,8 +52,8 @@ public final class Constants {
         public static final double kIzone = 200.0;
 
         public static final double idlePercent = .2;
-        public static final double lowShootRPM = 2000;
-        public static final double wallShootRPM = 8350;
+        public static final double lowShootRPM = 6000;
+        public static final double wallShootRPM = 6250;
 
         public static final double hoodSwitchCam = 201;
         public static final double hoodDeadBandSizeCam = 7;

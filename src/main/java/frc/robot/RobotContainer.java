@@ -82,7 +82,7 @@ public class RobotContainer {
   private ClimbOffIncreaseShoot increaseShoot;
   private ClimbOffDecreaseShoot decreaseShoot;
 
-  public RobotContainer(TrobotAddressableLED m_led, UsbCamera camera) {
+  public RobotContainer(TrobotAddressableLED m_led) {
     m_fClimb = new FrontClimb();
     m_bClimb = new BackClimb();
     m_drivetrainSubsystem = new Drivetrain(m_led);
@@ -114,20 +114,21 @@ public class RobotContainer {
 
     new Button(d_controller::getBButton).whenPressed(m_tower::setReverse);
 
-    new Button(d_controller::getXButton).whenPressed(m_drivetrainSubsystem::quickZeroPose);
+    // new Button(d_controller::getXButton).whenPressed(m_drivetrainSubsystem::quickZeroPose);
+    new Button(d_controller::getXButton).whenHeld(new DeployIntake(m_intake));
 
-    new Button(d_controller::getYButton).whenHeld(new LowShoot(m_shooter, m_tower));
+    // new Button(d_controller::getYButton).whenHeld(new LowShoot(m_shooter, m_tower));
 
-    new Button(d_controller::getLeftBumper).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_tower));
-    new Button(d_controller::getYButton).whenHeld(new PrimeManual(m_shooter, m_shooterVision, m_tower, 6000, true));
-    new Button(d_controller::getLeftBumper).whenHeld(new VisionTurn(
-        m_drivetrainSubsystem,
-        m_shooterVision,
-        () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND
-            * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-        () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND
-            * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
-        m_tower));
+    // new Button(d_controller::getLeftBumper).whenHeld(new PrimeShoot(m_shooter, m_shooterVision, m_tower));
+    new Button(d_controller::getYButton).whenHeld(new PrimeManual(m_shooter, m_shooterVision, m_tower, 7000, true));
+    // new Button(d_controller::getLeftBumper).whenHeld(new VisionTurn(
+    //     m_drivetrainSubsystem,
+    //     m_shooterVision,
+    //     () -> -modifyAxis(d_controller.getLeftY()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND
+    //         * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+    //     () -> -modifyAxis(d_controller.getLeftX()) * Drivetrain.MAX_VELOCITY_METERS_PER_SECOND
+    //         * Constants.Drivetrain.DRIVETRAIN_INPUT_TRANSLATION_MULTIPLIER,
+    //     m_tower));
     new Button(d_controller::getRightBumper).whenHeld(new Shoot(m_tower));
 
     dLeftTriggerDown.whenActive(m_drivetrainSubsystem::yesCreepMode);
@@ -147,10 +148,9 @@ public class RobotContainer {
     new Button(m_controller::getStartButton).whenPressed(m_bClimb::setClimbStatus);
     new Button(m_controller::getStartButton).toggleWhenPressed(new ClimbTower(m_tower));
 
-    mLeftActive.whenActive(new ControlFront(m_fClimb, m_controller));
-    mRightActive.whenActive(new ControlBack(m_bClimb, m_controller));
-    mLeftInactive.whenActive(new IdleFront(m_fClimb));
-    mRightInactive.whenActive(new IdleBack(m_bClimb));
+    
+    mLeftInactive.whenInactive(new ControlFront(m_fClimb, m_controller));
+    mRightInactive.whenInactive(new ControlBack(m_bClimb, m_controller));
 
     new POVButton(m_controller, 0).whenPressed(new TopBack(m_bClimb));
     new POVButton(m_controller, 0).whenPressed(new TopFront(m_fClimb));
@@ -240,9 +240,7 @@ public class RobotContainer {
     }
   }
 
-  public void enableColorSensor() {
-    m_tower.enableColorSensor();
-  }
+ 
 
   public void disableColorSensor() {
     m_tower.disableColorSensor();

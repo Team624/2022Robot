@@ -34,13 +34,17 @@ public class PrimeManual extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setRPM(desiredRPM + shooter.addedRPM);
-    shooter.setHood(hoodStatus);
+    shooter.setRPM(9200);
+    shooter.setHood(true);
+  
+
     // For leds
     if (Math.abs(desiredRPM - shooter.getRPM()) < 20) {
       tower.setRpmOnTarget(true);
+      tower.setClimbLED();
     } else {
       tower.setRpmOnTarget(false);
+      tower.setShootingLED();
     }
 
   }

@@ -14,7 +14,7 @@ public class LowRPM extends CommandBase {
 
   @Override
   public void initialize() {
-    shooter.setRPM(Constants.Shooter.lowShootRPM);
+    shooter.setRPM(10000);
   }
 
 }
